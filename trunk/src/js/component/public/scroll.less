@@ -1,0 +1,45 @@
+/**
+* 滚动条
+*/
+@import "~global/var.less";
+
+// 滚动条的
+.ccwork-scroll{
+    position: relative;
+    &-scrollbar,&-children{
+        height: 100%;
+        overflow: scroll;
+    }
+    
+    &-children{
+        &::-webkit-scrollbar{
+            width: 0;
+            height: 0;
+        }
+    }
+    &-scrollbar{
+        position: absolute;
+        overflow-x: hidden;
+        right: @u*5;
+        top: 0;
+        overflow: ~'hidden\0'; // ie Hack
+        z-index: 100;
+        &::-webkit-scrollbar{
+            width: 8px;
+        }
+        &::-webkit-scrollbar-thumb{
+            min-height:10px;
+            border-radius:100px;
+            background: rgba(204, 204, 204, 0.56);
+            &:hover{
+                background: rgba(204, 204, 204, 1);
+            }
+        }
+    }
+    // 火狐兼容
+    @-moz-document url-prefix(){
+        &-scrollbar{
+            width:0;
+        }
+    }
+}

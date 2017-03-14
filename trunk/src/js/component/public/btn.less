@@ -1,0 +1,46 @@
+@import '~global/var.less';
+
+.ccwork {
+    &-btn{
+        // width:100%;
+        min-width:@u*60;
+        min-height:@u*30;
+        line-height:@u*30;
+        text-align:center;
+        font-size:14px;
+        border-radius:@u*4;
+        border:0 none;
+        cursor: pointer;
+    }
+
+    &-btn-primary{
+        background-color:#459ef2;
+        color:#fff;
+        &:hover{
+            background-color:#4297e6;
+        }
+        &:active{
+            background-color:#3f8ed9;
+        }
+    }
+    // 不可用按钮
+    &-btn-sidabled{
+        background-color:#abb8c6;
+        color:#fff;
+        cursor:default;
+    }
+    // 默认按钮
+    &-btn-default{
+        border:1px solid #dae0e6;
+        color:#32373c;
+        background-color:#fff;
+        &:hover{
+            border-color:#459ef2;
+            background-color:#f5fbff;
+        }
+        &:active{
+            background-color:#e8f6ff;
+            border-color:#3f8ed9;
+        }
+    }
+}

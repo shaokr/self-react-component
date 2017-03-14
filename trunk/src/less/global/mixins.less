@@ -1,0 +1,127 @@
+//
+// mixins 自定义函数
+//---------------------------------------
+
+// 设置大小
+//----------------------------
+.size(@width, @height) {
+  width: @width;
+  height: @height;
+}
+.square(@size) {
+  .size(@size; @size);
+}
+
+// 图片base64
+//----------------------------
+.uri(@a){
+	background-image: data-uri('@pimg/@{a}');
+}
+
+// 三角形
+//----------------------
+.add-sjx(@a:@bc1){
+	width: 0;
+	height: 0;
+	color: @a;
+	vertical-align: middle;
+}
+// 尖头向上
+.add-up(@a:@bc1,@b:@u*10,@c:@b){.add-sjx(@a);
+	border-right: @c solid transparent;
+	border-left: @c solid transparent;
+	border-bottom:@b solid;
+}
+// 尖头向左
+.add-left(@a:@bc1,@b:@u*10,@c:@b){.add-sjx(@a);
+	border-top: @c solid transparent;
+	border-bottom: @c solid transparent;
+	border-right:@b solid;
+}
+// 尖头向下
+.add-down(@a:@bc1,@b:@u*10,@c:@b){.add-sjx(@a);
+	border-right: @c solid transparent;
+	border-left: @c solid transparent;
+	border-top:@b solid;
+}
+// 尖头向右
+.add-right(@a:@bc1,@b:@u*10,@c:@b){.add-sjx(@a);
+	border-top: @c solid transparent;
+	border-bottom: @c solid transparent;
+	border-left:@b solid;
+}
+
+// 内边框
+//-------------------
+.box-si(@a:1px;@b:#fff){
+box-shadow: inset 0 @a 0 @b,
+			inset 0 -@a 0 @b,
+			inset @a 0 0 @b,
+			inset -@a 0 0 @b;
+}
+// 单行省略号
+//-------------
+.slh(){text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
+// 2行省略号
+//-------------
+.slh2(){
+	overflow : hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+// 
+.changego(@cola: #999){
+	display: inline-block;
+	content: '';
+	height: 0.24rem;
+	width: 0.24rem;
+	border-left: @cola solid 0.04rem;
+	border-bottom: @cola solid 0.04rem;
+	transform: rotate(-135deg);
+}
+// 去除默认样式：如果 input,botton标签
+//--------------------------------
+.not-ae(@a:none){
+	-webkit-appearance:@a;
+	-moz-appearance:@a;
+	appearance:@a;
+}
+
+// 字体图标
+.iconfont(){
+	font-family:"iconfont" !important;
+	font-size:@fs3;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+.it(@a){
+	&::after{
+		.iconfont();
+		content: '@{a}';
+	}
+}
+
+// 固定字体大小
+.dpr(@a:@fs5){
+	@b:unit(@a,px);
+	[data-dpr="1"] &{
+		&:extend([data-dpr="1"]);
+		font-size: @b/(3/1);
+	}
+	[data-dpr="2"] &{
+		&:extend([data-dpr="2"]);
+		font-size: @b/(3/2);
+	}
+	[data-dpr="3"] &{
+		&:extend([data-dpr="3"]);
+		font-size: @b/(3/3);
+	}
+}
+// rem单位
+// .dpr(@a:@fs5){
+// 	font-size: @u*@a;
+// }

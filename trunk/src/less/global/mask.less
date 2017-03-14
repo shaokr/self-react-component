@@ -1,0 +1,16 @@
+// 循环输出适应屏幕
+.mask {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top:0;
+	left: 0;
+	z-index: 10;
+}
+.loop-mask(@counter) when (@counter >= 0) {
+	.mask-@{counter}{
+		background: rgba(0, 0, 0, 0.1*@counter)
+	}
+  	.loop-mask((@counter - 1));    // next iteration
+}
+.loop-mask(9);

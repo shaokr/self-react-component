@@ -1,0 +1,61 @@
+.hide {
+	display: none !important;
+}
+// 头部样式
+.header {
+	position: relative;
+	background:@bgc2;
+	line-height: @u*130;
+	height: @u*130;
+	border-bottom: 1px solid @bc1;
+	z-index: 11;
+	&-left{
+		position: absolute;
+		left: @mw5 - @u*14;
+		height: 100%;
+		display: flex;
+		align-items:center;     // 垂直居中 
+		color: #fff;
+		i{
+			.dpr(60);
+			display: block;
+		}
+		p{
+			color: @c1;
+		}
+	}
+	h1{
+		.dpr(@fs1);
+		color: #fff;
+		margin: 0 @u*100;
+		text-align: center;
+		.slh();
+	}
+}
+// 主要内容块
+.main {
+	margin: 0 auto;
+	min-width: @u*320;
+}
+.imo-null{
+	padding:25% 0;
+	text-align: center; 
+}
+.c1{
+	color:@c1;
+}
+.c2{
+	color:@c2;
+}
+.c3{
+	color:@c3;
+}
+.c4{
+	color:@c4;
+}
+.c8{
+	color:@c8;
+}
+.c11{
+	color:@c11;	
+}

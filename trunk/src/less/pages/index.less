@@ -1,0 +1,445 @@
+
+@import "~global/var.less";
+
+@import "~compoent/btn.less";
+
+/**
+.react-scroll{
+    position: relative;
+    &-scrollbar,&-children{
+        height: 100%;
+        overflow:hidden;
+    }
+    
+    &-children{
+        >*{
+            transition: 0.2s ease-out;
+        }
+    }
+    &-scrollbar{
+        position: absolute;
+        right: @u*5;
+        top: 0;
+    }
+}
+*/
+// 滚动条的
+.react-scroll{
+    position: relative;
+    &-scrollbar,&-children{
+        height: 100%;
+        overflow: scroll;
+    }
+    
+    &-children{
+        &::-webkit-scrollbar{
+            width: 0;
+            height: 0;
+        }
+    }
+    &-scrollbar{
+        position: absolute;
+        overflow-x: hidden;
+        right: @u*5;
+        top: 0;
+        overflow: ~'hidden\0'; // ie Hack
+        z-index: 100;
+        &::-webkit-scrollbar{
+            width: 8px;
+        }
+        &::-webkit-scrollbar-thumb{
+            min-height:10px;
+            border-radius:100px;
+            background: rgba(204, 204, 204, 0.56);
+            &:hover{
+                background: rgba(204, 204, 204, 1);
+            }
+        }
+    }
+    // 火狐兼容
+    @-moz-document url-prefix(){
+        &-scrollbar{
+            width:0;
+        }
+    }
+}
+// 头像
+.tree-main{
+    .tree-avatar{
+        width: @u*22;
+        height: @u*22;
+        margin-right: @u*10;
+        border-radius: @u*3;
+        overflow: hidden;
+        text-align: center;
+        line-height: @u*22;
+        color: #fff;
+        img{
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+// 大外框
+.tree-fixed{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+// 字体图标
+.tree-icon {
+    width: 1em; height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+// 主框
+.tree-main{
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    color: @c1;
+    font-size: 12px;
+    width: @u*661;
+    border-radius: @u*5;
+    background: #fff;
+    overflow: hidden;
+    border: 1px solid #dae0e6;
+    box-shadow: 0 0 @u*5 rgba(0, 0, 0, 0.2);
+    
+    /**滚动条*/
+    /**
+    .scroll{
+        //height:100%;
+        // margin-right: @u*5px;
+        overflow-y:auto;
+        &::-webkit-scrollbar{
+            width: @u*(8+5);
+        }
+ 
+        // 滚动曹
+        &::-webkit-scrollbar-track{
+            width:20px;
+        }
+        &::-webkit-scrollbar-track-piece{
+            width:10px;
+        }
+        // 滑快
+        &::-webkit-scrollbar-thumb{
+            width:8px;
+            min-height:10px;
+            // background-color:#e6eaf0;
+            background-image:linear-gradient(to right,#e6eaf0 8px,transparent 5px);
+            border-radius:1px;
+        }
+    }
+    */
+    // 头
+    .tree-header{
+        text-align: center;
+        height: @u*52;
+        background: #f7f7f7;
+        h2{
+            font-size: 14px;
+            color: #32373c;
+            font-weight: bold;
+            padding-top: @u*24; 
+        }
+    }
+    @box-lw:@u*320;
+    @box-p:@u*10;
+    // 中间box
+    .tree-box{
+        @h:@u*398;
+        @lw:@box-lw;
+        display: flex;
+        height: @h;
+        border-top: 1px solid #dae0e6;
+        border-bottom: 1px solid #dae0e6;
+        // 搜索框
+        &-search{
+            // position: relative;
+            border: 1px solid #dae0e6;
+            margin-top: @u*10;
+            border-radius: @u*100;
+            display: flex;
+            align-items: center;
+            >i{
+                width: @u*30;
+                text-align: center;
+                font-size: @u*18;
+            }
+            >input{
+                flex: 1;
+                height: @u*30;
+                border: none;
+                outline:none;
+                background: transparent;
+                margin-right: @u*14;
+            }
+            // 搜索列表数据
+            &-list{
+                position: absolute;
+                top: @u*42;
+                height: @u*(344 - 10);
+                left: 0;
+                width: 100%;
+                z-index: 100;
+                background: #fff;
+                ul{
+                    // padding: 0 @u*10;
+                    li{
+                        // height: @u*30;
+                        padding: @u*5 @u*10 @u*5 @u*10;
+                        display: flex;
+                        align-items: center;
+                        transition: 0.2s;
+                        cursor: pointer;
+                        &:hover{
+                            background: #F5FBFF;
+                        }
+                        .list-content{
+                            flex: 1;
+                            max-width: 80%;
+                            *{
+                                text-overflow: ellipsis;white-space: nowrap;overflow: hidden;
+                            }
+                        }
+                        i{
+                            border-radius: 50%;
+                            border: 1px solid #dae0e6;
+                            height: @u*18;
+                            width: @u*18;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            padding: 4px;
+                        }
+                    }
+                }
+            }
+        }
+        // 左右2边内容
+        &-left,&-right{
+            position: relative;
+            padding: @box-p 0 0 ;
+        }
+        &-left{
+            width: @lw;
+            margin: @box-p 0 @box-p 0;
+            padding-top: 0;
+            border-right: 1px solid #dae0e6;
+            &-top{
+                padding: 0 @box-p;
+                >p{
+                    line-height: @u*32;
+                }
+            }
+            .scroll{
+                max-height: calc(~'100% - '@u*32*2);
+                height: 100%;
+            }
+        }
+        &-right{
+            flex: 1;
+            &-top{
+                height: @u*32;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: @u*10;
+                padding: 0 @box-p;
+                .explain{
+                    color: @c3;
+                    b{
+                        margin-left: @u*10;
+                        color: @c1;
+                    }
+                }
+                .operation{
+                    color: #459ef2;
+                    cursor: pointer;
+                }
+            }
+            .scroll{
+                max-height: calc(~'100% - '@u*32+10);
+                height: 100%;
+                // margin-right: @u*-5;
+            }
+        }
+        
+    }
+    // 底部
+    .tree-bottom{
+        min-height: @u*60;
+        padding: @u*5 @u*4;
+        display: flex;
+        align-items: center;
+        flex-direction:row-reverse;
+        flex-wrap: wrap;
+        >.btn{
+            padding: 0 @u*10;
+            min-width: @u*120;
+            margin: @u*5;
+        }
+    }
+    // 一些组件--------------------------------
+    
+    // 联系人样式
+    .tree-children{
+        &-ul{
+            // 正常情况
+            &.type-normal{ 
+                >.tree-children-info{
+                    &:hover{
+                        &::after{
+                            content: '';
+                            position: absolute;
+                            background: #F5FBFF;
+                            right: 0;
+                            top: 0;
+                            width: @box-lw;
+                            height: 100%;
+                            z-index: 0;
+                        }
+                    }
+                }
+            }
+            // 不可选
+            &.type-immutable{
+                >.tree-children-info,>.tree-children-info{
+                    &::after{
+                        content: '';
+                        position: absolute;
+                        background: rgba(255, 255, 255, 0.5);
+                        right: 0;
+                        top: 0;
+                        width: @box-lw;
+                        height: 100%;
+                        z-index: 1;
+                        cursor: not-allowed;
+                    }
+                }
+            }
+            // 第一层
+            &.layer-0{
+                padding-left: @u*10;
+                >.tree-children-son{
+                    padding-left: 0;
+                }
+            }
+            
+        }
+        &-info{
+            height: @u*32;
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            padding-right: @u*(8+5+5);
+            >*{
+                position: relative;
+                z-index: 1;
+            }
+            &-front {
+                height:100%;
+                display: flex;
+                align-items: center;
+                i{
+                    padding: 0 @u*8 0 0;
+                    width: @u*22;
+                    height:100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    box-sizing: content-box;
+                    font-size: 20px;
+                    .tree-icon{
+                        width: 0.5em;
+                        height: 0.5em;
+                    }
+                }
+                .tree-avatar{
+                    margin-right:@u*8;
+                }
+            }
+            
+            &-name{
+                flex: 1;
+                // margin-left:  @box-p;
+                i{
+                    width: @u*20;
+                    height: @u*20;
+                }
+                small{
+                    color: @c3;
+                }
+            }
+        }
+        &-checkbox{
+            border-radius: 50%;
+            border: 1px solid #dae0e6;
+            height: @u*18;
+            width: @u*18;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4px;
+        }
+        &-son{
+            padding-left: @box-p*3;
+        }
+    }
+    // 选中人样式
+    .tree-selected{
+        &-ul{
+            >li{
+                display: flex;
+                align-items: center;
+                padding: 0 @u*18 0 @box-p;
+                height: @u*30;
+                transition: 0.2s;
+                &:hover{
+                    background-color: #F5FBFF;
+                }
+                >img{
+                    width: @u*22;
+                    height: @u*22;
+                    margin-right: @u*10;
+                }
+                >p{
+                    flex:1;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                >i{
+                    cursor: pointer;
+                    border-radius: 50%;
+                    border: 1px solid #dae0e6;
+                    height: @u*18;
+                    width: @u*18;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 4px;
+                    transition: 0.2s;
+                    &:hover{
+                        transform: scale(1.2);
+                        // border-color: #459ef2;
+                    }
+                }
+            }
+        }
+        
+    }
+}
