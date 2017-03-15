@@ -7,6 +7,7 @@ import {Component} from 'react';
 import _ from 'lodash';
 
 import Icon from 'component/public/icon';
+import Btn from 'component/public/btn';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
@@ -224,7 +225,7 @@ class Children {
  *
  */
 const noe = Symbol('noe');
-function getData({data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern = 'chenck'}) {
+function getData({data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern}) {
     let newTree = data;
     // paths.length &&
     _.forEach(data, (item, index) => {
@@ -460,6 +461,12 @@ export default class extends Component {
     componentWillReceiveProps(nextProps) {
         this.action = nextProps;
         if (this.uc != nextProps.uc) {
+            if (nextProps.type == 'radio') {
+                this.props.max = nextProps.max = 1;
+                this.props.isIntegration = nextProps.isIntegration = true;
+            } else {
+                this.props.type = nextProps.type = 'check';
+            }
             let {list, newTree} = getData({data: nextProps.tree, pattern: nextProps.type});
             let {selectedList = []} = nextProps.props;
             selectedList = _.map(selectedList, item => {
@@ -492,7 +499,8 @@ export default class extends Component {
             bottomBtn = [
                 {
                     txt: '确定',
-                    key: 'yes'
+                    key: 'yes',
+                    type: 'primary'
                 },
                 {
                     txt: '取消',
@@ -539,7 +547,7 @@ export default class extends Component {
 					</div>
 					<div className="tree-bottom">
                         {
-                            _.map(_.reverse(bottomBtn), (item) => <div className="btn btn-primary" onClick={ () => action.onClickBtn(item)}>{item.txt}</div>)
+                            _.map(_.reverse(bottomBtn), (item) => <Btn type={item.type} onClick={ () => action.onClickBtn(item)}>{item.txt}</Btn>)
                         }
 					</div>
 				</div>
@@ -634,7 +642,8 @@ export default class extends Component {
                     list,
                     pid: data.pid,
                     paths: data.treePath,
-                    idPath: data.treeIdPath
+                    idPath: data.treeIdPath,
+                    pattern: self.props.type
                 });
 
                 treePath.push('children');

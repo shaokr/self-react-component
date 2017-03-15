@@ -1,11 +1,9 @@
 /**
  * 电子公告主要框
  */
+import './scroll.less';
 import {Component} from 'react';
 
-import Icon from './icon';
-
-import _ from 'lodash';
 // import TreeList from './tree-list';
 
 // export default class extends Component {

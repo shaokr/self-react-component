@@ -1,9 +1,10 @@
 /**
  * 电子公告主要框
  */
+import './icon.less';
 import {Component} from 'react';
 
-export default class Icon extends Component {
+export default class extends Component {
     render() {
         let {style, icon} = this.props;
         return (
