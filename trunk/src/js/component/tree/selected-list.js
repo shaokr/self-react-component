@@ -3,7 +3,7 @@
  */
 import {Component} from 'react';
 
-import Icon from 'component/public/icon';
+import Icon from 'component/icon';
 import Avatar from './avatar';
 
 export default class SelectedList extends Component {

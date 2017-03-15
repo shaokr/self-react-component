@@ -6,8 +6,8 @@ import './index.less';
 import {Component} from 'react';
 import _ from 'lodash';
 
-import Icon from 'component/public/icon';
-import Btn from 'component/public/btn';
+import Icon from 'component/icon';
+import Btn from 'component/btn';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';

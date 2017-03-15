@@ -4,7 +4,7 @@
 import {Component} from 'react';
 import _ from 'lodash';
 
-import Scroll from 'component/public/scroll';
+import Scroll from 'component/scroll';
 
 import SelectedList from './selected-list';
 

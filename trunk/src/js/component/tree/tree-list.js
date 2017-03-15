@@ -4,7 +4,7 @@
 import {Component} from 'react';
 import classnames from 'classnames';
 
-import Icon from 'component/public/icon';
+import Icon from 'component/icon';
 import Avatar from './avatar';
 
 import _ from 'lodash';

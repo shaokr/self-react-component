@@ -3,7 +3,7 @@
  */
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import AppMain from 'component/tree/main';
+import AppMain from 'component/tree';
 
 let en4 = [
     {
