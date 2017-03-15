@@ -1,7 +1,7 @@
 /**
  * 电子公告主要框
  */
-import './scroll.less';
+import './index.less';
 import {Component} from 'react';
 
 // import TreeList from './tree-list';

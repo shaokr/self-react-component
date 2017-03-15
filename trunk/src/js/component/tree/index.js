@@ -7,7 +7,7 @@ import {Component} from 'react';
 import _ from 'lodash';
 
 import Icon from 'component/icon';
-import Btn from 'component/btn';
+import Button from 'component/button';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';

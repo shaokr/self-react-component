@@ -1,7 +1,7 @@
 /**
  * 电子公告主要框
  */
-import './icon.less';
+import './index.less';
 import {Component} from 'react';
 
 export default class extends Component {

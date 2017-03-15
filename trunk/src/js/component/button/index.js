@@ -1,7 +1,7 @@
 /**
  * 电子公告主要框
  */
-import './btn.less';
+import './index.less';
 import {Component} from 'react';
 import classnames from 'classnames';
 
