@@ -1,22 +1,21 @@
 @import '~global/var.less';
+@import '~global/mixins.less';
 
-.ccwork {
-    &-btn{
-        // width:100%;
-        min-width:@u*60;
-        min-height:@u*30;
-        line-height:@u*30;
-        text-align:center;
-        font-size:14px;
-        border-radius:@u*4;
-        border:0 none;
-        cursor: pointer;
-        outline: none;
-        user-select: none;
-        transition: all .3s cubic-bezier(.645,.045,.355,1);
-    }
+.@{prefix}-button {
+    // width:100%;
+    min-width:@u*60;
+    min-height:@u*30;
+    line-height:@u*30;
+    text-align:center;
+    font-size:14px;
+    border-radius:@u*4;
+    border:0 none;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    transition: all .3s cubic-bezier(.645,.045,.355,1);
 
-    &-btn-primary{
+    &-primary{
         background-color:#459ef2;
         color:#fff;
         &:hover{
@@ -27,13 +26,13 @@
         }
     }
     // 不可用按钮
-    &-btn-sidabled{
+    &-sidabled{
         background-color:#abb8c6;
         color:#fff;
         cursor:default;
     }
     // 默认按钮
-    &-btn-default{
+    &-default{
         border:1px solid #dae0e6;
         color:#32373c;
         background-color:#fff;

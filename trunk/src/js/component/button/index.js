@@ -1,13 +1,13 @@
 /**
- * 电子公告主要框
+ * 按钮
  */
 import './index.less';
 import {Component} from 'react';
 import classnames from 'classnames';
 
-// import Icon from './icon';
+import {prefix} from 'config/const';
 
-// import _ from 'lodash';
+let _prefix = `${prefix}-button`;
 
 export default class extends Component {
     render() {
@@ -28,9 +28,9 @@ export default class extends Component {
             classNmae
         } = this.props;
         return classnames([
-            'ccwork-btn', classNmae,
+            _prefix, classNmae,
             {
-                [`ccwork-btn-${type}`]: type
+                [`${_prefix}-${type}`]: type
             }
         ]);
     }

@@ -5,7 +5,7 @@ import {Component} from 'react';
 import _ from 'lodash';
 
 import Icon from 'component/icon';
-import Scroll from 'component/icon';
+import Scroll from 'component/scroll';
 
 import TreeList from './tree-list';
 import Avatar from './avatar';

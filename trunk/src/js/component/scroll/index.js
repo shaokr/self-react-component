@@ -1,5 +1,5 @@
 /**
- * 电子公告主要框
+ * 滚动条
  */
 import './index.less';
 import {Component} from 'react';

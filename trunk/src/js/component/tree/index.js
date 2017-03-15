@@ -1,5 +1,5 @@
 /**
- * 电子公告主要框
+ * 选人控件
  */
 import './index.less';
 
@@ -516,41 +516,44 @@ export default class extends Component {
         this.oldSelectedData = selectedData;
         return (
 			<div className="tree-fixed" style={treeFixed}>
-				<div className="tree-main">
-					<Header title={title} />
+				{
+                    show &&
+                    <div className="tree-main">
+                        <Header title={title} />
 
-					<div className="tree-box">
+                        <div className="tree-box">
 
-						<TreeLeft
-                            store={store} // 共用的一些数据
-                            action={action} // 所有操作
+                            <TreeLeft
+                                store={store} // 共用的一些数据
+                                action={action} // 所有操作
 
-                            searchShow={searchShow}
-                            searchPlaceholder={searchPlaceholder}
+                                searchShow={searchShow}
+                                searchPlaceholder={searchPlaceholder}
 
-                            treeTitle={treeTitle}
-                            tree={this.state.tree} // 树
-                        />
+                                treeTitle={treeTitle}
+                                tree={this.state.tree} // 树
+                            />
 
-                        <TreeRight
-                            store={store} // 共用的一些数据
-                            action={action} // 所有操作
+                            <TreeRight
+                                store={store} // 共用的一些数据
+                                action={action} // 所有操作
 
-                            max={max} // 最大
-                            selectedTitle={selectedTitle} // 标题
-                            selected={this.state.selected} // 当前选中
-                            isIntegration={isIntegration} // 是否整合
-                            selectedData={selectedData}
+                                max={max} // 最大
+                                selectedTitle={selectedTitle} // 标题
+                                selected={this.state.selected} // 当前选中
+                                isIntegration={isIntegration} // 是否整合
+                                selectedData={selectedData}
 
-                        />
+                            />
 
-					</div>
-					<div className="tree-bottom">
-                        {
-                            _.map(_.reverse(bottomBtn), (item) => <Btn type={item.type} onClick={ () => action.onClickBtn(item)}>{item.txt}</Btn>)
-                        }
-					</div>
-				</div>
+                        </div>
+                        <div className="tree-bottom">
+                            {
+                                _.map(_.reverse(bottomBtn), (item) => <Button type={item.type} onClick={ () => action.onClickBtn(item)}>{item.txt}</Button>)
+                            }
+                        </div>
+                    </div>
+                }
 			</div>
         );
     }
