@@ -11,21 +11,21 @@ import _ from 'lodash';
 
 let iconConfigList = {
     company: { // 公司
-        key: 'icon-gongsi',
+        key: 'gongsi',
         style: {
-            'font-size': '44px'
+            'fontSize': '44px'
         }
     },
     you: { // 向右
-        key: 'icon-jiaobiaoyou',
+        key: 'jiaobiaoyou',
         style: {
-            'font-size': '20px'
+            'fontSize': '20px'
         }
     },
     xia: { // 向下
-        key: 'icon-jiaobiaoxia',
+        key: 'jiaobiaoxia',
         style: {
-            'font-size': '20px'
+            'fontSize': '20px'
         }
     }
 };
@@ -37,7 +37,7 @@ class ItemIcon extends Component {
         return (
             <i onClick={onClick} style={icon.style}>
                 {
-                    icon && <Icon icon={icon.key}/>
+                    icon && <Icon type={icon.key}/>
                 }
             </i>
         );
@@ -104,11 +104,11 @@ export default class TreeList extends Component {
 					<div className="tree-children-checkbox">
 						{
 							// 全选
-							_item.typeChecked == 1 && <Icon icon="icon-gouxuan"/>
+							_item.typeChecked == 1 && <Icon type="gouxuan"/>
 						}
 						{
 							// 部分选中
-							_item.typeChecked == 2 && <Icon icon="icon-fuxuan"/>
+							_item.typeChecked == 2 && <Icon type="fuxuan"/>
 						}
 
 						{

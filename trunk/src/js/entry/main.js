@@ -5,6 +5,8 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import AppMain from 'component/tree';
 
+import {Component} from 'react';
+
 let en4 = [
     {
         name: 'name20',
@@ -86,23 +88,13 @@ let en = [
         name: '没有节操公司',
         key: 'sadas',
         isExpand: true,
-        icon: 'company',
-        children: en2
+        icon: 'company'
     },
     {
-        name: '没有节操公司2',
-        key: '87',
-        isExpand: false,
-        // icon: 'company',
-        children: [
-            {
-                name: '没有节操公司\死吧2',
-                key: '872',
-                isExpand: true,
-                icon: 'company',
-                children: en2
-            }
-        ]
+        icon: 'company',
+        isExpand: true,
+        key: '0',
+        name: '可我看外网'
     }
 ];
 // let lost = [1, 'children', 0];
@@ -124,7 +116,7 @@ let _onExpand = (item, fn) => {
             key: '' + i,
             icon: 'company',
             order: '',
-            
+
             isChangeChecked: false,
             checked: false,
             children: []
@@ -149,16 +141,40 @@ let _onExpand = (item, fn) => {
     ]);
 };
 let _onClickBtn = (...res) => {
-    console.log(res)
+    console.log(res);
 };
-ReactDOM.render(
-<AppMain
-    tree={en}
-    // isIntegration={true}
-    onExpand={_onExpand}
-    // searchShow = {false}
-    onClickBtn={_onClickBtn}
-    // type="radio"
-    // max={3}
-/>,
-document.getElementById('app-main'));
+console.log(AppMain);
+class DDiv extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            show: false
+        };
+    }
+    render() {
+        return (
+            <div>
+                <button onClick={this._onClick.bind(this)}>显示</button>
+                <AppMain
+                    title="隐藏部门/成员"
+                    show={this.state.show}
+                    tree={null}
+                    // isIntegration={true}
+                    onExpand={_onExpand}
+                    // searchShow = {false}
+                    onClickBtn={_onClickBtn}
+                    // type="radio"
+                    // max={3}
+                />
+                
+            </div>
+        );
+    }
+    _onClick() {
+        this.setState({
+            show: !this.state.show
+        });
+    }
+}
+
+ReactDOM.render(<DDiv/>, document.getElementById('app-main'));

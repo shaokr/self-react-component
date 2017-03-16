@@ -3,14 +3,24 @@
  */
 import './index.less';
 import {Component} from 'react';
+import classnames from 'classnames';
+
+import {prefix} from 'config/const';
+
+let _prefix = `${prefix}-icon`;
 
 export default class extends Component {
     render() {
-        let {style, icon} = this.props;
+        let {style, type} = this.props;
         return (
-			<svg className="ccwork-icon" aria-hidden="true" style={style}>
-				<use xlinkHref={`#${icon}`}></use>
+			<svg className={this.css} aria-hidden="true" style={style}>
+				<use xlinkHref={`#icon-${type}`}></use>
 			</svg>
         );
+    }
+    get css() {
+        return classnames([
+            _prefix, this.props.className
+        ]);
     }
 }

@@ -226,7 +226,7 @@ class Children {
  */
 const noe = Symbol('noe');
 function getData({data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern}) {
-    let newTree = data;
+    let newTree = data || [];
     // paths.length &&
     _.forEach(data, (item, index) => {
         if (item) {
@@ -435,16 +435,17 @@ function setUc(list, key, isCache = {}) {
 export default class extends Component {
     constructor(props) {
         super(props);
+        let {max, type, isIntegration = false, tree, selectedList = []} = props;
         // 模式
-        if (props.type == 'radio') {
-            this.props.max = props.max = 1;
-            this.props.isIntegration = props.isIntegration = true;
+        if (type == 'radio') {
+            max = 1;
+            isIntegration = true;
         } else {
-            this.props.type = props.type = 'check';
+            type = 'check';
         }
         // 获取数据
-        let {list, newTree} = getData({data: props.tree, pattern: props.type});
-        let {selectedList = []} = props;
+        let {list, newTree} = getData({data: tree, pattern: type});
+
         selectedList = _.map(selectedList, item => {
             return [item.key, item];
         });
@@ -454,30 +455,44 @@ export default class extends Component {
             selected: this.getSelected(list, new Map(selectedList))
         };
         this.uc = props.uc;
-        // let i = 7777;
+
         this.action = props;
+
+        this.config = {
+            max,
+            isIntegration
+        };
     }
 
     componentWillReceiveProps(nextProps) {
         this.action = nextProps;
-        if (this.uc != nextProps.uc) {
+        if (this.uc != nextProps.uc || !this.props.tree) {
+            let {max, type, isIntegration = false, tree, selectedList = []} = nextProps;
+
             if (nextProps.type == 'radio') {
-                this.props.max = nextProps.max = 1;
-                this.props.isIntegration = nextProps.isIntegration = true;
+                max = 1;
+                isIntegration = true;
             } else {
-                this.props.type = nextProps.type = 'check';
+                type = 'check';
             }
-            let {list, newTree} = getData({data: nextProps.tree, pattern: nextProps.type});
-            let {selectedList = []} = nextProps.props;
+            let {list, newTree} = getData({data: tree, pattern: type});
+
             selectedList = _.map(selectedList, item => {
                 return [item.key, item];
             });
+
             this.uc == nextProps.uc;
+
             this.setState({
                 list,
                 tree: newTree,
                 selected: this.getSelected(list, new Map(selectedList))
             });
+
+            this.config = {
+                max,
+                isIntegration
+            };
         };
     }
 
@@ -493,8 +508,6 @@ export default class extends Component {
             // isIntegration = false,
             treeTitle = '选择',
             selectedTitle = '已选',
-            max = 0,
-            isIntegration = false,
 
             bottomBtn = [
                 {
@@ -509,9 +522,14 @@ export default class extends Component {
             ]
 
         } = this.props;
+        let {
+            max,
+            isIntegration
+        } = this.config;
         let treeFixed = {
             display: show ? '' : 'none'
         };
+
         let selectedData = this.selectedData;
         this.oldSelectedData = selectedData;
         return (

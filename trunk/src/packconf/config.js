@@ -20,7 +20,7 @@ function Last({data, build, path}) {
     if (_copyList) {
         data.plugins.push(_copyList);
     }
-    data.output.library = 'Ccwork[name]'; // 输出到全局的名称
+    data.output.library = 'ZY[name]'; // 输出到全局的名称
     data.output.libraryTarget = 'umd'; // 输出方式
 
     return data;

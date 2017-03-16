@@ -68,7 +68,7 @@ class Selected extends Component {
         } = this.props;
 		return (
             <div className="tree-box-search">
-                <i><Icon icon="icon-sousuo"/></i>
+                <i><Icon type="sousuo"/></i>
                 <input type="text" placeholder={placeholder} onChange={onChange} />
                 {
                     !!selectedList.length && <Scroll className="tree-box-search-list" >
@@ -88,7 +88,7 @@ class Selected extends Component {
                                                 <p>{item.p2}</p>
                                             </div>
                                             <i>
-                                                {selected.has(key.toString()) && <Icon icon="icon-gouxuan"/> }
+                                                {selected.has(key.toString()) && <Icon type="gouxuan"/> }
                                             </i>
                                         </li>
                                     )

@@ -20,7 +20,7 @@ export default class SelectedList extends Component {
 				{
 					data.isDel &&
 					<i onClick={ () => action.hasSelectedItem(data) }>
-						<Icon icon="icon-xuanzequxiao"/>
+						<Icon type="xuanzequxiao"/>
 					</i>
 				}
 			</li>
