@@ -225,7 +225,7 @@ class Children {
  *
  */
 const noe = Symbol('noe');
-function getData({data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern}) {
+function getData({data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern, selectedList }) {
     let newTree = data || [];
     // paths.length &&
     _.forEach(data, (item, index) => {
@@ -233,7 +233,10 @@ function getData({data, list = {}, pid = noe, paths = [], idPath = [], unknownLi
             let _path = _.assign([], paths);
             let _idPath = _.assign([], idPath);
             let {key, children} = item;
-
+            // 判断是否存在选中列表中
+            if (selectedList && selectedList.has(key)) {
+                item.checked = true;
+            }
             _path.push(index); // 设置路径
             _idPath.push(key); // 设置key的路径
 
@@ -443,29 +446,28 @@ export default class extends Component {
         } else {
             type = 'check';
         }
+        selectedList = _.map(selectedList, item => [item.key, item]);
+        selectedList = new Map(selectedList);
         // 获取数据
-        let {list, newTree} = getData({data: tree, pattern: type});
+        let {list, newTree} = getData({data: tree, pattern: type, selectedList});
 
-        selectedList = _.map(selectedList, item => {
-            return [item.key, item];
-        });
         this.state = {
             list,
             tree: newTree,
-            selected: this.getSelected(list, new Map(selectedList))
+            selected: this.getSelected(list, selectedList)
         };
         this.uc = props.uc;
 
-        this.action = props;
-
         this.config = {
             max,
+            type,
             isIntegration
         };
+
+        this.action = props;
     }
 
     componentWillReceiveProps(nextProps) {
-        this.action = nextProps;
         if (this.uc != nextProps.uc || !this.props.tree) {
             let {max, type, isIntegration = false, tree, selectedList = []} = nextProps;
 
@@ -475,24 +477,26 @@ export default class extends Component {
             } else {
                 type = 'check';
             }
-            let {list, newTree} = getData({data: tree, pattern: type});
+            selectedList = _.map(selectedList, item => [item.key, item]);
+            selectedList = new Map(selectedList);
 
-            selectedList = _.map(selectedList, item => {
-                return [item.key, item];
-            });
+            let {list, newTree} = getData({data: tree, pattern: type, selectedList});
 
             this.uc == nextProps.uc;
 
             this.setState({
                 list,
                 tree: newTree,
-                selected: this.getSelected(list, new Map(selectedList))
+                selected: this.getSelected(list, selectedList)
             });
 
             this.config = {
                 max,
+                type,
                 isIntegration
             };
+
+            this.action = nextProps;
         };
     }
 
@@ -529,7 +533,6 @@ export default class extends Component {
         let treeFixed = {
             display: show ? '' : 'none'
         };
-
         let selectedData = this.selectedData;
         this.oldSelectedData = selectedData;
         return (
@@ -585,7 +588,7 @@ export default class extends Component {
     }
     // 操作
     set action(props = this.props) {
-        let {type} = props; // 'check'// 模式 radio:单选 check:多选
+        let {type} = this.config; // 'check'// 模式 radio:单选 check:多选
         let onCheck = {
             check: this._onCheck.bind(this, props.onCheck),
             radio: this._onCheckRadio.bind(this, props.onCheck)
@@ -664,7 +667,7 @@ export default class extends Component {
                     pid: data.pid,
                     paths: data.treePath,
                     idPath: data.treeIdPath,
-                    pattern: self.props.type
+                    pattern: self.config.type
                 });
 
                 treePath.push('children');
@@ -839,6 +842,7 @@ export default class extends Component {
     get selectedList() {
         let {selected, list} = this.state;
         let {isIntegration} = this.props;
+        console.log(selected)
         // item.isSelected
         let lists = [];
         _.forEach([...selected], ([, item]) => {

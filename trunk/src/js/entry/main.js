@@ -157,8 +157,24 @@ class DDiv extends Component {
                 <button onClick={this._onClick.bind(this)}>显示</button>
                 <AppMain
                     title="隐藏部门/成员"
-                    show={this.state.show}
-                    tree={null}
+                    show={true}
+                    searchShow={false}
+                    isIntegration = {true}
+                    selectedList={[
+                        {
+                            name:'sdasdas',
+                            key:111
+                        },
+                        {
+                            name:'没有2',
+                            key:'sadas2234'
+                        },
+                        {
+                            name:'没有',
+                            key:'sadas'
+                        },
+                    ]}
+                    tree={en}
                     // isIntegration={true}
                     onExpand={_onExpand}
                     // searchShow = {false}
