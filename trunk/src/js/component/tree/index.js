@@ -446,11 +446,11 @@ export default class extends Component {
         } else {
             type = 'check';
         }
-        selectedList = _.map(selectedList, item => [item.key, item]);
+        selectedList = _.map(selectedList, item => [item.key, {...item, isDel: true}]);
         selectedList = new Map(selectedList);
         // 获取数据
         let {list, newTree} = getData({data: tree, pattern: type, selectedList});
-
+        
         this.state = {
             list,
             tree: newTree,
@@ -477,7 +477,7 @@ export default class extends Component {
             } else {
                 type = 'check';
             }
-            selectedList = _.map(selectedList, item => [item.key, item]);
+            selectedList = _.map(selectedList, item => [item.key, {...item, isDel: true}]);
             selectedList = new Map(selectedList);
 
             let {list, newTree} = getData({data: tree, pattern: type, selectedList});
@@ -667,7 +667,8 @@ export default class extends Component {
                     pid: data.pid,
                     paths: data.treePath,
                     idPath: data.treeIdPath,
-                    pattern: self.config.type
+                    pattern: self.config.type,
+                    selectedList: selected
                 });
 
                 treePath.push('children');
@@ -797,6 +798,11 @@ export default class extends Component {
                         avatar: item.avatar, // 头像
                         isDel: item.isChangeChecked // 是否可以删除
                     });
+                } else {
+                    selected.set(key, {
+                        ...selected.get(key),
+                        isDel: item.isChangeChecked // 是否可以删除
+                    });
                 }
             } else {
                 if (_has) {
@@ -842,7 +848,6 @@ export default class extends Component {
     get selectedList() {
         let {selected, list} = this.state;
         let {isIntegration} = this.props;
-        console.log(selected)
         // item.isSelected
         let lists = [];
         _.forEach([...selected], ([, item]) => {

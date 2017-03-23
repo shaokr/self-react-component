@@ -125,7 +125,7 @@ let _onExpand = (item, fn) => {
             name: 'name' + ++i,
             key: '' + i,
             icon: 'company',
-            isChildren: true,
+            // isChildren: true,
             order: '',
             children: []
         },
@@ -133,7 +133,7 @@ let _onExpand = (item, fn) => {
             name: 'name' + ++i,
             key: '' + i,
             order: '',
-            // isChangeChecked: false,
+            isChangeChecked: false,
             checked: true,
             avatar: './1.png',
             children: []
