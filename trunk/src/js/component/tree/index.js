@@ -438,7 +438,7 @@ function setUc(list, key, isCache = {}) {
 export default class extends Component {
     constructor(props) {
         super(props);
-        let {max, type, isIntegration = false, tree, selectedList = []} = props;
+        let {max, type, isIntegration = false, tree, selectedList = []} = _.cloneDeep(props);
         // 模式
         if (type == 'radio') {
             max = 1;
@@ -469,7 +469,7 @@ export default class extends Component {
 
     componentWillReceiveProps(nextProps) {
         if (this.uc != nextProps.uc || !this.props.tree) {
-            let {max, type, isIntegration = false, tree, selectedList = []} = nextProps;
+            let {max, type, isIntegration = false, tree, selectedList = []} = _.cloneDeep(nextProps);
 
             if (nextProps.type == 'radio') {
                 max = 1;
