@@ -13,7 +13,8 @@ let mainData = {
 
 let mapListObj = { // 自定义map和依赖关系,可覆盖cdn中的配置(注释的是例子
     map: {
-        'mainCss': mainData.css
+        'mainCss': mainData.css,
+        'treeIcon': `//at.alicdn.com/t/font_hfe143sf87ojemi.js`
         // 'ReactDom': `${cdnHost}js/react/15.4.0/react-dom.min.js`,
     },
     meta: { // map的依赖关系
@@ -27,7 +28,7 @@ let mainListObj = { // 载入文件的配置
     [mainData.js]: { // 入口文件
         ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['mainCss', 'React', 'ReactRouter', 'mobx', 'mobxReact']
+        deps: ['mainCss', 'React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']
     }
 };
 

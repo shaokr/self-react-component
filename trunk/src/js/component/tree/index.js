@@ -4,6 +4,7 @@
 import './index.less';
 
 import {Component} from 'react';
+import classnames from 'classnames';
 import _ from 'lodash';
 
 import Icon from 'component/icon';
@@ -435,7 +436,7 @@ function setUc(list, key, isCache = {}) {
  * ----事件---
  * onCheck //
  */
-export default class extends Component {
+export default class Tree extends Component {
     constructor(props) {
         super(props);
         let {max, type, isIntegration = false, tree, selectedList = []} = _.cloneDeep(props);
@@ -450,7 +451,7 @@ export default class extends Component {
         selectedList = new Map(selectedList);
         // 获取数据
         let {list, newTree} = getData({data: tree, pattern: type, selectedList});
-        
+
         this.state = {
             list,
             tree: newTree,
@@ -503,40 +504,28 @@ export default class extends Component {
     render() {
         let {action, store} = this;
         let {
-            show = true,
+            show,
             // 标题设置
-            title = '',
+            title,
             // 搜索设置
-            searchShow = true,
-            searchPlaceholder = '搜索',
+            searchShow,
+            searchPlaceholder,
             // isIntegration = false,
-            treeTitle = '选择',
-            selectedTitle = '已选',
+            treeTitle,
+            selectedTitle,
 
-            bottomBtn = [
-                {
-                    txt: '确定',
-                    key: 'yes',
-                    type: 'primary'
-                },
-                {
-                    txt: '取消',
-                    key: 'no'
-                }
-            ]
-
+            bottomBtn
         } = this.props;
         let {
             max,
             isIntegration
         } = this.config;
-        let treeFixed = {
-            display: show ? '' : 'none'
-        };
-        let selectedData = this.selectedData;
-        this.oldSelectedData = selectedData;
+
+        let selectedData = this.selectedData; // 获取选中项目的数据
+        this.oldSelectedData = selectedData; // 保持为老选中项目数据
+        console.log(bottomBtn)
         return (
-			<div className="tree-fixed" style={treeFixed}>
+			<div className={this.treeClass} style={this.treeStyle}>
 				{
                     show &&
                     <div className="tree-main">
@@ -570,13 +559,33 @@ export default class extends Component {
                         </div>
                         <div className="tree-bottom">
                             {
-                                _.map(_.reverse(bottomBtn), (item) => <Button type={item.type} onClick={ () => action.onClickBtn(item)}>{item.txt}</Button>)
+                                _.map(_.reverse(_.clone(bottomBtn)), item => <Button type={item.type} onClick={ action.onClickBtn.bind(this, item)}>{item.txt}</Button>)
                             }
                         </div>
                     </div>
                 }
 			</div>
         );
+    }
+    // 获取主要tree外壳的样式
+    get treeStyle() {
+        let {
+            show,
+            zIndex
+        } = this.props;
+        return {
+            display: show ? '' : 'none',
+            zIndex: zIndex >> 0
+        };
+    }
+    // 获取主要tree外壳的class属性
+    get treeClass() {
+        let {
+            isAlert
+        } = this.props;
+        return classnames({
+            'tree-fixed': isAlert
+        });
     }
     // 共用数据
     get store() {
@@ -890,3 +899,29 @@ export default class extends Component {
         return num;
     }
 }
+
+Tree.defaultProps = {
+    type: 'check',
+    show: true,
+    isAlert: true,
+    // 标题设置
+    title: '',
+    // 搜索设置
+    searchShow: true,
+    searchPlaceholder: '搜索',
+    zIndex: 3,
+    // isIntegration = false,
+    treeTitle: '选择',
+    selectedTitle: '已选',
+    bottomBtn: [
+        {
+            txt: '确定',
+            key: 'yes',
+            type: 'primary'
+        },
+        {
+            txt: '取消',
+            key: 'no'
+        }
+    ]
+};

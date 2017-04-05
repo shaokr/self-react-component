@@ -162,18 +162,19 @@ class DDiv extends Component {
                     isIntegration = {true}
                     selectedList={[
                         {
-                            name:'sdasdas',
-                            key:111
+                            name: 'sdasdas',
+                            key: 111
                         },
                         {
-                            name:'没有2',
-                            key:'sadas2234'
+                            name: '没有2',
+                            key: 'sadas2234'
                         },
                         {
-                            name:'没有',
-                            key:'sadas'
-                        },
+                            name: '没有',
+                            key: 'sadas'
+                        }
                     ]}
+                    isAlert={false}
                     tree={en}
                     // isIntegration={true}
                     onExpand={_onExpand}
