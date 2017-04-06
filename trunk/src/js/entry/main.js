@@ -158,7 +158,7 @@ class DDiv extends Component {
                 <AppMain
                     title="隐藏部门/成员"
                     show={true}
-                    searchShow={false}
+                    // searchShow={false}
                     isIntegration = {true}
                     selectedList={[
                         {

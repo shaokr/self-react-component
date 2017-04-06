@@ -226,7 +226,7 @@ class Children {
  *
  */
 const noe = Symbol('noe');
-function getData({data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern, selectedList }) {
+function getData({ data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern, selectedList }) {
     let newTree = data || [];
     // paths.length &&
     _.forEach(data, (item, index) => {
@@ -278,7 +278,6 @@ function setChecked(list, keyList, checked) {
     _.forEach(_.uniq(keyList), (item) => {
         let data = downSetChecked(list, item, checked);
         list = data.list;
-        // console.log(data);
 		/**
 		 * 先循环获取数据
 		 * 这个数据是从最高层开始排序
@@ -291,6 +290,7 @@ function setChecked(list, keyList, checked) {
     });
 	// 排序
     _list = _.orderBy(_.toPairs(_list), 1);
+    
 	// 设置父类勾选状态和勾选
     return upTypeChecked(list, _list);
 }
@@ -361,7 +361,7 @@ function setTypeChecked(list, key, isCache = {}) {
                 let _item = list[key];
                 // 对不能进行更改设置并且未勾选的做无视处理
                 if (!_item.isChangeChecked) {
-                    _item.checked && (_typeChecked = 1);
+                    _item.checked && _typeChecked === -1 && (_typeChecked = 1);
                 } else {
 					// let typeChecked = await isCache.typeChecked;
 					// 判断如果当前状态为2时直接返回 直到为0或者1
@@ -380,7 +380,7 @@ function setTypeChecked(list, key, isCache = {}) {
                 return false;
             }
         });
-
+        console.log(_typeChecked);
         if (_typeChecked != -1 && _typeChecked != item.typeChecked) {
             item.typeChecked = _typeChecked;
             item.checked = typeCheckedConfig[_typeChecked];
@@ -447,7 +447,7 @@ export default class Tree extends Component {
         } else {
             type = 'check';
         }
-        selectedList = _.map(selectedList, item => [item.key, {...item, isDel: true}]);
+        selectedList = _.map(selectedList, item => [item.key.toString(), {...item, isDel: true}]);
         selectedList = new Map(selectedList);
         // 获取数据
         let {list, newTree} = getData({data: tree, pattern: type, selectedList});
@@ -478,7 +478,7 @@ export default class Tree extends Component {
             } else {
                 type = 'check';
             }
-            selectedList = _.map(selectedList, item => [item.key, {...item, isDel: true}]);
+            selectedList = _.map(selectedList, item => [item.key.toString(), {...item, isDel: true}]);
             selectedList = new Map(selectedList);
 
             let {list, newTree} = getData({data: tree, pattern: type, selectedList});
@@ -523,7 +523,7 @@ export default class Tree extends Component {
 
         let selectedData = this.selectedData; // 获取选中项目的数据
         this.oldSelectedData = selectedData; // 保持为老选中项目数据
-        console.log(bottomBtn)
+
         return (
 			<div className={this.treeClass} style={this.treeStyle}>
 				{
@@ -621,6 +621,7 @@ export default class Tree extends Component {
     _onAllClear() {
         let {list, selected} = this.state;
         let keyList = _.map([...selected], ([, {key, isDel}]) => {
+            key = key.toString();
             let item = list[key];
             // 是否存在于本地数据
             if (item) {
@@ -679,7 +680,6 @@ export default class Tree extends Component {
                     pattern: self.config.type,
                     selectedList: selected
                 });
-
                 treePath.push('children');
 
                 _.set(tree, treePath, _.get(newTree, data.l).children);

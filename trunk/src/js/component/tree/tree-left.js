@@ -11,62 +11,63 @@ import TreeList from './tree-list';
 import Avatar from './avatar';
 
 class Selected extends Component {
-	render() {
+    render() {
         let {
-            store:{selected},
-            action:{hasSelectedItem},
+            store: {selected},
+            action: {hasSelectedItem},
             placeholder,
             onChange,
             selectedList = [
-                // {
-                //     name:'wwww',
-                //     key:20,
-                //     p1:1212,
-                //     p2:'12124123123sdiugfiusghfiuwgefuigweiufgiuwgfiusebivgbsduidvuyaqvfuiwvefihavfyaqvfiubaesoeugvb'
-                // },
-                // {
-                //     name:'hdasd',
-                //     key:65,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // },
-                // {
-                //     name:'sdasd',
-                //     key:22,
-                // }
+                {
+                    name: '金屌',
+                    key: 20,
+                    p1: 'UI射鸡死',
+                    p2: '技术部>XXXX>UI'
+                },
+                {
+                    name: 'hdasd',
+                    key: 65,
+                    p1: 1212
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                },
+                {
+                    name: 'sdasd',
+                    key: 22
+                }
             ]
         } = this.props;
-		return (
+        return (
             <div className="tree-box-search">
                 <i><Icon type="sousuo"/></i>
                 <input type="text" placeholder={placeholder} onChange={onChange} />
@@ -74,9 +75,9 @@ class Selected extends Component {
                     !!selectedList.length && <Scroll className="tree-box-search-list" >
                         <ul>
                             {
-                                _.map(selectedList , (item) =>{ 
+                                _.map(selectedList, (item) => {
                                     let {key} = item;
-                                    if(typeof key === 'undefined'){
+                                    if (typeof key === 'undefined') {
                                         return;
                                     }
                                     return (
@@ -91,15 +92,15 @@ class Selected extends Component {
                                                 {selected.has(key.toString()) && <Icon type="gouxuan"/> }
                                             </i>
                                         </li>
-                                    )
+                                    );
                                 })
                             }
                         </ul>
                     </Scroll>
                 }
             </div>
-        );
-	}
+    );
+    }
 }
 
 export default class extends Component {
@@ -109,7 +110,7 @@ export default class extends Component {
 			<div className="tree-box-left">
 				<div className="tree-box-left-top">
 					{
-                        searchShow && <Selected  placeholder={searchPlaceholder} onChange={action.onSearchChange} store={store} action={action} />
+                        searchShow && <Selected placeholder={searchPlaceholder} onChange={action.onSearchChange} store={store} action={action} />
                     }
 					<p>{treeTitle}</p>
 				</div>
