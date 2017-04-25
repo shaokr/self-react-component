@@ -60,7 +60,7 @@ const Front = (props) => {
     return (
         <div className="tree-children-info-front">
             {
-                isI ? <ItemIcon {...props} /> : <Avatar name={data.name[0]} avatar={data.avatar} />
+                isI ? <ItemIcon {...props} /> : <Avatar name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
             }
         </div>
     );
@@ -70,7 +70,10 @@ export default class TreeList extends Component {
     // statics
     constructor(props) {
         super(props);
-        this.treeUc = '';
+        let {item} = this;
+
+        this.treeUc = item.treeUc;
+        this._onExpand = this._onExpand.bind(this);
     }
     shouldComponentUpdate(nextProps) {
         let {data: {key: nextKey}, store: {list: nextList}} = nextProps;
@@ -78,54 +81,64 @@ export default class TreeList extends Component {
         if (this.treeUc == nextList[nextKey].treeUc) {
             return false;
         } else {
+            this.treeUc = nextList[nextKey].treeUc;
             return true;
         }
     }
     render() {
         let {data, action, store} = this.props;
-        let {children, key} = data;
-        let _item = store.list[key];
-        this.treeUc = _item.treeUc; // 设置当前uc
+        let {item} = this;
 
-        let css = classnames([
-            'tree-children-ul', (iconConfigList[_item.icon] || {}).css, `layer-${_item.self.treeIdPath.length - 1}`,
-            {
-                'type-immutable': !_item.isChangeChecked, // 不可变化
-                'type-normal': _item.isChangeChecked
-            }
-        ]);
         return (
-			<div className={css}>
-				<div className="tree-children-info" onClick={() => _item.isChangeChecked && action.onCheck(data)}>
-                    <Front onClick={this._onExpand.bind(this)} data={_item} />
+			<div className={this.css}>
+				<div className="tree-children-info" onClick={() => item.isChangeChecked && action.onCheck(data)}>
+                    <Front onClick={this._onExpand} data={item} />
 
-					<div className="tree-children-info-name">{data.name}<small>{_item.small}</small></div>
+					<div className="tree-children-info-name">
+                        {data.name}
+                        <small>{item.small}</small>
+                    </div>
 
 					<div className="tree-children-checkbox">
-						{
-							// 全选
-							_item.typeChecked == 1 && <Icon type="gouxuan"/>
-						}
-						{
-							// 部分选中
-							_item.typeChecked == 2 && <Icon type="fuxuan"/>
-						}
-
-						{
-							// <input type="checkbox" checked={_item.checked} onChange={action.onCheck.bind(this, data)}/>
-						}
+						{this.checked}
 					</div>
 				</div>
 				{
-					_item.isChildren && _item.expand &&
+					item.isChildren && item.expand &&
 					<div className="tree-children-son">
 						{
-							_.map(children, item => <TreeList data={item} store = {store} action={action} />)
+							_.map(data.children, val => <TreeList data={val} store = {store} action={action} />)
 						}
 					</div>
 				}
 			</div>
         );
+    }
+    get item() {
+        let {data: {key}, store: {list}} = this.props;
+        return list[key];
+    }
+    get css() {
+        let {item} = this;
+
+        return classnames([
+            'tree-children-ul', (iconConfigList[item.icon] || {}).css, `layer-${item.self.treeIdPath.length - 1}`,
+            {
+                'type-immutable': !item.isChangeChecked, // 不可变化
+                'type-normal': item.isChangeChecked
+            }
+        ]);
+    }
+    get checked() {
+        let {item} = this;
+        if (item.isCheckedShow) {
+            if (item.typeChecked == 1) {
+                return <Icon type="gouxuan"/>;
+            }
+            if (item.typeChecked == 2) {
+                return <Icon type="fuxuan"/>;
+            }
+        }
     }
     _onExpand(e) {
         let {data, action, store} = this.props;

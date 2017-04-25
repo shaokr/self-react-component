@@ -3,7 +3,7 @@
  */
 import './index.less';
 
-import {Component} from 'react';
+import { Component } from 'react';
 import classnames from 'classnames';
 import _ from 'lodash';
 
@@ -14,16 +14,14 @@ import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
 
 // 头部
-const Header = ({title}) => {
-    return (
-		<header className="tree-header">
-			<div className="header-left">
-				<i className="icon-chevron-thin-left"></i>
+const Header = ({ title }) => (
+    <header className="tree-header">
+    <div className="header-left">
+    <i className="icon-chevron-thin-left" />
 			</div>
-			<h2>{title}</h2>
+    <h2>{title}</h2>
 		</header>
     );
-};
 
 /** {
 	key //
@@ -65,7 +63,7 @@ class Children {
     get checkType() {
         return {
             init(props) {
-                let {
+                const {
                     key,
 
                     name,
@@ -74,12 +72,13 @@ class Children {
                     icon,
 
                     isChildren = false, // 是否包含子类
-                    // isChecked = true,
+                    isCheckedShow = true, // 是否显示勾选框
+                    isChangeChecked = true, // 是否可以更改勾选状态
+
                     checked = false, // 勾选状态
                     isExpand = false,
                     expand = false,
-                    // isSelected = true,
-                    isChangeChecked = true,
+
                     childrenNumber = 1
 
                 } = props;
@@ -92,6 +91,7 @@ class Children {
                 this.icon = icon; // 使用的icon
 
                 // this.isChecked = !!isChecked; // 是否可以设置勾选状态
+                this.isCheckedShow = !!isCheckedShow;
                 this.isChangeChecked = !!isChangeChecked; // 是否可以更改勾选状态
                 this.checked = !!checked; // 勾选状态
 
@@ -109,11 +109,11 @@ class Children {
                 this.isChildren = isChildren; // 是否包含子类
                 this.allNexusChecked = {};
             },
-            addPaths({list, pid, path, children, idPath, data}) {
-                let {isExpand, isSelected, childrenNumber} = this.self;
-                let pItem = list[pid]; // 获取父元素
-                let unknownList = []; // 未知情况
-                let childrenLength = (children && children.length) || 0;
+            addPaths({ list, pid, path, children, idPath, data }) {
+                const { isExpand, isSelected, childrenNumber } = this.self;
+                const pItem = list[pid]; // 获取父元素
+                const unknownList = []; // 未知情况
+                const childrenLength = (children && children.length) || 0;
                 // 判断是否包含子类
                 this.isChildren = this.isChildren || !!childrenLength;
                 // 判断
@@ -138,8 +138,8 @@ class Children {
                         unknownList.push(this.key);
                     }
                 }
-                let key = JSON.stringify(path);
-                this.paths[key] = {pid, path, children, idPath};
+                const key = JSON.stringify(path);
+                this.paths[key] = { pid, path, children, idPath };
                 return unknownList;
             }
         };
@@ -148,7 +148,7 @@ class Children {
     get radioType() {
         return {
             init(props) {
-                let {
+                const {
                     key,
 
                     name,
@@ -157,12 +157,13 @@ class Children {
                     icon,
 
                     isChildren = false, // 是否包含子类
+                    isCheckedShow = true, // 是否显示勾选框
+                    isChangeChecked = true,
                     // isChecked = true,
                     checked = false, // 勾选状态
                     isExpand = false,
-                    expand = false,
+                    expand = false
                     // isSelected = true,
-                    isChangeChecked = true
 
                 } = props;
                 this.self = props;
@@ -174,6 +175,7 @@ class Children {
                 this.icon = icon; // 使用的icon
 
                 // this.isChecked = !!isChecked; // 是否可以设置勾选状态
+                this.isCheckedShow = !!isCheckedShow;
                 this.isChangeChecked = !!isChangeChecked; // 是否可以更改勾选状态
                 this.checked = false; // 勾选状态
 
@@ -191,11 +193,11 @@ class Children {
                 this.isChildren = isChildren; // 是否包含子类
                 this.allNexusChecked = {};
             },
-            addPaths({list, pid, path, children, idPath, data}) {
-                let {isExpand} = this.self;
-                let pItem = list[pid]; // 获取父元素
-                let unknownList = []; // 需要设置为勾选的项
-                let childrenLength = (children && children.length) || 0;
+            addPaths({ list, pid, path, children, idPath, data }) {
+                const { isExpand } = this.self;
+                const pItem = list[pid]; // 获取父元素
+                const unknownList = []; // 需要设置为勾选的项
+                const childrenLength = (children && children.length) || 0;
                 // 判断是否包含子类
                 this.isChildren = this.isChildren || !!childrenLength;
                 // 判断
@@ -208,8 +210,8 @@ class Children {
                         this.isChangeChecked = false;
                     }
                 }
-                let key = JSON.stringify(path);
-                this.paths[key] = {pid, path, children, idPath};
+                const key = JSON.stringify(path);
+                this.paths[key] = { pid, path, children, idPath };
                 return unknownList;
             }
         };
@@ -227,37 +229,39 @@ class Children {
  */
 const noe = Symbol('noe');
 function getData({ data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern, selectedList }) {
-    let newTree = data || [];
+    const newTree = data || [];
     // paths.length &&
-    _.forEach(data, (item, index) => {
-        if (item) {
-            let _path = _.assign([], paths);
-            let _idPath = _.assign([], idPath);
-            let {key, children} = item;
-            // 判断是否存在选中列表中
-            if (selectedList && selectedList.has(key)) {
-                item.checked = true;
-            }
-            _path.push(index); // 设置路径
-            _idPath.push(key); // 设置key的路径
+    if (data && data.length) {
+        _.forEach(data, (item, index) => {
+            if (item) {
+                const _path = _.assign([], paths);
+                const _idPath = _.assign([], idPath);
+                const { key, children } = item;
+                // 判断是否存在选中列表中
+                if (selectedList && selectedList.has(key)) {
+                    item.checked = true;
+                }
+                _path.push(index); // 设置路径
+                _idPath.push(key); // 设置key的路径
 
-            if (!list[key]) {
-                list[key] = new Children(item, pattern);
-            }
-            newTree[index].treePath = _.cloneDeep(_path);
-            newTree[index].treeIdPath = _.cloneDeep(_idPath);
-            unknownList.push(...list[key].addPaths({ list, pid, path: newTree[index].treePath, idPath: newTree[index].treeIdPath, children }));
+                if (!list[key]) {
+                    list[key] = new Children(item, pattern);
+                }
+                newTree[index].treePath = _.cloneDeep(_path);
+                newTree[index].treeIdPath = _.cloneDeep(_idPath);
+                unknownList.push(...list[key].addPaths({ list, pid, path: newTree[index].treePath, idPath: newTree[index].treeIdPath, children }));
 
-            // 判断是否包含子项
-            if (children && children.length) {
-                _path.push('children');
-                let _data = getData({data: children, list, pid: key, paths: _path, idPath: _idPath, unknownList, first: false, pattern});
-                list = _data.list;
+                // 判断是否包含子项
+                if (children && children.length) {
+                    _path.push('children');
+                    const _data = getData({ data: children, list, pid: key, paths: _path, idPath: _idPath, unknownList, first: false, pattern });
+                    list = _data.list;
 
-                newTree[index].children = _data.newTree;
+                    newTree[index].children = _data.newTree;
+                }
             }
-        }
-    });
+        });
+    }
 
     if (first) {
         list = setChecked(list, unknownList, true);
@@ -266,7 +270,7 @@ function getData({ data, list = {}, pid = noe, paths = [], idPath = [], unknownL
         list,
         newTree
     };
-};
+}
 /**
  * list 所有数据
  * keyList 需要修改的key数组
@@ -276,7 +280,7 @@ function setChecked(list, keyList, checked) {
     let _list = {};
 
     _.forEach(_.uniq(keyList), (item) => {
-        let data = downSetChecked(list, item, checked);
+        const data = downSetChecked(list, item, checked);
         list = data.list;
 		/**
 		 * 先循环获取数据
@@ -290,14 +294,14 @@ function setChecked(list, keyList, checked) {
     });
 	// 排序
     _list = _.orderBy(_.toPairs(_list), 1);
-    
+
 	// 设置父类勾选状态和勾选
     return upTypeChecked(list, _list);
 }
 // 向下级设置勾选
 function downSetChecked(list, key, checked, isCache = {}) {
-    let changeList = [];
-    let item = list[key];
+    const changeList = [];
+    const item = list[key];
     if (item && !isCache[key]) {
         isCache[key] = true;
 
@@ -307,16 +311,16 @@ function downSetChecked(list, key, checked, isCache = {}) {
             item.typeChecked = item.checked ? '1' : '0';
         }
 
-        _.forEach(item.paths, ({idPath, children}) => {
-            let _path = _.initial(idPath);// idPath//
+        _.forEach(item.paths, ({ idPath, children }) => {
+            const _path = _.initial(idPath);// idPath//
             changeList.push(_path);
             if (children) {
-                _.forEach(children, ({key}) => {
-                    let data = downSetChecked(list, key, checked, isCache);
+                _.forEach(children, ({ key }) => {
+                    const data = downSetChecked(list, key, checked, isCache);
                     list = data.list;
                     changeList.push(...data.changeList);
                 });
-            };
+            }
         });
         // }
         item.treeUc++;
@@ -335,7 +339,7 @@ function upTypeChecked(list, changeList) {
 	/**
 	 * 从最底层开始设置勾选状态和勾选
 	 */
-    let isCache = {};
+    const isCache = {};
     _.forEachRight(changeList, ([key]) => {
         list = setTypeChecked(list, key, isCache);
     });
@@ -346,19 +350,19 @@ function upTypeChecked(list, changeList) {
  * 设置勾选状态和勾选
  */
 function setTypeChecked(list, key, isCache = {}) {
-    let item = list[key];
+    const item = list[key];
     if (item && !isCache[key]) {
         let _typeChecked = -1;// getTypeChecked(list, item.key, !cache); // 当前勾选状态
-        let typeCheckedConfig = { // 勾选状态对应勾选的情况
+        const typeCheckedConfig = { // 勾选状态对应勾选的情况
             0: false,
             1: true,
             2: false
         };
-        _.forEach(item.paths, ({children}) => {
+        _.forEach(item.paths, ({ children }) => {
 			// if(!setAllCheckedCache[pid]){
 				// 循环当前树下子项目
-            _.forEach(children, ({key}) => {
-                let _item = list[key];
+            _.forEach(children, ({ key }) => {
+                const _item = list[key];
                 // 对不能进行更改设置并且未勾选的做无视处理
                 if (!_item.isChangeChecked) {
                     _item.checked && _typeChecked === -1 && (_typeChecked = 1);
@@ -380,7 +384,6 @@ function setTypeChecked(list, key, isCache = {}) {
                 return false;
             }
         });
-        console.log(_typeChecked);
         if (_typeChecked != -1 && _typeChecked != item.typeChecked) {
             item.typeChecked = _typeChecked;
             item.checked = typeCheckedConfig[_typeChecked];
@@ -395,11 +398,11 @@ function setTypeChecked(list, key, isCache = {}) {
  * 设置自己和父级的uc
  */
 function setUc(list, key, isCache = {}) {
-    let item = list[key];
+    const item = list[key];
     if (item && !isCache[key]) {
         item.treeUc++;
         list[key] = item;
-        _.forEach(item.paths, ({pid}) => {
+        _.forEach(item.paths, ({ pid }) => {
             list = setUc(list, pid, isCache);
         });
         isCache[key] = true; // 保存缓存
@@ -439,7 +442,7 @@ function setUc(list, key, isCache = {}) {
 export default class Tree extends Component {
     constructor(props) {
         super(props);
-        let {max, type, isIntegration = false, tree, selectedList = []} = _.cloneDeep(props);
+        let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(props);
         // 模式
         if (type == 'radio') {
             max = 1;
@@ -447,10 +450,10 @@ export default class Tree extends Component {
         } else {
             type = 'check';
         }
-        selectedList = _.map(selectedList, item => [item.key.toString(), {...item, isDel: true}]);
+        selectedList = _.map(selectedList, item => [item.key.toString(), { ...item, isDel: true }]);
         selectedList = new Map(selectedList);
         // 获取数据
-        let {list, newTree} = getData({data: tree, pattern: type, selectedList});
+        const { list, newTree } = getData({ data: tree, pattern: type, selectedList });
 
         this.state = {
             list,
@@ -469,8 +472,8 @@ export default class Tree extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.uc != nextProps.uc || !this.props.tree) {
-            let {max, type, isIntegration = false, tree, selectedList = []} = _.cloneDeep(nextProps);
+        if (this.uc != nextProps.uc || !this.props.tree || (this.props.tree && !this.props.tree.length)) {
+            let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(nextProps);
 
             if (nextProps.type == 'radio') {
                 max = 1;
@@ -478,10 +481,10 @@ export default class Tree extends Component {
             } else {
                 type = 'check';
             }
-            selectedList = _.map(selectedList, item => [item.key.toString(), {...item, isDel: true}]);
+            selectedList = _.map(selectedList, item => [item.key.toString(), { ...item, isDel: true }]);
             selectedList = new Map(selectedList);
 
-            let {list, newTree} = getData({data: tree, pattern: type, selectedList});
+            const { list, newTree } = getData({ data: tree, pattern: type, selectedList });
 
             this.uc == nextProps.uc;
 
@@ -490,7 +493,7 @@ export default class Tree extends Component {
                 tree: newTree,
                 selected: this.getSelected(list, selectedList)
             });
-
+ 
             this.config = {
                 max,
                 type,
@@ -498,12 +501,12 @@ export default class Tree extends Component {
             };
 
             this.action = nextProps;
-        };
+        }
     }
 
     render() {
-        let {action, store} = this;
-        let {
+        const { action, store } = this;
+        const {
             show,
             // 标题设置
             title,
@@ -516,17 +519,17 @@ export default class Tree extends Component {
 
             bottomBtn
         } = this.props;
-        let {
+        const {
             max,
             isIntegration
         } = this.config;
 
-        let selectedData = this.selectedData; // 获取选中项目的数据
+        const selectedData = this.selectedData; // 获取选中项目的数据
         this.oldSelectedData = selectedData; // 保持为老选中项目数据
 
         return (
-			<div className={this.treeClass} style={this.treeStyle}>
-				{
+            <div className={this.treeClass} style={this.treeStyle}>
+                {
                     show &&
                     <div className="tree-main">
                         <Header title={title} />
@@ -534,42 +537,42 @@ export default class Tree extends Component {
                         <div className="tree-box">
 
                             <TreeLeft
-                                store={store} // 共用的一些数据
-                                action={action} // 所有操作
+                              store={store} // 共用的一些数据
+                              action={action} // 所有操作
 
-                                searchShow={searchShow}
-                                searchPlaceholder={searchPlaceholder}
+                              searchShow={searchShow}
+                              searchPlaceholder={searchPlaceholder}
 
-                                treeTitle={treeTitle}
-                                tree={this.state.tree} // 树
+                              treeTitle={treeTitle}
+                              tree={this.state.tree} // 树
                             />
 
                             <TreeRight
-                                store={store} // 共用的一些数据
-                                action={action} // 所有操作
+                              store={store} // 共用的一些数据
+                              action={action} // 所有操作
 
-                                max={max} // 最大
-                                selectedTitle={selectedTitle} // 标题
-                                selected={this.state.selected} // 当前选中
-                                isIntegration={isIntegration} // 是否整合
-                                selectedData={selectedData}
+                              max={max} // 最大
+                              selectedTitle={selectedTitle} // 标题
+                              selected={this.state.selected} // 当前选中
+                              isIntegration={isIntegration} // 是否整合
+                              selectedData={selectedData}
 
                             />
 
                         </div>
                         <div className="tree-bottom">
                             {
-                                _.map(_.reverse(_.clone(bottomBtn)), item => <Button type={item.type} onClick={ action.onClickBtn.bind(this, item)}>{item.txt}</Button>)
+                                _.map(_.reverse(_.clone(bottomBtn)), item => <Button type={item.type} onClick={action.onClickBtn.bind(this, item)}>{item.txt}</Button>)
                             }
                         </div>
                     </div>
                 }
-			</div>
+            </div>
         );
     }
     // 获取主要tree外壳的样式
     get treeStyle() {
-        let {
+        const {
             show,
             zIndex
         } = this.props;
@@ -580,7 +583,7 @@ export default class Tree extends Component {
     }
     // 获取主要tree外壳的class属性
     get treeClass() {
-        let {
+        const {
             isAlert
         } = this.props;
         return classnames({
@@ -597,8 +600,8 @@ export default class Tree extends Component {
     }
     // 操作
     set action(props = this.props) {
-        let {type} = this.config; // 'check'// 模式 radio:单选 check:多选
-        let onCheck = {
+        const { type } = this.config; // 'check'// 模式 radio:单选 check:多选
+        const onCheck = {
             check: this._onCheck.bind(this, props.onCheck),
             radio: this._onCheckRadio.bind(this, props.onCheck)
         }[type];
@@ -619,18 +622,17 @@ export default class Tree extends Component {
     }
 	// 删除全部选中
     _onAllClear() {
-        let {list, selected} = this.state;
-        let keyList = _.map([...selected], ([, {key, isDel}]) => {
+        let { list, selected } = this.state;
+        const keyList = _.map([...selected], ([, { key, isDel }]) => {
             key = key.toString();
-            let item = list[key];
+            const item = list[key];
             // 是否存在于本地数据
             if (item) {
                 // 是否可以删除
                 isDel && selected.delete(key);
                 return key;
-            } else {
-                selected.delete(key);
             }
+            selected.delete(key);
         });
 
         list = setChecked(list, keyList, false);
@@ -641,10 +643,10 @@ export default class Tree extends Component {
 
 	// 展开/收起节点时触发
     _onExpand(ck, item) {
-        let self = this;
-        let {list} = this.state;
-        let {key} = item;
-        let _item = list[key];
+        const self = this;
+        let { list } = this.state;
+        const { key } = item;
+        const _item = list[key];
         if (_item.isExpand) {
             _item.expand = !_item.expand;
             list[key] = _item;
@@ -656,14 +658,14 @@ export default class Tree extends Component {
         });
         if (typeof ck === 'function') {
             let _callback = (res) => {
-                let {list, tree, selected} = self.state;
-                let {key, treePath} = item;
+                const { list, tree, selected } = self.state;
+                let { key, treePath } = item;
                 // debugger;
                 treePath = _.cloneDeep(treePath);
 
-                let _res = _.get(tree, _.slice(treePath, 0, -2), {});
+                const _res = _.get(tree, _.slice(treePath, 0, -2), {});
                 item.children = res;
-                let data = {
+                const data = {
                     l: [_.last(treePath)],
                     pid: _res.key || noe,
                     treePath: _.cloneDeep(_res.treePath) || [],
@@ -671,7 +673,7 @@ export default class Tree extends Component {
                 };
 
                 data.treePath.length && data.treePath.push('children');
-                let {list: newList, newTree} = getData({
+                let { list: newList, newTree } = getData({
                     data: _.set([], data.l, item),
                     list,
                     pid: data.pid,
@@ -694,7 +696,7 @@ export default class Tree extends Component {
                 });
             };
             ck(item, _callback);
-        };
+        }
     }
     // 超过最大
     _onExceedMax(ck) {
@@ -703,9 +705,9 @@ export default class Tree extends Component {
 
 	// 点击复选框触发
     _onCheck(ck, item, checked) {
-        let {max} = this.props;
-        let {list, selected} = this.state;
-        let {key} = item;
+        const { max } = this.props;
+        let { list, selected } = this.state;
+        const { key } = item;
         if (key) {
             if (typeof checked === 'undefined') checked = !list[key].checked;
             if (checked) {
@@ -725,7 +727,7 @@ export default class Tree extends Component {
     }
     // 单人模式复选框
     _onCheckRadio(ck, item) {
-        let {list, selected} = this.state;
+        let { list, selected } = this.state;
         let isSelf = false;
         _.forEach([...selected], ([key]) => {
             list[key].checked = false;
@@ -735,7 +737,7 @@ export default class Tree extends Component {
             isSelf = (key == item.key);
         });
         if (!isSelf) {
-            let {key} = item;
+            const { key } = item;
             selected.set(key, {
                 name: item.name, // 名称
                 key, // 关键字
@@ -758,7 +760,7 @@ export default class Tree extends Component {
     }
     // 搜索值变化
     _onSearchChange(ck, event) {
-        let {value} = event.target;
+        const { value } = event.target;
         if (typeof ck === 'function') {
             let _callback = (res) => {
                 _callback = () => {};
@@ -772,14 +774,14 @@ export default class Tree extends Component {
     }
     // 点击按钮
     _onClickBtn(fn, item) {
-        let {oldSelectedData} = this;
-        let {list, tree} = this.state;
+        let { oldSelectedData } = this;
+        const { list, tree } = this.state;
         oldSelectedData = _.map(oldSelectedData.list, (item) => {
-            let _item = list[item.key] || {};
+            const _item = list[item.key] || {};
             item.path = [];
             if (_item) {
-                _.forEach(_item.paths, ({path}) => {
-                    let {treeIdPath, treePath, ...data} = _.get(tree, path);
+                _.forEach(_item.paths, ({ path }) => {
+                    const { treeIdPath, treePath, ...data } = _.get(tree, path);
                     item.path.push({ ...data, path });
                 });
             }
@@ -798,7 +800,7 @@ export default class Tree extends Component {
     // 设置selected中的选中项目
     getSelected(list, selected) {
         _.forEach(list, (item, key) => {
-            let _has = selected.has(key);
+            const _has = selected.has(key);
             if (item.checked) {
                 if (!_has) {
                     selected.set(key, {
@@ -813,18 +815,16 @@ export default class Tree extends Component {
                         isDel: item.isChangeChecked // 是否可以删除
                     });
                 }
-            } else {
-                if (_has) {
-                    selected.delete(key);
-                }
+            } else if (_has) {
+                selected.delete(key);
             }
         });
         return selected;
     }
 
     hasSelectedItem(item) {
-        let {list, selected} = this.state;
-        let {key} = item;
+        const { list, selected } = this.state;
+        let { key } = item;
         key = key.toString();
         if (list[key]) {
             this._onCheck(false, item);
@@ -846,8 +846,8 @@ export default class Tree extends Component {
     }
 
     get selectedData() {
-        let list = this.selectedList;
-        let size = this.selectedSize(list);
+        const list = this.selectedList;
+        const size = this.selectedSize(list);
         return {
             list,
             size
@@ -855,12 +855,12 @@ export default class Tree extends Component {
     }
 
     get selectedList() {
-        let {selected, list} = this.state;
-        let {isIntegration} = this.props;
+        const { selected, list } = this.state;
+        const { isIntegration } = this.props;
         // item.isSelected
-        let lists = [];
+        const lists = [];
         _.forEach([...selected], ([, item]) => {
-            let _item = list[item.key];
+            const _item = list[item.key];
             if (!_item) {
                 lists.push(item);
                 return;
@@ -868,18 +868,16 @@ export default class Tree extends Component {
 
             if (_item.isChildren) {
                 if (isIntegration) {
-                    if (!_.every(_item.paths, ({pid}) => selected.has(pid))) {
+                    if (!_.every(_item.paths, ({ pid }) => selected.has(pid))) {
                         lists.push(item);
                     }
                 }
+            } else if (isIntegration) {
+                if (!_.every(_item.paths, ({ pid }) => selected.has(pid))) {
+                        lists.push(item);
+                    }
             } else {
-                if (isIntegration) {
-                    if (!_.every(_item.paths, ({pid}) => selected.has(pid))) {
-                        lists.push(item);
-                    }
-                } else {
-                    lists.push(item);
-                }
+                lists.push(item);
             }
         });
 
@@ -887,7 +885,7 @@ export default class Tree extends Component {
     }
 
     selectedSize(selectedList) {
-        let {list} = this.state;
+        const { list } = this.state;
         let num = 0;
         _.forEach(selectedList, (item) => {
             if (list[item.key]) {

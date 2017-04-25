@@ -1,13 +1,26 @@
 /**
  * 头像
  */
-import {Component} from 'react';
+import { Component } from 'react';
 
 import _ from 'lodash';
-let getColor = (() => {
-    let list = {};
+const bgColor = [
+    'rgb(92, 208, 166)',
+    'rgb(185, 185,185)',
+    'rgb(77, 188, 205)',
+    'rgb(244, 158, 92)',
+    'rgb(132, 131, 191)',
+    'rgb(80, 129, 191)'
+];
+
+const getColor = (() => {
+    const list = {};
     return (id) => {
-        !list[id] && (list[id] = `rgb(${_.random(100, 200)}, ${_.random(100, 200)}, ${_.random(100, 200)})`);
+        if (list[id]) {
+            return list[id];
+        }
+        const bg = bgColor[id % bgColor.length];
+        list[id] = bg || `rgb(${_.random(80, 244)}, ${_.random(129, 208)}, ${_.random(92, 205)})`;
         return list[id];
     };
 })();
@@ -20,29 +33,32 @@ export default class Avatar extends Component {
                 display: 'none'
             },
             baColor: {
-                background: getColor(props.name)
+                background: props.color || getColor(props.dataKey)
             }
         };
-    }
-    render() {
-        let {name, avatar} = this.props;
-        let {imgStyle, baColor} = this.state;
-        baColor = imgStyle ? baColor : {};
-        imgStyle = imgStyle || {};
-        return (
-            <div className="tree-avatar" style={baColor}>
-                {avatar && <img src={avatar} style={imgStyle} onLoad={this._onLoad.bind(this)} />}
-                {name}
-            </div>
-        );
+        this._onLoad = this._onLoad.bind(this);
     }
     // 图片加载成功
     _onLoad() {
-        let {imgStyle} = this.state;
+        const { imgStyle } = this.state;
         if (imgStyle) {
             this.setState({
                 imgStyle: false
             });
         }
     }
-};
+
+    render() {
+        const { name, avatar } = this.props;
+        let { imgStyle, baColor } = this.state;
+        baColor = imgStyle ? baColor : {};
+        imgStyle = imgStyle || {};
+        return (
+            <div className="tree-avatar" style={baColor}>
+                {avatar && <img alt={name} src={avatar} style={imgStyle} onLoad={this._onLoad} />}
+                {name}
+            </div>
+        );
+    }
+
+}

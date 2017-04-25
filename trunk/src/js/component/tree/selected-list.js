@@ -15,7 +15,7 @@ export default class SelectedList extends Component {
 		// 是否可删除
         return (
 			<li>
-				<Avatar name={data.name[0]} avatar={data.avatar}/>
+				<Avatar name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
 				<p>{data.name}</p>
 				{
 					data.isDel &&

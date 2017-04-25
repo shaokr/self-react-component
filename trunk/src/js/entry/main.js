@@ -160,20 +160,7 @@ class DDiv extends Component {
                     show={true}
                     // searchShow={false}
                     isIntegration = {true}
-                    selectedList={[
-                        {
-                            name: 'sdasdas',
-                            key: 111
-                        },
-                        {
-                            name: '没有2',
-                            key: 'sadas2234'
-                        },
-                        {
-                            name: '没有',
-                            key: 'sadas'
-                        }
-                    ]}
+                    selectedList={[]}
                     isAlert={false}
                     tree={en}
                     // isIntegration={true}
