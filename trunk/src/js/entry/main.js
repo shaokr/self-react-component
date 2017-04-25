@@ -160,7 +160,7 @@ class DDiv extends Component {
                     show={true}
                     // searchShow={false}
                     isIntegration = {true}
-                    selectedList={[]}
+                    selectedList={en}
                     isAlert={false}
                     tree={en}
                     // isIntegration={true}

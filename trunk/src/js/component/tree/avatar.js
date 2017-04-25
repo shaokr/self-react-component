@@ -2,8 +2,8 @@
  * 头像
  */
 import { Component } from 'react';
-
 import _ from 'lodash';
+
 const bgColor = [
     'rgb(92, 208, 166)',
     'rgb(185, 185,185)',
@@ -56,7 +56,7 @@ export default class Avatar extends Component {
         return (
             <div className="tree-avatar" style={baColor}>
                 {avatar && <img alt={name} src={avatar} style={imgStyle} onLoad={this._onLoad} />}
-                {name}
+                {name[0]}
             </div>
         );
     }
