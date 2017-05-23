@@ -88,7 +88,9 @@ let en = [
         name: '没有节操公司',
         key: 'sadas',
         isExpand: true,
-        icon: 'company'
+        icon: 'company',
+        isCheckedShow: false,
+        children: en2
     },
     {
         icon: 'company',
@@ -164,10 +166,10 @@ class DDiv extends Component {
                     isAlert={false}
                     tree={en}
                     // isIntegration={true}
-                    onExpand={_onExpand}
+                    // onExpand={_onExpand}
                     // searchShow = {false}
                     onClickBtn={_onClickBtn}
-                    // type="radio"
+                    type="radio"
                     // max={3}
                 />
                 

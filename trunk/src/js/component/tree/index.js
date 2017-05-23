@@ -16,11 +16,11 @@ import TreeRight from './tree-right';
 // 头部
 const Header = ({ title }) => (
     <header className="tree-header">
-    <div className="header-left">
-    <i className="icon-chevron-thin-left" />
-			</div>
-    <h2>{title}</h2>
-		</header>
+        <div className="header-left">
+        <i className="icon-chevron-thin-left" />
+    </div>
+        <h2>{title}</h2>
+    </header>
     );
 
 /** {
@@ -162,8 +162,8 @@ class Children {
                     // isChecked = true,
                     checked = false, // 勾选状态
                     isExpand = false,
-                    expand = false
-                    // isSelected = true,
+                    expand = false,
+                    isSelected
 
                 } = props;
                 this.self = props;
@@ -184,7 +184,13 @@ class Children {
                 this.isExpand = !!isExpand; // !!(children && children.length); // 是否可以展开
                 this.expand = !!expand; // 是否展开
 
-                // this.isSelected = true; // 是否可以选中到另一个栏目
+                // 是否可以选中到另一个栏目
+                if (typeof isSelected === 'undefined') {
+                    this.isSelected = this.isCheckedShow;
+                } else {
+                    this.isSelected = isSelected;
+                }
+
 
                 this.treeUc = 0; // 当前terr的uc
                 this.paths = {}; // 当前路径下的一些内容信息
@@ -493,7 +499,7 @@ export default class Tree extends Component {
                 tree: newTree,
                 selected: this.getSelected(list, selectedList)
             });
- 
+
             this.config = {
                 max,
                 type,
@@ -728,6 +734,9 @@ export default class Tree extends Component {
     // 单人模式复选框
     _onCheckRadio(ck, item) {
         let { list, selected } = this.state;
+        if (!list[item.key].isSelected) {
+            return;
+        }
         let isSelf = false;
         _.forEach([...selected], ([key]) => {
             list[key].checked = false;
@@ -874,8 +883,8 @@ export default class Tree extends Component {
                 }
             } else if (isIntegration) {
                 if (!_.every(_item.paths, ({ pid }) => selected.has(pid))) {
-                        lists.push(item);
-                    }
+                    lists.push(item);
+                }
             } else {
                 lists.push(item);
             }

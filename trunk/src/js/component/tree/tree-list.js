@@ -1,7 +1,7 @@
 /**
  * 电子公告主要框
  */
-import {Component} from 'react';
+import { Component } from 'react';
 import classnames from 'classnames';
 
 import Icon from 'component/icon';
@@ -32,7 +32,7 @@ let iconConfigList = {
 
 class ItemIcon extends Component {
     render() {
-        let {onClick} = this.props;
+        let { onClick } = this.props;
         let icon = this.getIcon;
         return (
             <i onClick={onClick} style={icon.style}>
@@ -43,7 +43,7 @@ class ItemIcon extends Component {
         );
     }
     get getIcon() {
-        let {data} = this.props;
+        let { data } = this.props;
         let icon = iconConfigList[data.icon];
         if (!icon && data.isExpand) {
             let iconName = data.expand ? 'xia' : 'you';
@@ -54,7 +54,7 @@ class ItemIcon extends Component {
 }
 
 const Front = (props) => {
-    let {data} = props;
+    let { data } = props;
     let _icon = iconConfigList[data.icon];
     let isI = _icon || data.isExpand;
     return (
@@ -70,13 +70,13 @@ export default class TreeList extends Component {
     // statics
     constructor(props) {
         super(props);
-        let {item} = this;
+        let { item } = this;
 
         this.treeUc = item.treeUc;
         this._onExpand = this._onExpand.bind(this);
     }
     shouldComponentUpdate(nextProps) {
-        let {data: {key: nextKey}, store: {list: nextList}} = nextProps;
+        let { data: { key: nextKey }, store: { list: nextList } } = nextProps;
 		// return true;
         if (this.treeUc == nextList[nextKey].treeUc) {
             return false;
@@ -86,40 +86,43 @@ export default class TreeList extends Component {
         }
     }
     render() {
-        let {data, action, store} = this.props;
-        let {item} = this;
+        let { data, action, store } = this.props;
+        let { item, checked } = this;
 
         return (
-			<div className={this.css}>
-				<div className="tree-children-info" onClick={() => item.isChangeChecked && action.onCheck(data)}>
+            <div className={this.css}>
+                <div className="tree-children-info" onClick={() => item.isChangeChecked && action.onCheck(data)}>
                     <Front onClick={this._onExpand} data={item} />
 
-					<div className="tree-children-info-name">
+                    <div className="tree-children-info-name">
                         {data.name}
                         <small>{item.small}</small>
                     </div>
 
-					<div className="tree-children-checkbox">
-						{this.checked}
-					</div>
-				</div>
-				{
+                    {
+                        item.isCheckedShow &&
+                        <div className="tree-children-checkbox">
+                            {checked}
+                        </div>
+                    }
+                </div>
+                {
 					item.isChildren && item.expand &&
 					<div className="tree-children-son">
-						{
-							_.map(data.children, val => <TreeList data={val} store = {store} action={action} />)
+    {
+							_.map(data.children, val => <TreeList data={val} store={store} action={action} />)
 						}
 					</div>
 				}
-			</div>
+            </div>
         );
     }
     get item() {
-        let {data: {key}, store: {list}} = this.props;
+        let { data: { key }, store: { list } } = this.props;
         return list[key];
     }
     get css() {
-        let {item} = this;
+        let { item } = this;
 
         return classnames([
             'tree-children-ul', (iconConfigList[item.icon] || {}).css, `layer-${item.self.treeIdPath.length - 1}`,
@@ -130,19 +133,17 @@ export default class TreeList extends Component {
         ]);
     }
     get checked() {
-        let {item} = this;
-        if (item.isCheckedShow) {
-            if (item.typeChecked == 1) {
-                return <Icon type="gouxuan"/>;
-            }
-            if (item.typeChecked == 2) {
-                return <Icon type="fuxuan"/>;
-            }
+        let { item } = this;
+        if (item.typeChecked == 1) {
+            return <Icon type="gouxuan" />;
+        }
+        if (item.typeChecked == 2) {
+            return <Icon type="fuxuan" />;
         }
     }
     _onExpand(e) {
-        let {data, action, store} = this.props;
-        let {key} = data;
+        let { data, action, store } = this.props;
+        let { key } = data;
         let item = store.list[key];
         action.onExpand(data);
         (item.isExpand || iconConfigList[item.icon]) && e.stopPropagation();
