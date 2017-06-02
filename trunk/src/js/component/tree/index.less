@@ -5,7 +5,7 @@
     .tree-avatar{
         width: @u*22;
         height: @u*22;
-        margin-right: @u*10;
+        // margin-right: @u*10;
         border-radius: @u*3;
         overflow: hidden;
         text-align: center;
@@ -241,9 +241,9 @@
             // 第一层
             &.layer-0{
                 padding-left: @u*10;
-                >.tree-children-son{
-                    padding-left: 0;
-                }
+                // >.tree-children-son{
+                //     padding-left: 0;
+                // }
             }
             
         }
@@ -268,7 +268,7 @@
                     height:100%;
                     display: flex;
                     align-items: center;
-                    justify-content: center;
+                    justify-content: flex-start;
                     box-sizing: content-box;
                     font-size: 20px;
                     .zy-icon{
@@ -304,7 +304,7 @@
             padding: 4px;
         }
         &-son{
-            padding-left: @box-p*3;
+            padding-left: @u*22;
         }
     }
     // 选中人样式
@@ -346,6 +346,12 @@
                         // border-color: #459ef2;
                     }
                 }
+            }
+        }
+        &-front{
+            margin-right: @u*8;
+            .zy-icon{
+                width: @u*22;
             }
         }
         

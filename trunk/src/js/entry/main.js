@@ -63,6 +63,7 @@ let en2 = [
         name: 'name1',
         key: '1',
         order: '',
+        icon: 'company',
         children: [
             ...en4
         ]
@@ -71,6 +72,7 @@ let en2 = [
         name: 'name3',
         key: '3',
         order: '',
+        icon: 'company',
         children: [
         ]
     }
@@ -89,12 +91,18 @@ let en = [
         key: 'sadas',
         isExpand: true,
         icon: 'company',
-        isCheckedShow: false,
         children: en2
     },
     {
-        icon: 'company',
+        name: '没有节操公司2',
+        key: 'sadas',
         isExpand: true,
+        icon: 'company',
+        children: en2
+    },
+    {
+        isExpand: true,
+        icon: 'time',
         key: '0',
         name: '可我看外网'
     }

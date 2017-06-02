@@ -4,6 +4,8 @@
 import { Component } from 'react';
 import _ from 'lodash';
 
+import Icon from 'component/icon';
+
 const bgColor = [
     'rgb(92, 208, 166)',
     'rgb(185, 185,185)',
@@ -24,6 +26,37 @@ const getColor = (() => {
         return list[id];
     };
 })();
+
+const iconConfigList = {
+    company: { // 公司
+        key: 'gongsi',
+        style: {
+            fontSize: '44px'
+        }
+    },
+    you: { // 向右
+        key: 'jiaobiaoyou',
+        style: {
+            fontSize: '20px',
+            paddingRight: '0'
+        }
+    },
+    xia: { // 向下
+        key: 'jiaobiaoxia',
+        style: {
+            fontSize: '20px',
+            paddingRight: '0'
+        }
+    }
+};
+
+const ItemIcon = ({ onClick, icon }) => (
+    <i onClick={onClick} style={icon.style}>
+        {
+            icon && <Icon type={icon.key} />
+        }
+    </i>
+);
 
 export default class Avatar extends Component {
     constructor(props) {
@@ -49,6 +82,12 @@ export default class Avatar extends Component {
     }
 
     render() {
+        const { icon } = this.props;
+        const _icon = iconConfigList[icon];
+        if (_icon) {
+            return <ItemIcon icon={_icon} />;
+        }
+
         const { name, avatar } = this.props;
         let { imgStyle, baColor } = this.state;
         baColor = imgStyle ? baColor : {};
