@@ -12,7 +12,7 @@ const Del = ({ onClick, isDel }) => {
     if (isDel) {
         return (
             <i onClick={onClick}>
-                <Icon type="xuanzequxiao" />
+                <Icon type="close" />
             </i>
         );
     }

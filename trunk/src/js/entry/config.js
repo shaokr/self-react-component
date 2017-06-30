@@ -14,7 +14,7 @@ let mainData = {
 let mapListObj = { // 自定义map和依赖关系,可覆盖cdn中的配置(注释的是例子
     map: {
         'mainCss': mainData.css,
-        'treeIcon': `//at.alicdn.com/t/font_hfe143sf87ojemi.js`
+        'treeIcon': `//at.alicdn.com/t/font_pwbftnqb8dea5rk9.js`
         // 'ReactDom': `${cdnHost}js/react/15.4.0/react-dom.min.js`,
     },
     meta: { // map的依赖关系

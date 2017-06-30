@@ -60,7 +60,9 @@ class Children {
         return this.pattern.addPaths.call(this, param);
     }
     // tree的初始状态
-    stateInit(item) {
+    stateInit(item, data) {
+        const { state = {} } = data || {};
+
         const _isChildren = (() => {
             const { isChildren, children } = item;
             if (typeof isChildren === 'undefined') {
@@ -77,8 +79,13 @@ class Children {
             return !!isExpand;
         })();
 
-        const _expand = !!item.expand;
+        let _expand = state.expand;
+        if (typeof state.expand === 'undefined') {
+            _expand = !!item.expand;
+        }
+
         const _isCheckedShow = !!item.isCheckedShow;
+
         return {
             isChildren: _isChildren, // 是否包含子类
             isExpand: _isExpand, // 是否可以展开
@@ -98,7 +105,7 @@ class Children {
                     small,
                     icon,
 
-                    isChildren = false, // 是否包含子类
+                    // isChildren = false, // 是否包含子类
                     isCheckedShow = true, // 是否显示勾选框
                     isChangeChecked = true, // 是否可以更改勾选状态
 
@@ -128,7 +135,7 @@ class Children {
                 this.paths = {}; // 当前路径下的一些内容信息
 
                 this.childrenNumber = childrenNumber;// 可选子类项目( addPaths中可能变化
-                this.isChildren = isChildren; // 是否包含子类
+                // this.isChildren = isChildren; // 是否包含子类
                 this.allNexusChecked = {};
             },
             addPaths({ item, list, pid, path, children, idPath }) {
@@ -155,7 +162,7 @@ class Children {
                     }
                 }
                 const key = JSON.stringify(path);
-                const state = this.stateInit(item);
+                const state = this.stateInit(item, this.paths[key]); // 获取状态信息
                 this.paths[key] = { pid, path, children: item.children, idPath, state };
                 return unknownList;
             }
@@ -173,7 +180,7 @@ class Children {
                     small,
                     icon,
 
-                    isChildren = false, // 是否包含子类
+                    // isChildren = false, // 是否包含子类
                     isCheckedShow = true, // 是否显示勾选框
                     isChangeChecked = true,
 
@@ -208,7 +215,7 @@ class Children {
                 this.paths = {}; // 当前路径下的一些内容信息
 
 
-                this.isChildren = isChildren; // 是否包含子类
+                // this.isChildren = isChildren; // 是否包含子类
                 this.allNexusChecked = {};
             },
             // 添加新路径的情况
@@ -223,7 +230,7 @@ class Children {
                     }
                 }
                 const key = JSON.stringify(path);
-                const state = this.stateInit(item); // 获取状态信息
+                const state = this.stateInit(item, this.paths[key]); // 获取状态信息
                 this.paths[key] = { pid, path, children: item.children, idPath, state };
                 return unknownList;
             }
@@ -647,7 +654,6 @@ export default class Tree extends Component {
             ...obj
         };
         return list[key];
-        
     }
 	// 删除全部选中
     _onAllClear() {
@@ -678,7 +684,6 @@ export default class Tree extends Component {
         const item = list[key];
         const dataState = this.getDataState(key, data.treePath);
         if (dataState.isExpand) {
-            console.log(data, item);
             item.paths[JSON.stringify(data.treePath)].state = {
                 ...dataState,
                 expand: !dataState.expand
@@ -690,13 +695,15 @@ export default class Tree extends Component {
             list
         });
         if (typeof ck === 'function') {
-            let _callback = function(res) {
+            let _callback = function (res) {
                 const { list, tree, selected } = self.state;
                 let { key, treePath } = data;
                 // debugger;
                 treePath = _.cloneDeep(treePath);
 
+                // const _res = _.get(tree, _.slice(treePath, 0, -2), {});
                 const _res = _.get(tree, _.slice(treePath, 0, -2), {});
+
                 data.children = res;
                 const _data = {
                     l: [_.last(treePath)],
@@ -705,19 +712,19 @@ export default class Tree extends Component {
                     treeIdPath: _.cloneDeep(_res.treeIdPath) || []
                 };
 
-                _data.treePath.length && data.treePath.push('children');
+                _data.treePath.length && _data.treePath.push('children');
+
                 let { list: newList, newTree } = getData({
-                    data: _.set([], data.l, data),
+                    data: _.set([], _data.l, data),
                     list,
-                    pid: data.pid,
-                    paths: data.treePath,
-                    idPath: data.treeIdPath,
+                    pid: _data.pid,
+                    paths: _data.treePath,
+                    idPath: _data.treeIdPath,
                     pattern: self.config.type,
                     selectedList: selected
                 });
                 treePath.push('children');
-
-                _.set(tree, treePath, _.get(newTree, data.l).children);
+                _.set(tree, treePath, _.get(newTree, _data.l).children);
 
                 // 更新uc
                 newList = setUc(newList, key);
@@ -899,12 +906,14 @@ export default class Tree extends Component {
         const lists = [];
         _.forEach([...selected], ([, item]) => {
             const _item = list[item.key];
+            // 判断是否在当前数据中
             if (!_item) {
                 lists.push(item);
                 return;
             }
-
-            if (_item.isChildren) {
+            // console.log(_.some(_item.paths, ({ state }) => state.isChildren));
+            // 判断是否含有子类
+            if (_.some(_item.paths, ({ state }) => state.isChildren)) {
                 if (isIntegration) {
                     if (!_.every(_item.paths, ({ pid }) => selected.has(pid))) {
                         lists.push(item);

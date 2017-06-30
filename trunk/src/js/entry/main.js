@@ -63,7 +63,7 @@ let en2 = [
         name: 'name1',
         key: '1',
         order: '',
-        icon: 'company',
+        icon: 'folder',
         children: [
             ...en4
         ]
@@ -72,7 +72,7 @@ let en2 = [
         name: 'name3',
         key: '3',
         order: '',
-        icon: 'company',
+        icon: 'folder',
         children: [
         ]
     }
@@ -88,7 +88,7 @@ let en2 = [
 let en = [
     {
         name: '没有节操公司',
-        key: 'sadas',
+        key: 'sadas3',
         isExpand: true,
         icon: 'company',
         children: en2
@@ -102,7 +102,7 @@ let en = [
     },
     {
         isExpand: true,
-        icon: 'time',
+        icon: 'folder',
         key: '0',
         name: '可我看外网'
     }
@@ -135,7 +135,7 @@ let _onExpand = (item, fn) => {
             name: 'name' + ++i,
             key: '' + i,
             icon: 'company',
-            // isChildren: true,
+            isChildren: true,
             order: '',
             children: []
         },
@@ -169,7 +169,7 @@ class DDiv extends Component {
                     title="隐藏部门/成员"
                     show={true}
                     // searchShow={false}
-                    isIntegration = {true}
+                    //isIntegration = {true}
                     selectedList={en}
                     isAlert={false}
                     tree={en}
@@ -177,7 +177,7 @@ class DDiv extends Component {
                     // onExpand={_onExpand}
                     // searchShow = {false}
                     onClickBtn={_onClickBtn}
-                    type="radio"
+                    // type="radio"
                     // max={3}
                 />
                 

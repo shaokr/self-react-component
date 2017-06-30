@@ -10,21 +10,15 @@ import Avatar from './avatar';
 import _ from 'lodash';
 
 const iconConfigList = {
-    company: { // 公司
-        key: 'gongsi',
-        style: {
-            fontSize: '44px'
-        }
-    },
-    you: { // 向右
-        key: 'jiaobiaoyou',
+    close: { // 向右
+        key: 'caret-right',
         style: {
             fontSize: '20px',
             paddingRight: '0'
         }
     },
-    xia: { // 向下
-        key: 'jiaobiaoxia',
+    open: { // 向下
+        key: 'caret-down',
         style: {
             fontSize: '20px',
             paddingRight: '0'
@@ -42,23 +36,35 @@ const ItemIcon = ({ onClick, icon }) => (
 
 const Expand = ({ dataState, onClick }) => {
     if (dataState.isExpand) {
-        const iconName = dataState.expand ? 'xia' : 'you';
+        const iconName = dataState.expand ? 'open' : 'close';
         const icon = iconConfigList[iconName];
         return <ItemIcon onClick={onClick} icon={icon} />;
     }
     return null;
 };
+
+const getFrontIcon = (icon, dataState) => {
+    if (dataState.isExpand) {
+        const config = {
+            folder: {
+                true: 'folder-open',
+                false: 'folder'
+            }
+        };
+        if (config[icon]) {
+            return config[icon][dataState.expand] || icon;
+        }
+    }
+    return icon;
+};
 // 前面的下拉和头像等内容
-const Front = ({ data, onClick, dataState }) => {
-    const icon = iconConfigList[data.icon];
-    return (
+const Front = ({ data, onClick, dataState }) => (
         <div className="tree-children-info-front">
             <Expand onClick={onClick} dataState={dataState} />
-            { !!icon && <ItemIcon icon={icon} /> }
-            { !icon && <Avatar name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />}
+            {/*{ !!icon && <ItemIcon icon={icon} /> }*/}
+            <Avatar icon={getFrontIcon(data.icon, dataState)} name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
         </div>
     );
-};
 // 勾选状态
 const Checked = ({ item }) => {
     if (!item.isCheckedShow) {
@@ -66,8 +72,8 @@ const Checked = ({ item }) => {
     }
 
     const config = {
-        1: 'gouxuan',
-        2: 'fuxuan'
+        1: 'check',
+        2: 'minus'
     };
     return (
         <div className="tree-children-checkbox">
@@ -140,7 +146,6 @@ export default class TreeList extends Component {
         const { data, action, store } = this.props;
         const { item } = this;
         const dataState = action.getDataState(data.key, data.treePath);
-
         return (
             <div className={this.css}>
                 <div className="tree-children-info" onClick={() => item.isChangeChecked && action.onCheck(data)}>

@@ -27,44 +27,11 @@ const getColor = (() => {
     };
 })();
 
-const iconConfigList = {
-    company: { // 公司
-        key: 'gongsi',
-        style: {
-            fontSize: '44px'
-        }
-    },
-    you: { // 向右
-        key: 'jiaobiaoyou',
-        style: {
-            fontSize: '20px',
-            paddingRight: '0'
-        }
-    },
-    xia: { // 向下
-        key: 'jiaobiaoxia',
-        style: {
-            fontSize: '20px',
-            paddingRight: '0'
-        }
-    }
-};
-
-const ItemIcon = ({ onClick, icon }) => (
-    <i onClick={onClick} style={icon.style}>
-        {
-            icon && <Icon type={icon.key} />
-        }
-    </i>
-);
-
 export default class Avatar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            imgStyle: {
-                display: 'none'
-            },
+            showImg: false,
             baColor: {
                 background: props.color || getColor(props.dataKey)
             }
@@ -73,29 +40,31 @@ export default class Avatar extends Component {
     }
     // 图片加载成功
     _onLoad() {
-        const { imgStyle } = this.state;
-        if (imgStyle) {
-            this.setState({
-                imgStyle: false
-            });
-        }
+        this.setState({
+            showImg: true
+        });
     }
-
-    render() {
+    get iconStyle() {
         const { icon } = this.props;
-        const _icon = iconConfigList[icon];
-        if (_icon) {
-            return <ItemIcon icon={_icon} />;
-        }
+        const config = {
+            'folder-open': {
+                color: '#86BAF1'
+            },
+            'folder': {
+                color: '#86BAF1'
+            }
+        };
+        return config[icon];
+    }
+    render() {
+        const { name, avatar, icon } = this.props;
+        const { baColor, showImg } = this.state;
 
-        const { name, avatar } = this.props;
-        let { imgStyle, baColor } = this.state;
-        baColor = imgStyle ? baColor : {};
-        imgStyle = imgStyle || {};
         return (
-            <div className="tree-avatar" style={baColor}>
-                {avatar && <img alt={name} src={avatar} style={imgStyle} onLoad={this._onLoad} />}
-                {name[0]}
+            <div className="tree-avatar" >
+                { !!icon && <Icon type={icon} className="tree-avatar--icon" style={this.iconStyle} />}
+                { !icon && showImg && avatar && <img className="tree-avatar--img" alt={name} src={avatar} onLoad={this._onLoad} />}
+                { !icon && !showImg && !avatar && <div className="tree-avatar--name" style={baColor}>{name[0]}</div>}
             </div>
         );
     }

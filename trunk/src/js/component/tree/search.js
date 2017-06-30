@@ -85,7 +85,7 @@ export default class Selected extends Component {
         } = this.props;
         return (
             <div className="tree-box-search">
-                <i><Icon type="sousuo" /></i>
+                <i><Icon type="search" /></i>
                 <input type="text" placeholder={placeholder} onChange={onChange} />
                 {
                     !!selectedList.length && <Scroll className="tree-box-search-list" >
