@@ -105,8 +105,15 @@ let en = [
         icon: 'folder',
         key: '0',
         name: '可我看外网'
-    }
+    },
+    
 ];
+let en78 = [
+    {
+        key: '880',
+        name: '880'
+    }
+]
 // let lost = [1, 'children', 0];
 // for (let i = 0; i < 100; i++) {
 //     _.set(en, lost, {
@@ -170,11 +177,11 @@ class DDiv extends Component {
                     show={true}
                     // searchShow={false}
                     //isIntegration = {true}
-                    selectedList={en}
+                    selectedList={en78}
                     isAlert={false}
                     tree={en}
                     // isIntegration={true}
-                    // onExpand={_onExpand}
+                    onExpand={_onExpand}
                     // searchShow = {false}
                     onClickBtn={_onClickBtn}
                     // type="radio"

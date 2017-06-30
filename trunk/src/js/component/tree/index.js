@@ -276,7 +276,7 @@ function getData({ data, list = {}, pid = noe, paths = [], idPath = [], unknownL
                 // 判断是否包含子项
                 if (children && children.length) {
                     _path.push('children');
-                    const _data = getData({ data: children, list, pid: key, paths: _path, idPath: _idPath, unknownList, first: false, pattern });
+                    const _data = getData({ data: children, list, pid: key, paths: _path, idPath: _idPath, unknownList, first: false, pattern, selectedList });
                     list = _data.list;
 
                     newTree[index].children = _data.newTree;
@@ -465,6 +465,7 @@ export default class Tree extends Component {
     constructor(props) {
         super(props);
         let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(props);
+        selectedList = _.map(selectedList, item => item);
         // 模式
         if (type == 'radio') {
             max = 1;
@@ -850,14 +851,15 @@ export default class Tree extends Component {
                     selected.set(key, {
                         name: item.name, // 名称
                         key: item.key, // 关键字
-                        icon: item.icon, // 关键字
+                        icon: item.icon, // 图标
                         avatar: item.avatar, // 头像
                         isDel: item.isChangeChecked // 是否可以删除
                     });
                 } else {
                     selected.set(key, {
                         ...selected.get(key),
-                        isDel: item.isChangeChecked // 是否可以删除
+                        isDel: item.isChangeChecked, // 是否可以删除
+                        icon: item.icon
                     });
                 }
             } else if (_has) {

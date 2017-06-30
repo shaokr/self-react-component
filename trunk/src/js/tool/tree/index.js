@@ -1,9 +1,12 @@
 import Systemjs from 'systemjs';
 
-export const a = async () => {
-    await Systemjs.import('Apiutil');
+export const getDept = async () => {
+    const api = await Systemjs.import('Apiutil');
+    const res = await api.fetch('manage.dept.get', {
+
+    });
+    // manage.dept.get
+    // manage.dept.list
 };
-console.log(import('config/config'));
 export default {
-    a
 };
