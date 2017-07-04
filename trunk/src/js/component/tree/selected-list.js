@@ -1,12 +1,14 @@
 /**
  * 电子公告主要框
  */
-import { Component } from 'react';
+import { Component, addons } from 'react';
 import _ from 'lodash';
 
 import Scroll from 'component/scroll';
 import Icon from 'component/icon';
 import Avatar from './avatar';
+
+const { CSSTransitionGroup } = addons;
 
 const Del = ({ onClick, isDel }) => {
     if (isDel) {
