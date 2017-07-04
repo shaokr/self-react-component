@@ -1,3 +1,4 @@
+const _ = require('lodash');
 let fs = require('fs');
 let paths = require('path');
 let itemWebConfig = {
@@ -15,6 +16,15 @@ function Last({data, build, path}) {
         return require(itemWebConfig.build);
     }
 
+    // const entry = {};
+    // _.forEach([
+    //     'tree',
+    //     'tool-tree'
+    // ], (item) => entry[item] = data.entry[item]);
+    // data.entry = entry;
+
+    // data.resolve.modules.push(...userConfig.modules)
+
     // 添加目录拷贝
     let _copyList = Copy(path);
     if (_copyList) {
@@ -23,6 +33,8 @@ function Last({data, build, path}) {
     data.output.library = 'ZY[name]'; // 输出到全局的名称
     data.output.libraryTarget = 'umd'; // 输出方式
 
+    data.externals['zy-tree'] = 'ZYtree';
+    // console.log(data);
     return data;
 }
 
@@ -37,7 +49,7 @@ function Copy(path) {
         _data.push({ context: 'node_modules/systemjs/dist', from: '*', to: 'systemjs' });
     }
     _data.push({ context: `${path}/js/conf/lang`, from: '**', to: 'lang' });
-    _data.push({ context: `${path}/icon`, from: '**', to: 'icon' });
+    // _data.push({ context: `${path}/icon`, from: '**', to: 'icon' });
 
     return new CopyWebpackPlugin(_data);
 }
