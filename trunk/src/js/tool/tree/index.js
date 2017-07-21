@@ -19,13 +19,30 @@ Systemjs.import(`${cdnHost}/config/1.0.6/config.js`).then((res) => {
     Systemjs.config(res(cdnHost));
 });
 
-// console.log(Tree);
-// const BBB = () => {
-//     Component
-// }
-const treeCache = {
+const init = (async () => {
+    await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);
+    const api = await Systemjs.import('Apiutil');
+    api.setUrl('192.168.1.239:82');
+    const loginRes = await api.fetch('im.login.signin', {
+        login_type: 1,
+        account: 'guanliyuan',
+        password: '111111',
+        verify_code: '1.0',
+        client_ver: '0.1.0',
+        dev_type: 5
+    });
 
-};
+    api.setData({
+        access_token: loginRes.access_token,
+        cid: '1',
+        client_ver: '1.0.0',
+        dev_type: '5',
+        operator_uid: loginRes.uid
+    });
+    return api;
+})();
+
+const treeCache = {};
 class Wtree extends Component {
     constructor(props) {
         super(props);
@@ -34,7 +51,7 @@ class Wtree extends Component {
         };
         this.tree = treeCache.w;
         if (!this.tree) {
-            this.getGs().then((res) => {
+            this.getInit().then((res) => {
                 treeCache.w = res;
                 this.tree = res;
                 this.setState({
@@ -43,25 +60,10 @@ class Wtree extends Component {
             });
         }
     }
-    getGs = async () => {
-        await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);
-        const api = await Systemjs.import('Apiutil');
-        api.setUrl('192.168.1.239:82');
-        api.setData({
-            access_token: 'b9bc05355a42c593',
-            cid: '1',
-            client_ver: '1.0.0',
-            dev_type: '5',
-            operator_uid: '6415812873936306181'
-        });
-
-        const GsInfo = await api.fetch('manage.dept.get', {
-            did: '0'
-        }).then((res) => {
-            const [data] = res.datas;
-            return data;
-        });
-        const list = await this.getDept({
+    // 初始化
+    getInit = async () => {
+        const GsInfo = await this.getDept({ did: 0 });
+        const list = await this.getAll({
             key: GsInfo.did
         });
 
@@ -76,9 +78,59 @@ class Wtree extends Component {
             }
         ];
     };
-    getDept = async (data, ck) => {
-        await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);
-        const api = await Systemjs.import('Apiutil');
+    // 获取部门信息
+    getDept = async ({ did }) => {
+        const api = await init;
+        const GsInfo = await api.fetch('manage.dept.get', {
+            did
+        }).then((res) => {
+            const [data] = res.datas;
+            return data;
+        });
+        return GsInfo;
+    }
+    // 获取部门和用户列表
+    getAll = async (data, ck) => {
+        const [userList, deptList] = await Promise.all([
+            this.getUserList(data),
+            this.getDeptList(data)
+        ]);
+
+        const RData = [
+            ...deptList,
+            ...userList
+        ];
+        if (ck) {
+            ck(RData);
+            _.set(treeCache.w, data.treePath, RData);
+        }
+        return RData;
+    }
+    // 获取用户列表
+    getUserList = async function (data, ck) {
+        const api = await init;
+
+        if (!data.children) {
+            const did = data.key;
+            const userList = await api.fetch('manage.user.list', { did }).then(res =>
+                _.map(res.datas, item => (
+                    {
+                        key: item.uid,
+                        name: item.name
+                    }
+                ))
+            );
+
+            const RData = userList;
+            return RData;
+        }
+        return false;
+        // manage.dept.get
+        // manage.dept.list
+    };
+    // 获取部门列表
+    getDeptList = async function (data, ck) {
+        const api = await init;
 
         if (!data.children) {
             const did = data.key;
@@ -93,27 +145,11 @@ class Wtree extends Component {
                     }
                 ))
             );
-            const userList = await api.fetch('manage.user.list', { did }).then(res =>
-                _.map(res.datas, item => (
-                    {
-                        key: item.uid,
-                        name: item.name
-                    }
-                ))
-            );
 
-            const RData = [
-                ...deptList,
-                ...userList
-            ];
-            // _.set(this.tree)
-            if (ck) {
-                ck(RData);
-                _.set(treeCache.w, data.treePath, RData);
-                console.log(treeCache.w);
-            }
+            const RData = deptList;
             return RData;
         }
+        return false;
         // manage.dept.get
         // manage.dept.list
     };
@@ -121,11 +157,10 @@ class Wtree extends Component {
         return (
             <div>
                 <Tree
-                  isIntegration
+                  // isIntegration
                   tree={this.tree}
-                  onExpand={this.getDept}
+                  onExpand={this.getAll}
                 />
-                <button>qweqwe</button>
             </div>
         );
     }

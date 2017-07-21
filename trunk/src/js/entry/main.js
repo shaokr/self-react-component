@@ -88,14 +88,14 @@ let en2 = [
 let en = [
     {
         name: '没有节操公司',
-        key: 'sadas3',
+        key: 15555,
         isExpand: true,
         icon: 'company',
         children: en2
     },
     {
         name: '没有节操公司2',
-        key: 'sadas',
+        key: 205434,
         isExpand: true,
         icon: 'company',
         children: en2
@@ -131,18 +131,14 @@ let _onExpand = (item, fn) => {
         {
             name: 'name' + ++i,
             key: '' + i,
-            icon: 'company',
+            icon: 'folder',
             order: '',
-
-            isChangeChecked: false,
-            checked: false,
-            children: []
-        },
-        {
-            name: 'name' + ++i,
-            key: '' + i,
-            icon: 'company',
             isChildren: true,
+            children: []
+        },
+        {
+            name: 'name' + ++i,
+            key: '' + i,
             order: '',
             children: []
         },
@@ -150,9 +146,7 @@ let _onExpand = (item, fn) => {
             name: 'name' + ++i,
             key: '' + i,
             order: '',
-            isChangeChecked: false,
             checked: true,
-            avatar: './1.png',
             children: []
         }
     ]);
@@ -184,7 +178,7 @@ class DDiv extends Component {
                     onExpand={_onExpand}
                     // searchShow = {false}
                     onClickBtn={_onClickBtn}
-                    // type="radio"
+                    type="radio" 
                     // max={3}
                 />
                 

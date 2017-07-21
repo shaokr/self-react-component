@@ -16,14 +16,14 @@ export default class extends Component {
             <div className="tree-box-left">
                 <div className="tree-box-left-top">
                     {
-                        // searchShow && <Search placeholder={searchPlaceholder} onChange={action.onSearchChange} store={store} action={action} />
+                        searchShow && <Search placeholder={searchPlaceholder} onChange={action.onSearchChange} store={store} action={action} />
                     }
                     <p>{treeTitle}</p>
                 </div>
 
-                <Scroll className="scroll">
+                <div className="scroll">
                     { _.map(tree, item => <TreeList data={item} store={store} action={action} />) }
-                </Scroll>
+                </div>
             </div>
         );
     }

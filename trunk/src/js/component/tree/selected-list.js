@@ -41,9 +41,9 @@ class Li extends Component {
 
 
 export default ({ data, store, action }) => (
-    <Scroll className="scroll">
+    <div className="scroll">
         <ul className="tree-selected-ul">
             { _.map(data, item => <Li key={item.key} data={item} action={action} />) }
         </ul>
-    </Scroll>
-	);
+    </div>
+);

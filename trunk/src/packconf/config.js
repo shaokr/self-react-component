@@ -49,7 +49,7 @@ function Copy(path) {
         _data.push({ context: 'node_modules/systemjs/dist', from: '*', to: 'systemjs' });
     }
     _data.push({ context: `${path}/js/conf/lang`, from: '**', to: 'lang' });
-    // _data.push({ context: `${path}/icon`, from: '**', to: 'icon' });
+    _data.push({ context: `${path}/icon`, from: '**', to: 'icon' });
 
     return new CopyWebpackPlugin(_data);
 }

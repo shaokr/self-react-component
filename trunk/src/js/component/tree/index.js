@@ -163,7 +163,7 @@ class Children {
                 }
                 const key = JSON.stringify(path);
                 const state = this.stateInit(item, this.paths[key]); // 获取状态信息
-                this.paths[key] = { pid, path, children: item.children, idPath, state };
+                this.paths[key] = { pid, path, children: item.children, idPath, state, self: item };
                 return unknownList;
             }
         };
@@ -231,7 +231,7 @@ class Children {
                 }
                 const key = JSON.stringify(path);
                 const state = this.stateInit(item, this.paths[key]); // 获取状态信息
-                this.paths[key] = { pid, path, children: item.children, idPath, state };
+                this.paths[key] = { pid, path, children: item.children, idPath, state, self: item };
                 return unknownList;
             }
         };
@@ -820,14 +820,13 @@ export default class Tree extends Component {
     // 点击按钮
     _onClickBtn(fn, item) {
         let { oldSelectedData } = this;
-        const { list, tree } = this.state;
+        const { list } = this.state;
         oldSelectedData = _.map(oldSelectedData.list, (item) => {
             const _item = list[item.key] || {};
             item.path = [];
             if (_item) {
-                _.forEach(_item.paths, ({ path }) => {
-                    const { treeIdPath, treePath, ...data } = _.get(tree, path);
-                    item.path.push({ ...data, path });
+                _.forEach(_item.paths, ({ path, self }) => {
+                    item.path.push({ ...self, path });
                 });
             }
             return item;
