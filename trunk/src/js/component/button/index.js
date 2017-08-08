@@ -2,16 +2,16 @@
  * 按钮
  */
 import './index.less';
-import {Component} from 'react';
+import { Component } from 'react';
 import classnames from 'classnames';
 
-import {prefix} from 'config/const';
+import { prefix } from 'config/const';
 
-let _prefix = `${prefix}-button`;
+const _prefix = `${prefix}-button`;
 
 export default class extends Component {
     render() {
-        let {
+        const {
             size,
             loading,
             icon,
@@ -19,11 +19,11 @@ export default class extends Component {
             children
         } = this.props;
         return (
-			<button className={this.css} onClick={onClick}>{children}</button>
+            <button className={this.css} onClick={onClick}>{children}</button>
         );
     }
     get css() {
-        let {
+        const {
             type,
             classNmae
         } = this.props;
@@ -34,4 +34,4 @@ export default class extends Component {
             }
         ]);
     }
-};
+}

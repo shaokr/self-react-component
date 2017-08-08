@@ -3,25 +3,23 @@
  */
 import { Component } from 'react';
 import classnames from 'classnames';
+import _ from 'lodash';
+
 
 import Icon from 'component/icon';
 import Avatar from './avatar';
-
-import _ from 'lodash';
 
 const iconConfigList = {
     close: { // 向右
         key: 'caret-right',
         style: {
-            fontSize: '20px',
-            paddingRight: '0'
+            fontSize: '18px'
         }
     },
     open: { // 向下
         key: 'caret-down',
         style: {
-            fontSize: '20px',
-            paddingRight: '0'
+            fontSize: '18px'
         }
     }
 };

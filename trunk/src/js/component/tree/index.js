@@ -8,10 +8,10 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 import Icon from 'component/icon';
-import Button from 'component/button';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
+import BottomBox from './bottom-box';
 
 // 头部
 const Header = ({ title }) => (
@@ -21,7 +21,7 @@ const Header = ({ title }) => (
         </div>
         <h2>{title}</h2>
     </header>
-    );
+);
 
 /** {
 	key //
@@ -467,7 +467,7 @@ export default class Tree extends Component {
         let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(props);
         selectedList = _.map(selectedList, item => item);
         // 模式
-        if (type == 'radio') {
+        if (type === 'radio') {
             max = 1;
             isIntegration = true;
         } else {
@@ -500,7 +500,7 @@ export default class Tree extends Component {
         if (this.uc != nextProps.uc || !this.props.tree || (this.props.tree && !this.props.tree.length)) {
             let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(nextProps);
 
-            if (nextProps.type == 'radio') {
+            if (nextProps.type === 'radio') {
                 max = 1;
                 isIntegration = true;
             } else {
@@ -539,7 +539,7 @@ export default class Tree extends Component {
             searchShow,
             searchPlaceholder,
             // isIntegration = false,
-            treeTitle,
+            // treeTitle,
             selectedTitle,
 
             bottomBtn
@@ -567,7 +567,7 @@ export default class Tree extends Component {
                               searchShow={searchShow}
                               searchPlaceholder={searchPlaceholder}
 
-                              treeTitle={treeTitle}
+                              // treeTitle={treeTitle}
                               tree={this.state.tree} // 树
                             />
 
@@ -580,14 +580,12 @@ export default class Tree extends Component {
                               selected={this.state.selected} // 当前选中
                               isIntegration={isIntegration} // 是否整合
                               selectedData={selectedData}
-                            />
+                            >
+                                <BottomBox bottomBtn={bottomBtn} onClick={action.onClickBtn} />
+                            </TreeRight>
 
                         </div>
-                        <div className="tree-bottom">
-                            {
-                                _.map(_.reverse(_.clone(bottomBtn)), item => <Button type={item.type} onClick={action.onClickBtn.bind(this, item)}>{item.txt}</Button>)
-                            }
-                        </div>
+                        
                     </div>
                 }
             </div>
@@ -804,13 +802,10 @@ export default class Tree extends Component {
 
     }
     // 搜索值变化
-    _onSearchChange(ck, event) {
+    _onSearchChange(ck, event, searchCk) {
         const { value } = event.target;
         if (typeof ck === 'function') {
-            let _callback = (res) => {
-                _callback = () => {};
-            };
-            ck(value, _callback, event);
+            ck(value, searchCk, event);
         }
     }
     // 关闭窗口
@@ -947,7 +942,7 @@ export default class Tree extends Component {
 }
 
 Tree.defaultProps = {
-    type: 'check',
+    type: 'check', // 类型 check
     show: true,
     isAlert: true,
     // 标题设置
@@ -957,17 +952,13 @@ Tree.defaultProps = {
     searchPlaceholder: '搜索',
     zIndex: 3,
     // isIntegration = false,
-    treeTitle: '选择',
+    // treeTitle: '选择',
     selectedTitle: '已选',
     bottomBtn: [
         {
             txt: '确定',
             key: 'yes',
             type: 'primary'
-        },
-        {
-            txt: '取消',
-            key: 'no'
         }
     ]
 };

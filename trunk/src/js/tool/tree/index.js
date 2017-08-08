@@ -18,7 +18,7 @@ Systemjs.import(`${cdnHost}/config/1.0.6/config.js`).then((res) => {
     // res中的map查看cdn目录下config.js文件
     Systemjs.config(res(cdnHost));
 });
-
+// 初始化
 const init = (async () => {
     await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);
     const api = await Systemjs.import('Apiutil');
@@ -34,10 +34,11 @@ const init = (async () => {
 
     api.setData({
         access_token: loginRes.access_token,
-        cid: '1',
+        cid: loginRes.cids[0],
         client_ver: '1.0.0',
         dev_type: '5',
-        operator_uid: loginRes.uid
+        operator_uid: loginRes.uid,
+        uid: loginRes.uid
     });
     return api;
 })();
@@ -152,16 +153,71 @@ class Wtree extends Component {
         return false;
         // manage.dept.get
         // manage.dept.list
-    };
+    }
+    onSearch = async (val, ck) => {
+        const api = await init;
+        const res = await api.fetch('search.user.get', {
+            keyword: val
+        });
+        if (res.err_code === '0') {
+            let list = [];
+            _.forEach(res.hits, (item) => {
+                const _item = {
+                    name: item.name,
+                    key: item.uid
+                };
+                list.push(
+                    ..._.map(item.depts, dept => ({
+                        ..._item,
+                        title: dept.name.split('-')[0]
+
+                    }))
+                );
+            });
+            list = _.groupBy(list, 'title');
+
+            ck(_.map(list, (item, key) => ({
+                title: key,
+                children: item
+            })));
+            // _.map(res.hits, item => {
+            //     name: item.name,
+            //     key: item.uid,
+            //     title:''
+            //     织语网络科技有限公司
+            // });
+            // ck([
+            //     {
+            //         title: val,
+            //         children: [
+            //             {
+            //                 name: '金屌',
+            //                 key: 201,
+            //                 small: 'UI射鸡死'
+            //             },
+            //             {
+            //                 name: val,
+            //                 key: val
+            //             },
+            //             {
+            //                 name: 'sdasd',
+            //                 key: 22
+            //             }
+            //         ]
+            //     }
+            // ]);
+
+        }
+    }
     render() {
         return (
-            <div>
-                <Tree
-                  // isIntegration
-                  tree={this.tree}
-                  onExpand={this.getAll}
-                />
-            </div>
+            <Tree
+              isIntegration
+              onSearchChange={this.onSearch}
+                // consfig
+              tree={this.tree}
+              onExpand={this.getAll}
+            />
         );
     }
 }

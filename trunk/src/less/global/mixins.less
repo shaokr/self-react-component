@@ -104,24 +104,23 @@ box-shadow: inset 0 @a 0 @b,
 		content: '@{a}';
 	}
 }
-
 // 固定字体大小
-.dpr(@a:@fs5){
+.dpr (@a:@fs5) when (@isPc = false) {
 	@b:unit(@a,px);
 	[data-dpr="1"] &{
 		&:extend([data-dpr="1"]);
-		font-size: @b/(3/1);
+		font-size: @b/(@multiple/1);
 	}
 	[data-dpr="2"] &{
 		&:extend([data-dpr="2"]);
-		font-size: @b/(3/2);
+		font-size: @b/(@multiple/2);
 	}
 	[data-dpr="3"] &{
 		&:extend([data-dpr="3"]);
-		font-size: @b/(3/3);
+		font-size: @b/(@multiple/3);
 	}
 }
-// rem单位
-// .dpr(@a:@fs5){
-// 	font-size: @u*@a;
-// }
+
+.dpr (@a:@fs5) when (@isPc = true) {
+	font-size: @u*@a;
+}

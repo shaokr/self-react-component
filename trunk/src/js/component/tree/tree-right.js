@@ -26,11 +26,12 @@ class Head extends Component {
 
 export default class extends Component {
     render() {
-        const { store, action, max, selectedTitle, selectedData: { list: selectedList, size } } = this.props;
+        const { store, action, max, selectedTitle, selectedData: { list: selectedList, size }, children } = this.props;
         return (
             <div className="tree-box-right">
                 <Head title={selectedTitle} max={max} action={action} size={size} />
                 <SelectedList data={selectedList} store={store} action={action} />
+                {children}
             </div>
         );
     }
