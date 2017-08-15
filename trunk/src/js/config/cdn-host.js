@@ -5,8 +5,8 @@ let {location} = window;
 let _protocol = location.protocol === 'file:' ? 'http:' : '';
 
 let host = {
-    production: `${_protocol}//192.168.1.251/fed/web-cdn/`,
-    test: `${_protocol}//192.168.1.251/fed/web-cdn/`,
+    production: `${_protocol}//192.168.1.251:8989/fed/web-cdn/`,
+    test: `${_protocol}//192.168.1.251:8989/fed/web-cdn/`,
     cloud: `${location.origin}/fed/web-cdn/`
 }[env];
 

@@ -5,22 +5,22 @@ import Systemjs from 'systemjs';
 import Tree from 'zy-tree';
 
 // 'Apiutil': 'host:js/api-util/1.0.0/util.min.js',
-const cdnHost = '//192.168.1.251/fed/web-cdn';
-Systemjs.config({
-    meta: {
-        '*.js': {
-            format: 'global',
-            scriptload: true
-        }
-    }
-});
-Systemjs.import(`${cdnHost}/config/1.0.6/config.js`).then((res) => {
-    // res中的map查看cdn目录下config.js文件
-    Systemjs.config(res(cdnHost));
-});
+// const cdnHost = '//192.168.1.251/fed/web-cdn';
+// Systemjs.config({
+//     meta: {
+//         '*.js': {
+//             format: 'global',
+//             scriptload: true
+//         }
+//     }
+// });
+// Systemjs.import(`${cdnHost}/config/1.0.6/config.js`).then((res) => {
+//     // res中的map查看cdn目录下config.js文件
+//     Systemjs.config(res(cdnHost));
+// });
 // 初始化
 const init = (async () => {
-    await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);
+    // await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);
     const api = await Systemjs.import('Apiutil');
     api.setUrl('192.168.1.239:82');
     const loginRes = await api.fetch('im.login.signin', {
@@ -213,8 +213,12 @@ class Wtree extends Component {
         return (
             <Tree
               isIntegration
-              onSearchChange={this.onSearch}
+              onClickBtn={(...res) => {
+                  console.log(res);
+              }}
+                onSearchChange={this.onSearch}  
                 // consfig
+                type="radio"
               tree={this.tree}
               onExpand={this.getAll}
             />

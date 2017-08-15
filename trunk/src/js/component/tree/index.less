@@ -343,6 +343,16 @@
             width: @u*30;
             text-align: center;
             font-size: @u*18;
+            &.tree-search--close{
+                transition: 0.2s;
+                font-size: @u*15;
+                color: @c3;
+                cursor: pointer;
+                &:hover{
+                    transform: scale(1.2);
+                    color: @c2;
+                }
+            }
         }
         >input{
             flex: 1;

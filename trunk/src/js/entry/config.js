@@ -14,7 +14,8 @@ let mainData = {
 let mapListObj = { // 自定义map和依赖关系,可覆盖cdn中的配置(注释的是例子
     map: {
         'mainCss': mainData.css,
-        'treeIcon': `//at.alicdn.com/t/font_pwbftnqb8dea5rk9.js`
+        'treeIcon': `//at.alicdn.com/t/font_pwbftnqb8dea5rk9.js`,
+        'Apiutil': '//localhost:8080/web-api-config/trunk/dist/util.js'
         // 'ReactDom': `${cdnHost}js/react/15.4.0/react-dom.min.js`,
     },
     meta: { // map的依赖关系
@@ -26,13 +27,18 @@ let mapListObj = { // 自定义map和依赖关系,可覆盖cdn中的配置(注�
 
 let mainListObj = { // 载入文件的配置
     [mainData.js]: { // 入口文件
-        ToLoad: true, // 是否马上加载
+        // ToLoad: true, // 是否马上加载
          // 依赖库
         deps: ['mainCss', 'React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']
+    },
+    './tool-tree.js': { // 入口文件
+        ToLoad: true, // 是否马上加载
+         // 依赖库
+        deps: ['mainCss', 'React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon', './tree.css', './tree.js', 'Apiutil']
     }
 };
 
-Systemjs.import(`${cdnHost}/config/1.0.3/config.js`).then((res) => {
+Systemjs.import(`${cdnHost}/config/1.0.6/config.js`).then((res) => {
     // res中的map查看cdn目录下config.js文件
     Systemjs.config(res(cdnHost));
     Systemjs.config(mapListObj);

@@ -96,6 +96,7 @@ class Children {
     // 多选模式
     get checkType() {
         return {
+            // 初始化
             init(props) {
                 const {
                     key,
@@ -138,6 +139,7 @@ class Children {
                 // this.isChildren = isChildren; // 是否包含子类
                 this.allNexusChecked = {};
             },
+            // 添加方法
             addPaths({ item, list, pid, path, children, idPath }) {
                 const { childrenNumber } = this.self;
                 const pItem = list[pid]; // 获取父元素
@@ -171,6 +173,7 @@ class Children {
     // 单选模式
     get radioType() {
         return {
+            // 初始化
             init(props) {
                 const {
                     key,
@@ -464,133 +467,38 @@ function setUc(list, key, isCache = {}) {
 export default class Tree extends Component {
     constructor(props) {
         super(props);
-        let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(props);
-        selectedList = _.map(selectedList, item => item);
-        // 模式
-        if (type === 'radio') {
-            max = 1;
-            isIntegration = true;
-        } else {
-            type = 'check';
-        }
-        selectedList = _.map(selectedList, item => [item.key.toString(), { ...item, isDel: true }]);
-        selectedList = new Map(selectedList);
-        // 获取数据
-        const { list, newTree } = getData({ data: tree, pattern: type, selectedList });
-
-        this.state = {
-            list,
-            tree: newTree,
-            selected: this.getSelected(list, selectedList)
-        };
-        this.uc = props.uc;
-
-        this.config = {
-            max,
-            type,
-            isIntegration
-        };
-
-        this.action = props;
+        this.initState = this.initState.bind(this);
 
         this.getDataState = this.getDataState.bind(this);
+        this.hasSelectedItem = this.hasSelectedItem.bind(this);
+        this.getDataState = this.getDataState.bind(this);
+
+        this._onSelect = this._onSelect.bind(this);
+        this._onAllClear = this._onAllClear.bind(this);
+        this._onExpand = this._onExpand.bind(this);
+        this._onClickBtn = this._onClickBtn.bind(this);
+        this._onSearchChange = this._onSearchChange.bind(this);
+        this._onExceedMax = this._onExceedMax.bind(this);
+        this._onCheck = this._onCheck.bind(this);
+        this._onCheckRadio = this._onCheckRadio.bind(this);
+
+        const { state, config, uc } = this.initState(props);
+        this.state = state;
+        this.uc = uc;
+        this.config = config;
+        this.action = props;
     }
 
     componentWillReceiveProps(nextProps) {
         if (this.uc != nextProps.uc || !this.props.tree || (this.props.tree && !this.props.tree.length)) {
-            let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(nextProps);
-
-            if (nextProps.type === 'radio') {
-                max = 1;
-                isIntegration = true;
-            } else {
-                type = 'check';
-            }
-            selectedList = _.map(selectedList, item => [item.key.toString(), { ...item, isDel: true }]);
-            selectedList = new Map(selectedList);
-
-            const { list, newTree } = getData({ data: tree, pattern: type, selectedList });
-
-            this.uc == nextProps.uc;
-
-            this.setState({
-                list,
-                tree: newTree,
-                selected: this.getSelected(list, selectedList)
-            });
-
-            this.config = {
-                max,
-                type,
-                isIntegration
-            };
-
-            this.action = nextProps;
+            const { state, config, uc } = this.initState(nextProps);
+            this.uc = uc;
+            this.config = config;
+            this.setState(state);
         }
+        this.action = nextProps;
     }
 
-    render() {
-        const { action, store } = this;
-        const {
-            show,
-            // 标题设置
-            title,
-            // 搜索设置
-            searchShow,
-            searchPlaceholder,
-            // isIntegration = false,
-            // treeTitle,
-            selectedTitle,
-
-            bottomBtn
-        } = this.props;
-        const {
-            max,
-            isIntegration
-        } = this.config;
-
-        const selectedData = this.selectedData; // 获取选中项目的数据
-        this.oldSelectedData = selectedData; // 保持为老选中项目数据
-        return (
-            <div className={this.treeClass} style={this.treeStyle}>
-                {
-                    show &&
-                    <div className="tree-main">
-                        <Header title={title} />
-
-                        <div className="tree-box">
-
-                            <TreeLeft
-                              store={store} // 共用的一些数据
-                              action={action} // 所有操作
-
-                              searchShow={searchShow}
-                              searchPlaceholder={searchPlaceholder}
-
-                              // treeTitle={treeTitle}
-                              tree={this.state.tree} // 树
-                            />
-
-                            <TreeRight
-                              store={store} // 共用的一些数据
-                              action={action} // 所有操作
-
-                              max={max} // 最大
-                              selectedTitle={selectedTitle} // 标题
-                              selected={this.state.selected} // 当前选中
-                              isIntegration={isIntegration} // 是否整合
-                              selectedData={selectedData}
-                            >
-                                <BottomBox bottomBtn={bottomBtn} onClick={action.onClickBtn} />
-                            </TreeRight>
-
-                        </div>
-                        
-                    </div>
-                }
-            </div>
-        );
-    }
     // 获取主要tree外壳的样式
     get treeStyle() {
         const {
@@ -642,10 +550,54 @@ export default class Tree extends Component {
     get action() {
         return this._action;
     }
+    // 初始化各种数据
+    initState(props) {
+        let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(props);
+        selectedList = _.map(selectedList, item => item);
+        // 模式
+        if (type === 'radio') {
+            max = 1;
+            isIntegration = true;
+        } else {
+            type = 'check';
+        }
+        selectedList = _.map(selectedList, item => [item.key.toString(), { ...item, isDel: true }]);
+        selectedList = new Map(selectedList);
+        // 获取数据
+        const { list, newTree } = getData({ data: tree, pattern: type, selectedList });
+
+        const state = {
+            list,
+            tree: newTree,
+            selected: this.getSelected(list, selectedList)
+        };
+
+        const config = {
+            max,
+            type,
+            isIntegration
+        };
+        return {
+            config,
+            uc: props.uc,
+            state
+        };
+    }
+    /**
+     * 查询state.list中的某路径中的state数据
+     * @param {''} key 关键词
+     * @param {''} path 路径
+     */
     getDataState(key, path) {
         const { list } = this.state;
         return list[key].paths[JSON.stringify(path)].state;
     }
+    /**
+     * 设置state.list中的某路径中的state数据
+     * @param {*} key
+     * @param {*} path
+     * @param {*} obj
+     */
     setDataState(key, path, obj) {
         const { list } = this.state;
         list[key].paths[JSON.stringify(path)].state = {
@@ -654,7 +606,9 @@ export default class Tree extends Component {
         };
         return list[key];
     }
-	// 删除全部选中
+	/**
+     * 删除全部选中事件
+     */
     _onAllClear() {
         let { list, selected } = this.state;
         const keyList = _.map([...selected], ([, { key, isDel }]) => {
@@ -675,7 +629,9 @@ export default class Tree extends Component {
         });
     }
 
-	// 展开/收起节点时触发
+	/**
+     * 展开/收起节点时触发
+     */
     _onExpand(ck, data) {
         const self = this;
         let { list } = this.state;
@@ -767,19 +723,22 @@ export default class Tree extends Component {
     // 单人模式复选框
     _onCheckRadio(ck, item) {
         let { list, selected } = this.state;
-        if (!list[item.key].isSelected) {
+        const { key } = item;
+        if (list[key] && !list[key].isSelected) {
             return;
         }
+        
         let isSelf = false;
-        _.forEach([...selected], ([key]) => {
-            list[key].checked = false;
-            list[key].typeChecked = '0';
-            list = setUc(list, key);
-            selected.delete(key);
-            isSelf = (key == item.key);
+        _.forEach([...selected], ([selKey]) => {
+            if (list[selKey]) {
+                list[selKey].checked = false;
+                list[selKey].typeChecked = '0';
+                list = setUc(list, selKey);
+            }
+            selected.delete(selKey);
+            isSelf = (selKey === key);
         });
         if (!isSelf) {
-            const { key } = item;
             selected.set(key, {
                 name: item.name, // 名称
                 key, // 关键字
@@ -787,9 +746,11 @@ export default class Tree extends Component {
                 icon: item.icon, // 头像
                 isDel: true // 是否可以删除
             });
-            list[key].checked = true;
-            list[key].typeChecked = '1';
-            list = setUc(list, key);
+            if (list[key]) {
+                list[key].checked = true;
+                list[key].typeChecked = '1';
+                list = setUc(list, key);
+            }
         }
         this.setState({
             list,
@@ -799,19 +760,22 @@ export default class Tree extends Component {
 
 	// 点击树节点触发
     _onSelect(ck, key) {
-
     }
+
     // 搜索值变化
     _onSearchChange(ck, event, searchCk) {
         const { value } = event.target;
         if (typeof ck === 'function') {
             ck(value, searchCk, event);
+        } else {
+            searchCk(value);
         }
     }
+
     // 关闭窗口
     _onClose() {
-
     }
+
     // 点击按钮
     _onClickBtn(fn, item) {
         let { oldSelectedData } = this;
@@ -863,6 +827,10 @@ export default class Tree extends Component {
         return selected;
     }
 
+    /**
+     * 反选项目
+     * @param {*} item 需要反选的项目
+     */
     hasSelectedItem(item) {
         const { list, selected } = this.state;
         let { key } = item;
@@ -885,7 +853,9 @@ export default class Tree extends Component {
             });
         }
     }
-
+    /**
+     * 选中数据
+     */
     get selectedData() {
         const list = this.selectedList;
         const size = this.selectedSize(list);
@@ -894,7 +864,7 @@ export default class Tree extends Component {
             size
         };
     }
-
+    // 选中列表
     get selectedList() {
         const { selected, list } = this.state;
         const { isIntegration } = this.props;
@@ -926,7 +896,7 @@ export default class Tree extends Component {
 
         return _.orderBy(lists, ['isChildren'], 'asc');
     }
-
+    // 选中数量
     selectedSize(selectedList) {
         const { list } = this.state;
         let num = 0;
@@ -938,6 +908,69 @@ export default class Tree extends Component {
             }
         });
         return num;
+    }
+
+    render() {
+        const { action, store } = this;
+        const {
+            show,
+            // 标题设置
+            title,
+            // 搜索设置
+            searchShow,
+            searchPlaceholder,
+            // isIntegration = false,
+            // treeTitle,
+            selectedTitle,
+
+            bottomBtn
+        } = this.props;
+        const {
+            max,
+            isIntegration
+        } = this.config;
+
+        const selectedData = this.selectedData; // 获取选中项目的数据
+        this.oldSelectedData = selectedData; // 保持为老选中项目数据
+        return (
+            <div className={this.treeClass} style={this.treeStyle}>
+                {
+                    show &&
+                    <div className="tree-main">
+                        <Header title={title} />
+
+                        <div className="tree-box">
+
+                            <TreeLeft
+                                store={store} // 共用的一些数据
+                                action={action} // 所有操作
+
+                                searchShow={searchShow}
+                                searchPlaceholder={searchPlaceholder}
+
+                              // treeTitle={treeTitle}
+                                tree={this.state.tree} // 树
+                            />
+
+                            <TreeRight
+                                store={store} // 共用的一些数据
+                                action={action} // 所有操作
+
+                                max={max} // 最大
+                                selectedTitle={selectedTitle} // 标题
+                                selected={this.state.selected} // 当前选中
+                                isIntegration={isIntegration} // 是否整合
+                                selectedData={selectedData}
+                            >
+                                <BottomBox bottomBtn={bottomBtn} onClick={action.onClickBtn} />
+                            </TreeRight>
+
+                        </div>
+
+                    </div>
+                }
+            </div>
+        );
     }
 }
 
