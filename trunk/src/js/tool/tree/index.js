@@ -216,9 +216,10 @@ class Wtree extends Component {
               onClickBtn={(...res) => {
                   console.log(res);
               }}
+                expandType="1"
                 onSearchChange={this.onSearch}  
                 // consfig
-                type="radio"
+                //type="radio"
               tree={this.tree}
               onExpand={this.getAll}
             />

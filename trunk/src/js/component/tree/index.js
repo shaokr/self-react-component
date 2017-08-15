@@ -1,18 +1,19 @@
 /**
  * 选人控件
  */
-import './index.less';
+
 
 import { Component } from 'react';
 import classnames from 'classnames';
 import _ from 'lodash';
 
-import Icon from 'component/icon';
+// import Icon from 'component/icon';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
 import BottomBox from './bottom-box';
 
+import './index.less';
 // 头部
 const Header = ({ title }) => (
     <header className="tree-header">
@@ -471,7 +472,6 @@ export default class Tree extends Component {
 
         this.getDataState = this.getDataState.bind(this);
         this.hasSelectedItem = this.hasSelectedItem.bind(this);
-        this.getDataState = this.getDataState.bind(this);
 
         this._onSelect = this._onSelect.bind(this);
         this._onAllClear = this._onAllClear.bind(this);
@@ -524,7 +524,8 @@ export default class Tree extends Component {
         // 共用数据
         return {
             list: this.state.list,
-            selected: this.state.selected
+            selected: this.state.selected,
+            expandType: this.props.expandType
         };
     }
     // 操作
@@ -727,7 +728,7 @@ export default class Tree extends Component {
         if (list[key] && !list[key].isSelected) {
             return;
         }
-        
+
         let isSelf = false;
         _.forEach([...selected], ([selKey]) => {
             if (list[selKey]) {
@@ -976,6 +977,7 @@ export default class Tree extends Component {
 
 Tree.defaultProps = {
     type: 'check', // 类型 check
+    expandType: '2',
     show: true,
     isAlert: true,
     // 标题设置

@@ -57,14 +57,14 @@ const getFrontIcon = (icon, dataState) => {
 };
 // 前面的下拉和头像等内容
 const Front = ({ data, onClick, dataState }) => (
-        <div className="tree-children-info-front">
-            <Expand onClick={onClick} dataState={dataState} />
-            {/*{ !!icon && <ItemIcon icon={icon} /> }*/}
-            <Avatar icon={getFrontIcon(data.icon, dataState)} name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
-        </div>
+    <div className="tree-children-info-front">
+        <Expand onClick={onClick} dataState={dataState} />
+        {/* { !!icon && <ItemIcon icon={icon} /> }*/}
+        <Avatar icon={getFrontIcon(data.icon, dataState)} name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
+    </div>
     );
 // 勾选状态
-const Checked = ({ item }) => {
+const Checked = ({ item, onClick }) => {
     if (!item.isCheckedShow) {
         return null;
     }
@@ -74,7 +74,7 @@ const Checked = ({ item }) => {
         2: 'minus'
     };
     return (
-        <div className="tree-children-checkbox">
+        <div className="tree-children-checkbox" onClick={onClick}>
             <Icon type={config[item.typeChecked]} />
         </div>
     );
@@ -90,7 +90,7 @@ const Name = ({ name, small }) => (
 const Children = ({ dataState, data, store, action }) => {
     if (dataState.isChildren && dataState.expand) {
         return (
-            <div className="tree-children-son">
+            <div className="tree-children-son" >
                 {
                     _.map(data.children, val => <TreeList data={val} store={store} action={action} />)
                 }
@@ -106,7 +106,9 @@ export default class TreeList extends Component {
         const { item } = this;
 
         this.treeUc = item.treeUc;
-        this._onExpand = this._onExpand.bind(this);
+        this.onExpand = this.onExpand.bind(this);
+        this.onCheck = this.onCheck.bind(this);
+        this.onClickItem = this.onClickItem.bind(this);
     }
     // 判断是否需要更新
     shouldComponentUpdate(nextProps) {
@@ -120,8 +122,14 @@ export default class TreeList extends Component {
     }
     // 获取当前项目的数据
     get item() {
-        const { data: { key }, store: { list } } = this.props;
-        return list[key];
+        const {
+            data: { key, treePath },
+            store: { list },
+            action
+        } = this.props;
+        const item = list[key];
+        item._state = action.getDataState(key, treePath);
+        return item;
     }
     // 获取当前项目的样式配置
     get css() {
@@ -134,25 +142,43 @@ export default class TreeList extends Component {
             }
         ]);
     }
-    _onExpand(e) {
+    onExpand(e) {
         e.stopPropagation();
         const { data, action } = this.props;
         action.onExpand(data);
+        return false;
     }
-
+    onCheck(e) {
+        e.stopPropagation();
+        const { action, data } = this.props;
+        const { item } = this;
+        if (item.isChangeChecked) {
+            action.onCheck(data);
+        }
+        return false;
+    }
+    onClickItem(e) {
+        const { store } = this.props;
+        const { item } = this;
+        if (store.expandType === '1' && item._state.isExpand) {
+            this.onExpand(e);
+        } else {
+            this.onCheck(e);
+        }
+    }
     render() {
         const { data, action, store } = this.props;
         const { item } = this;
         const dataState = action.getDataState(data.key, data.treePath);
         return (
             <div className={this.css}>
-                <div className="tree-children-info" onClick={() => item.isChangeChecked && action.onCheck(data)}>
+                <div className="tree-children-info" onClick={this.onClickItem}>
 
-                    <Front onClick={this._onExpand} data={data} dataState={dataState} />
+                    <Front onClick={this.onExpand} data={data} dataState={dataState} />
 
                     <Name name={data.name} small={item.small} />
 
-                    <Checked item={item} />
+                    <Checked onClick={this.onCheck} item={item} />
                 </div>
 
                 <Children item={item} data={data} store={store} action={action} dataState={dataState} />
