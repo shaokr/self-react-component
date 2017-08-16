@@ -34,6 +34,7 @@ function Last({data, build, path}) {
     data.output.libraryTarget = 'umd'; // 输出方式
 
     data.externals['zy-tree'] = 'ZYtree';
+    data.externals['Apiutil'] = 'Apiutil';
     // console.log(data);
     return data;
 }
