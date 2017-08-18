@@ -1,9 +1,6 @@
-import { render } from 'react-dom';
-import { Component } from 'react';
 import _ from 'lodash';
 import Tree from 'zy-tree';
 import Apiutil from 'Apiutil';
-import param from 'util/widget/param';
 
 // 'Apiutil': 'host:js/Apiutil-util/1.0.0/util.min.js',
 // const cdnHost = '//192.168.1.251/fed/web-cdn';
@@ -209,6 +206,8 @@ export const initData = async (data = {}) => {
 };
 
 if (__DEV__) {
+    const { render } = require('react-dom');
+    const param = require('util/widget/param').default;
     if (param.debug == 1) {
         (async () => {
             // await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);

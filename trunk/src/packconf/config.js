@@ -35,6 +35,7 @@ function Last({data, build, path}) {
 
     data.externals['zy-tree'] = 'ZYtree';
     data.externals['Apiutil'] = 'Apiutil';
+    data.externals['bridgeWs'] = 'bridgeWs';
     // console.log(data);
     return data;
 }
