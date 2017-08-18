@@ -7,7 +7,7 @@ import { Component } from 'react';
 import classnames from 'classnames';
 import _ from 'lodash';
 
-// import Icon from 'component/icon';
+import Icon from 'component/icon';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
@@ -15,12 +15,15 @@ import BottomBox from './bottom-box';
 
 import './index.less';
 // 头部
-const Header = ({ title }) => (
+const Header = ({ title, onClick }) => (
     <header className="tree-header">
         <div className="header-left">
             <i className="icon-chevron-thin-left" />
         </div>
         <h2>{title}</h2>
+        <div className="header-right" onClick={onClick}>
+            <Icon type="close" />
+        </div>
     </header>
 );
 
@@ -483,6 +486,13 @@ export default class Tree extends Component {
         this._onCheckRadio = this._onCheckRadio.bind(this);
 
         const { state, config, uc } = this.initState(props);
+        /**
+         * {
+         *  list // []
+         *  tree // []
+         *  selected // map
+         * }
+         */
         this.state = state;
         this.uc = uc;
         this.config = config;
@@ -705,19 +715,45 @@ export default class Tree extends Component {
         let { list, selected } = this.state;
         const { key } = item;
         if (key) {
-            if (typeof checked === 'undefined') checked = !list[key].checked;
-            if (checked) {
-                if (this.oldSelectedData.size + list[key].childrenNumber > max) {
+            // 判断是否存在列表中
+            if (list[key]) {
+                if (typeof checked === 'undefined') checked = !list[key].checked;
+                if (checked) {
+                    if (this.oldSelectedData.size + list[key].childrenNumber > max) {
+                        this.action.onExceedMax();
+                        return;
+                    }
+                }
+                list = setChecked(list, [key], checked);
+
+                this.setState({
+                    list,
+                    selected: this.getSelected(list, selected)
+                });
+                return;
+            }
+            // 判断是否已经存在选中项中
+            if (selected.has(key)) {
+                selected.delete(key);
+            } else {
+                if (this.oldSelectedData.size + (item.childrenNumber || 1) > max) {
                     this.action.onExceedMax();
                     return;
                 }
+                selected.set(key, {
+                    name: item.name, // 名称
+                    key, // 关键字
+                    avatar: item.avatar, // 头像
+                    icon: item.icon, // 头像
+                    isDel: true // 是否可以删除
+                });
             }
-            list = setChecked(list, [key], checked);
-
             this.setState({
-                list,
-                selected: this.getSelected(list, selected)
+                selected
             });
+        }
+        if (typeof ck === 'function') {
+            ck(item);
         }
         // return item;
     }
@@ -728,18 +764,17 @@ export default class Tree extends Component {
         if (list[key] && !list[key].isSelected) {
             return;
         }
-
-        let isSelf = false;
+        // 是否存在于选中项中
+        const isHas = selected.has(key);
         _.forEach([...selected], ([selKey]) => {
             if (list[selKey]) {
                 list[selKey].checked = false;
                 list[selKey].typeChecked = '0';
                 list = setUc(list, selKey);
             }
-            selected.delete(selKey);
-            isSelf = (selKey === key);
         });
-        if (!isSelf) {
+        selected.clear();
+        if (!isHas) {
             selected.set(key, {
                 name: item.name, // 名称
                 key, // 关键字
@@ -914,9 +949,11 @@ export default class Tree extends Component {
     render() {
         const { action, store } = this;
         const {
-            show,
+            isSelect,
+            show, // 显示状态
             // 标题设置
             title,
+            onClose, // 关闭按钮
             // 搜索设置
             searchShow,
             searchPlaceholder,
@@ -938,7 +975,7 @@ export default class Tree extends Component {
                 {
                     show &&
                     <div className="tree-main">
-                        <Header title={title} />
+                        <Header title={title} onClick={onClose} />
 
                         <div className="tree-box">
 
@@ -963,7 +1000,12 @@ export default class Tree extends Component {
                                 isIntegration={isIntegration} // 是否整合
                                 selectedData={selectedData}
                             >
-                                <BottomBox bottomBtn={bottomBtn} onClick={action.onClickBtn} />
+                                <BottomBox
+                                    bottomBtn={bottomBtn}
+                                    onClick={action.onClickBtn}
+                                    isSelect={isSelect}
+                                    isExistSelected={!!this.state.selected.size}
+                                />
                             </TreeRight>
 
                         </div>
@@ -977,19 +1019,20 @@ export default class Tree extends Component {
 
 Tree.defaultProps = {
     type: 'check', // 类型 check
-    expandType: '2',
-    show: true,
-    isAlert: true,
+    expandType: '2', // 可展开项展开类型
+    show: true, // 是否显示
+    isAlert: true, // 是否以弹窗的显示显示
+    isSelect: false, // 是否必须有选项
+    zIndex: 3, // 浮动样式的层级
     // 标题设置
-    title: '',
+    title: '', // 默认标题
     // 搜索设置
-    searchShow: true,
-    searchPlaceholder: '搜索',
-    zIndex: 3,
+    searchShow: true, // 是否显示搜索项
+    searchPlaceholder: '搜索', // 搜索框的Placeholder
     // isIntegration = false,
     // treeTitle: '选择',
-    selectedTitle: '已选',
-    bottomBtn: [
+    selectedTitle: '已选', // 右侧选中的说明
+    bottomBtn: [ // 默认按钮设置
         {
             txt: '确定',
             key: 'yes',

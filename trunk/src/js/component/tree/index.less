@@ -72,12 +72,19 @@
         text-align: center;
         height: @u*52;
         background: @bgc1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         h2{
-            font-size: 14px;
+            flex: 1;
+            font-size: @fs2;
             color: @c1;
             font-weight: bold;
-            padding-top: @u*24; 
         }
+        .header-right,.header-left{
+            padding: @u*8;
+        }
+        
     }
     @box-lw:@u*320;
     @box-p:@u*10;
@@ -334,6 +341,7 @@
     // 搜索
     .tree-search{
         // position: relative;
+        position: static;
         border: 1px solid @bc1;
         margin-top: @u*10;
         border-radius: @u*100;
