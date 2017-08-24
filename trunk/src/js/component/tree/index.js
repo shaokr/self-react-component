@@ -12,6 +12,7 @@ import Icon from 'component/icon';
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
 import BottomBox from './bottom-box';
+import TreeList from './tree-list';
 
 import './index.less';
 // 头部
@@ -523,11 +524,12 @@ export default class Tree extends Component {
     // 获取主要tree外壳的class属性
     get treeClass() {
         const {
-            isAlert
+            isAlert,
+            className
         } = this.props;
-        return classnames({
+        return classnames([className, {
             'tree-fixed': isAlert
-        });
+        }]);
     }
     // 共用数据
     get store() {
@@ -950,6 +952,7 @@ export default class Tree extends Component {
         const { action, store } = this;
         const {
             isSelect,
+            isSoLongAsTreeList,
             show, // 显示状态
             // 标题设置
             title,
@@ -961,7 +964,8 @@ export default class Tree extends Component {
             // treeTitle,
             selectedTitle,
 
-            bottomBtn
+            bottomBtn,
+            className
         } = this.props;
         const {
             max,
@@ -970,6 +974,9 @@ export default class Tree extends Component {
 
         const selectedData = this.selectedData; // 获取选中项目的数据
         this.oldSelectedData = selectedData; // 保持为老选中项目数据
+        if (isSoLongAsTreeList) {
+            return <TreeList tree={this.state.tree} className={className} store={store} action={action} />;
+        }
         return (
             <div className={this.treeClass} style={this.treeStyle}>
                 {
@@ -1022,6 +1029,7 @@ Tree.defaultProps = {
     expandType: '2', // 可展开项展开类型
     show: true, // 是否显示
     isAlert: true, // 是否以弹窗的显示显示
+    isSoLongAsTreeList: false, // 是否只需要列表树
     isSelect: false, // 是否必须有选项
     zIndex: 3, // 浮动样式的层级
     // 标题设置
@@ -1038,5 +1046,6 @@ Tree.defaultProps = {
             key: 'yes',
             type: 'primary'
         }
-    ]
+    ],
+    className: ''
 };

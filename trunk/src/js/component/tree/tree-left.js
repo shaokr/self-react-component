@@ -21,9 +21,7 @@ export default class extends Component {
                     {/* <p>{treeTitle}</p> */}
                 </div>
 
-                <div className="scroll">
-                    { _.map(tree, item => <TreeList data={item} store={store} action={action} />) }
-                </div>
+                <TreeList tree={tree} store={store} action={action} />
             </div>
         );
     }

@@ -230,7 +230,7 @@ if (__DEV__) {
                 uid: loginRes.uid
             });
 
-            const companyData = await initData({ type: 'user' });
+            const companyData = await initData();
             const groupIdData = await getGroup({ key: '115' });
             const tree = [
                 companyData,
@@ -249,6 +249,7 @@ if (__DEV__) {
                 onClickBtn={(...res) => {
                     console.log(res);
                 }}
+                isSoLongAsTreeList
                 expandType="1"
                 onSearchChange={getSearch}
                         // consfig

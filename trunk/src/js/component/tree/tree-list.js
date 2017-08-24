@@ -87,19 +87,19 @@ const Name = ({ name, small }) => (
     </div>
 );
 // 子类展示
-const Children = ({ dataState, data, store, action }) => {
+const Children = ({ dataState, data, store, action, onHover }) => {
     if (dataState.isChildren && dataState.expand) {
         return (
             <div className="tree-children-son" >
                 {
-                    _.map(data.children, val => <TreeList data={val} store={store} action={action} />)
+                    _.map(data.children, val => <TreeList data={val} store={store} action={action} onHover={onHover} />)
                 }
             </div>
         );
     }
     return null;
 };
-export default class TreeList extends Component {
+class TreeList extends Component {
     // statics
     constructor(props) {
         super(props);
@@ -167,12 +167,12 @@ export default class TreeList extends Component {
         }
     }
     render() {
-        const { data, action, store } = this.props;
+        const { data, action, store, onHover } = this.props;
         const { item } = this;
         const dataState = action.getDataState(data.key, data.treePath);
         return (
-            <div className={this.css}>
-                <div className="tree-children-info" onClick={this.onClickItem}>
+            <div className={this.css} >
+                <div className="tree-children-info" onClick={this.onClickItem} onMouseOverCapture={onHover}>
 
                     <Front onClick={this.onExpand} data={data} dataState={dataState} />
 
@@ -181,8 +181,21 @@ export default class TreeList extends Component {
                     <Checked onClick={this.onCheck} item={item} />
                 </div>
 
-                <Children item={item} data={data} store={store} action={action} dataState={dataState} />
-
+                <Children item={item} data={data} store={store} action={action} dataState={dataState} onHover={onHover} />
+            </div>
+        );
+    }
+}
+export default class TreeListBox extends Component {
+    get class() {
+        const { className } = this.props;
+        return classnames([className, 'scroll tree-children-box']);
+    }
+    render() {
+        const { tree, store, action } = this.props;
+        return (
+            <div className={this.class}>
+                { _.map(tree, item => <TreeList data={item} store={store} action={action} />) }
             </div>
         );
     }
