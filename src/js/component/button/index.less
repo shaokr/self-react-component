@@ -1,47 +1,153 @@
 @import '~global/var.less';
 @import '~global/mixins.less';
 
+// 可变化按钮样式
+.establish-btn(@color, @fColor: #fff) {
+    @hue: hue(@color);
+    background: linear-gradient(hsv(@hue, .85, .95) , hsv(@hue, .90, .85));
+    color: @fColor;
+    border: 1px solid hsv(@hue, .80, .70);
+    box-shadow: inset 0 2px 0 0 rgba(255,255,255,0.15);
+    &:hover{
+        background: linear-gradient(hsv(@hue, .85, .95) , hsv(@hue, .80, .70));
+    }
+    &:active{
+        background: linear-gradient(hsv(@hue, .75, .70), hsv(@hue, .75, .70));
+    }
+    &.@{prefix}-button__sidabled{
+        background: linear-gradient(hsv(@hue, .40, 1), hsv(@hue, .40, .95));
+        border-color: hsv(@hue, .30, .85);
+        cursor: no-drop;
+    }
+    // 幽灵按钮
+    &.@{prefix}-button__ghost {
+        background: transparent;
+        color: @color;
+        &:hover{
+            // background: transparent;
+            color: hsv(@hue, .85, .95);
+            border-color: hsv(@hue, .85, .95);
+        }
+        &:active{
+            // background: transparent;
+            color: hsv(@hue, .75, .70);
+            border-color: hsv(@hue, .75, .70);
+        }
+        &.@{prefix}-button__sidabled{
+            // background: transparent;
+            color: #BEC7D0;
+            border-color: #DAE0E6;
+            cursor: no-drop;
+        }
+    }
+    // 默认
+    &.@{prefix}-button__default{
+        color: @color;
+        background: linear-gradient(#fff , #f6f6f6);
+        border-color: #DAE0E6;
+        box-shadow: none;
+        &:hover{
+            color: @fColor;
+            background: linear-gradient(hsv(@hue, .85, .95) , hsv(@hue, .85, .95));
+            border-color: hsv(@hue, .85, .95);
+        }
+        &:active{
+            color: @fColor;
+            background: linear-gradient(hsv(@hue, .75, .70), hsv(@hue, .75, .70));
+            border-color: hsv(@hue, .75, .70);
+        }
+        &.@{prefix}-button__sidabled{
+            background: linear-gradient(#FAFAFA, #FAFAFA);
+            color: #BEC7D0;
+            border-color: #DAE0E6;
+            cursor: no-drop;
+        }
+    }
+}
 .@{prefix}-button {
-    // width:100%;
-    min-width:@u*60;
+    .dpr(@fs2);
+    min-width:@u*90;
     min-height:@u*30;
     line-height:@u*30;
+    padding: 0 @u*20;
     text-align:center;
-    font-size:14px;
-    border-radius:@u*4;
-    border:0 none;
+    border-radius:@u*3;
+    // border:0 none;
     cursor: pointer;
     outline: none;
     user-select: none;
-    transition: all .3s cubic-bezier(.645,.045,.355,1);
-    &-primary{
-        background-color:#459ef2;
-        color:#fff;
-        &:hover{
-            background-color:#4297e6;
-        }
-        &:active{
-            background-color:#3f8ed9;
-        }
-    }
-    // 不可用按钮
-    &-sidabled{
-        background-color:#abb8c6;
-        color:#fff;
-        cursor:default;
-    }
+    transition: all .1s cubic-bezier(.645,.045,.355,1);
+    // 按钮类型
     // 默认按钮
-    &-default{
-        border:1px solid #dae0e6;
-        color:#32373c;
-        background-color:#fff;
+    // &--default{
+        color: @c1;
+        background: linear-gradient(#fff , #f6f6f6);
+        border: 1px solid #DAE0E6;
         &:hover{
-            border-color:#459ef2;
-            background-color:#f5fbff;
+            background: linear-gradient(#FEFEFE , #E7EDF3);
         }
         &:active{
-            background-color:#e8f6ff;
-            border-color:#3f8ed9;
+            background: linear-gradient(#DAE0E6, #DAE0E6);
+            border-color: #C3CED9;
         }
+        &.@{prefix}-button__sidabled{
+            background: linear-gradient(#FAFAFA, #FAFAFA);
+            color: #BEC7D0;
+            border-color: #DAE0E6;
+            cursor: no-drop;
+        }
+    // }
+    // 主要
+    &--primary{
+        .establish-btn(#489EF3);
+    }
+    // 危险
+    &--danger{
+        .establish-btn(#E03200);
+    }
+    // 警告
+    &--warning{
+        .establish-btn(#CC9200);
+    }
+    // 按钮大小
+    &__large{
+        .dpr(@fs1);
+        // min-width:@u*60;
+        min-height:@u*36;
+        line-height:@u*36;
+        padding: 0 @u*22;
+    }
+    &__small{
+        .dpr(@fs3);
+        min-width:@u*60;
+        min-height:@u*22;
+        line-height:@u*22;
+        padding: 0 @u*15;
+    }
+    &--icon{
+        &+&,+span{
+            margin-left: .5em;
+        }
+    }
+    &__load {
+        .@{prefix}-button--icon{
+            svg {
+                animation: loadingCircle 1s infinite linear;
+            }
+        }
+    }
+
+    // 不可用按钮
+    // &-sidabled{
+    //     filter: grayscale(50%);
+    //     cursor:default;
+    // }
+}
+@keyframes loadingCircle {
+    0%{
+        transform: rotateZ(0);
+    }
+    100% {
+        transform: rotateZ(360deg);
     }
 }
