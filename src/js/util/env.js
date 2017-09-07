@@ -2,7 +2,7 @@
  * 环境判断
  * shaokr 2017.1.13
  */
-import param from 'util/widget/param'; // 参数对象
+import param from 'util/param'; // 参数对象
 
 let {location} = window;
 /**

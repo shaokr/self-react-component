@@ -3,6 +3,7 @@
  */
 import './index.less';
 import { Component } from 'react';
+import Alert from 'antd/lib/alert';
 
 
 export default class Main extends Component {
@@ -13,6 +14,7 @@ export default class Main extends Component {
         // let
         return (
             <div>
+                <Alert {...this.props} />
 			</div>
         );
     }

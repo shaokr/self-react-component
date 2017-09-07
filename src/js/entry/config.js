@@ -11,7 +11,7 @@ const { SystemJSConfigMain } = window;
 const mapListObj = { // 自定义map和依赖关系,可覆盖cdn中的配置(注释的是例子
     map: {
         // 'ReactDom': 'host/js/react/15.4.0/react-dom.min.js',
-        'treeIcon': `//at.alicdn.com/t/font_pwbftnqb8dea5rk9.js`,
+        'treeIcon': `//at.alicdn.com/t/font_232637_recy5urka5nah5mi.js`,
         'Apiutil': '//localhost:8080/web-api-config/trunk/dist/util.js',
         'bridgeWs': '//localhost:8080/web-sdk/dist/bridge.js'
     },
@@ -30,7 +30,7 @@ const mainListObj = { // 载入文件的配置
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']
     },
     '_tool-tree-pc-management': { // 入口文件 签名
-        ToLoad: true, // 是否马上加载
+        // ToLoad: true, // 是否马上加载
          // 依赖库
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon', './tree.css', './tree.js', 'Apiutil']
     },
@@ -38,6 +38,11 @@ const mainListObj = { // 载入文件的配置
         // ToLoad: true, // 是否马上加载
          // 依赖库
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon', './tree.css', './tree.js', 'bridgeWs']
+    },
+    '_index': { // 入口文件 签名
+        ToLoad: true, // 是否马上加载
+         // 依赖库
+        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']
     }
 };
 
