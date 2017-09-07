@@ -5,8 +5,8 @@ import Tree from 'zy-tree';
  * 获取部门信息
  * @param {*} param0
  */
-const getDept = async ({ key }, ck) => {
-    const GsInfo = await io.contacts.GoGetDeptInfo({
+const getDept = async function ({ key }, ck) {
+    const GsInfo = await this.io.contacts.GoGetDeptInfo({
         dept_ids: [key]
     }).then((res) => {
         const data = res.depts[0].datas;
@@ -22,9 +22,9 @@ const getDept = async ({ key }, ck) => {
  * 获取用户列表
  * @param {*} data
  */
-const getUserList = async ({ key, type = 'user' }, ck) => {
+const getUserList = async function ({ key, type = 'user' }, ck) {
     const did = key;
-    const userList = await io.contacts.GoGetCorpData({ type: 2, ids: [did] }).then((res) => {
+    const userList = await this.io.contacts.GoGetCorpData({ type: 2, ids: [did] }).then((res) => {
         if (res.res.err_code === '0') {
             return (
                 _.map(res.datas, (item) => {
@@ -36,6 +36,7 @@ const getUserList = async ({ key, type = 'user' }, ck) => {
                     return {
                         key: userData.uid,
                         name: userData.user_name,
+                        itemType: 'user',
                         type
                     };
                 })
@@ -53,9 +54,9 @@ const getUserList = async ({ key, type = 'user' }, ck) => {
  * 获取部门列表
  * @param {*} data
  */
-const getDeptList = async ({ key, type = 'dept', children }, ck) => {
+const getDeptList = async function ({ key, type = 'dept', children }, ck) {
     const did = key;
-    const deptList = await io.contacts.GoGetCorpData({ type: 1, ids: [did] }).then((res) => {
+    const deptList = await this.io.contacts.GoGetCorpData({ type: 1, ids: [did] }).then((res) => {
         if (res.res.err_code === '0') {
             return (
                 _.map(res.datas, (item) => {
@@ -70,6 +71,7 @@ const getDeptList = async ({ key, type = 'dept', children }, ck) => {
                         name: deptData.dept_name,
                         isChildren: true,
                         icon: 'folder',
+                        itemType: 'dept',
                         type,
                         children: _item.children
                     };
@@ -88,11 +90,11 @@ const getDeptList = async ({ key, type = 'dept', children }, ck) => {
  * 获取部门和用户
  * @param {*} data
  */
-const getDeptAndUserList = async (data, ck) => {
+const getDeptAndUserList = async function (data, ck) {
     const _data = _.assign({}, data, { type: 'dept-user' });
     const [userList, deptList] = await Promise.all([
-        getUserList(_data),
-        getDeptList(_data)
+        this.getUserList(_data),
+        this.getDeptList(_data)
     ]);
 
     const RData = [
@@ -108,7 +110,7 @@ const getDeptAndUserList = async (data, ck) => {
 /**
  * 获取搜索数据
  */
-const getSearch = async (data, ck) => {
+const getSearch = async function (data, ck) {
     let _data = {};
     if (typeof data === 'string') {
         _data.keyword = data;
@@ -120,7 +122,7 @@ const getSearch = async (data, ck) => {
         };
     }
     if (_data.keyword) {
-        const res = await io.search.GoSearchUser(_data);
+        const res = await this.io.search.GoSearchUser(_data);
         if (res.err_code === '0') {
             let list = [];
             _.forEach(res.hits, (item) => {
@@ -132,7 +134,6 @@ const getSearch = async (data, ck) => {
                     ..._.map(item.depts, dept => ({
                         ..._item,
                         title: dept.name.split('-')[0]
-
                     }))
                 );
             });
@@ -141,6 +142,7 @@ const getSearch = async (data, ck) => {
                 title: key,
                 children: item
             }));
+
             if (typeof ck === 'function') {
                 ck(RData);
             }
@@ -151,8 +153,8 @@ const getSearch = async (data, ck) => {
 /**
  * 获取群用户系列
  */
-const getGroup = async ({ key, type = 'group' }, ck) => {
-    const res = await io.group.GoGetUserList({
+const getGroup = async function ({ key, type = 'group' }, ck) {
+    const res = await this.io.group.GoGetUserList({
         group_id: key
     });
 
@@ -167,28 +169,28 @@ const getGroup = async ({ key, type = 'group' }, ck) => {
     return Rdata;
 };
 
-const onExpand = async (data, ck) => {
+const onExpand = async function (data, ck) {
     if (data.type === 'group') {
-        return getGroup(data, ck);
+        return this.getGroup(data, ck);
     }
     if (data.type === 'dept-user') {
-        return getDeptAndUserList(data, ck);
+        return this.getDeptAndUserList(data, ck);
     }
     if (data.type === 'dept') {
-        return getDeptList(data, ck);
+        return this.getDeptList(data, ck);
     }
     if (data.type === 'user') {
-        return getUserList(data, ck);
+        return this.getUserList(data, ck);
     }
 };
 
 /**
  * 获取初始的根部门和用户信息
  */
-const initData = async (data = {}) => {
+const initData = async function (data = {}) {
     const { key = '0', type = 'dept-user' } = data;
-    const GsInfo = await getDept({ key });
-    const list = await onExpand({
+    const GsInfo = await this.getDept({ key });
+    const list = await this.onExpand({
         key: GsInfo.dept_id,
         type
     });
@@ -217,12 +219,11 @@ class Default {
 }
 if (__DEV__) {
     const { render } = require('react-dom');
-    const param = require('util/widget/param').default;
+    const param = require('util/param').default;
     const bridgeWs = require('bridgeWs').default;
     if (param.debug == 1) {
         const io = bridgeWs.init();
         (async () => {
-            
             // ip	是	 	''	登录的ip地址
             // dev_type	是	 	 	客户端设备类型,0-unkown、1-pc、2-iOS、3-android、4-web、5-mac
             // login_type 	是	 	 1	登录类型,1-账号密码登录、2-手机验证码登录、3-扫一扫登录
@@ -255,8 +256,20 @@ if (__DEV__) {
                 }}
                 expandType="1"
                 onSearchChange={getSearch}
+                disableKeys={['4563403140', '4563442200']}
+                disableChangeKeys={['4563403139', '4563442200']}
                         // consfig
                         // type="radio"
+                bottomBtn={
+                    [
+                        {
+                            txt: '确定',
+                            key: 'yes',
+                            type: 'primary',
+                            load: false
+                        }
+                    ]
+                }
                 tree={tree}
                 onExpand={onExpand}
                 max="7"

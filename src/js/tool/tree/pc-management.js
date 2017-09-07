@@ -207,7 +207,7 @@ export const initData = async (data = {}) => {
 
 if (__DEV__) {
     const { render } = require('react-dom');
-    const param = require('util/widget/param').default;
+    const param = require('util/param').default;
     if (param.debug == 1) {
         (async () => {
             // await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);
@@ -249,11 +249,39 @@ if (__DEV__) {
                 onClickBtn={(...res) => {
                     console.log(res);
                 }}
-                isSoLongAsTreeList
+                // isSoLongAsTreeList
                 expandType="1"
                 onSearchChange={getSearch}
+                disableKeys={['4563403140', '4563403145', '4563442200']}
+                disableChangeKeys={['4563403139', '4563442200', '4563403146']}
+                selectedList={[
+                    {
+                        key: '4563403139',
+                        name: '管理员'
+                    },
+                    {
+                        key: '4563403140',
+                        name: '李易峰'
+                    },
+                    {
+                        key: '4563403145',
+                        name: 'hhhhhhh'
+                    },
+                    {
+                        key: '4563403146',
+                        name: 'qawdqwdqw'
+                    }
+                ]}
                         // consfig
                         // type="radio"
+                bottomBtn={[
+                    {
+                        txt: '确定',
+                        key: 'yes',
+                        type: 'primary',
+                        load: true
+                    }
+                ]}
                 tree={tree}
                 onExpand={onExpand}
                 max="7"
