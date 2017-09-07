@@ -46,7 +46,7 @@ export default class Avatar extends Component {
         return (
             <div className="tree-bottom">
                 {
-                    _.map(this.btnList, item => <Button type={this.getType(item)} onClick={() => this.onClick(item)}>{item.txt}</Button>)
+                    _.map(this.btnList, item => <Button type={this.getType(item)} onClick={() => this.onClick(item)} loading={item.load} >{item.txt}</Button>)
                 }
             </div>
         );

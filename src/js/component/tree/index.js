@@ -50,9 +50,9 @@ const Header = ({ title, onClick }) => (
  * 新项
  */
 class Children {
-    constructor(props, pattern) {
+    constructor({ item, pattern, selectedList, disableKeys, disableChangeKeys }) {
         this.pattern = this[`${pattern}Type`];
-        this.pattern.init.call(this, props);
+        this.pattern.init.call(this, { item, selectedList, disableKeys, disableChangeKeys });
     }
     /**
      * 添加
@@ -102,7 +102,7 @@ class Children {
     get checkType() {
         return {
             // 初始化
-            init(props) {
+            init({ item, selectedList, disableKeys, disableChangeKeys }) {
                 const {
                     key,
 
@@ -117,25 +117,42 @@ class Children {
 
                     checked = false, // 勾选状态
 
-                    childrenNumber = 1
+                    childrenNumber = 1,
+                    isSelected = true
 
-                } = props;
-                this.self = props;
-
+                } = item;
+                this.self = item;
+                
                 this.key = key;
                 this.name = name;
                 this.avatar = avatar;  // 头像
                 this.small = small; // 灰色文字描述
                 this.icon = icon; // 使用的icon
 
-                // this.isChecked = !!isChecked; // 是否可以设置勾选状态
+                // 勾选状态的设置
+                if (selectedList && selectedList.has(key)) {
+                    this.checked = true;
+                } else {
+                    this.checked = !!checked; // 勾选状态
+                }
+                // 是否可以更改勾选状态
+                if (disableChangeKeys && ~_.indexOf(disableChangeKeys, key)) {
+                    this.isChangeChecked = false;
+                } else {
+                    this.isChangeChecked = !!isChangeChecked;
+                }
+
+                // 是否可以选中到另一个栏目
+                if (disableKeys && ~_.indexOf(disableKeys, key)) {
+                    this.isSelected = false;
+                    this.isChangeChecked = false;
+                } else {
+                    this.isSelected = !!isSelected;
+                }
+                
                 this.isCheckedShow = !!isCheckedShow;
-                this.isChangeChecked = !!isChangeChecked; // 是否可以更改勾选状态
-                this.checked = !!checked; // 勾选状态
 
-                this.typeChecked = checked ? 1 : 0; // 勾选类型 0全不选 1全选 2部分选中
-
-                // this.isSelected = !!isSelected; // 是否可以选中到另一个栏目
+                this.typeChecked = this.checked ? 1 : 0; // 勾选类型 0全不选 1全选 2部分选中
 
                 this.treeUc = 0; // 当前terr的uc
                 this.paths = {}; // 当前路径下的一些内容信息
@@ -143,6 +160,7 @@ class Children {
                 this.childrenNumber = childrenNumber;// 可选子类项目( addPaths中可能变化
                 // this.isChildren = isChildren; // 是否包含子类
                 this.allNexusChecked = {};
+                
             },
             // 添加方法
             addPaths({ item, list, pid, path, children, idPath }) {
@@ -256,7 +274,7 @@ class Children {
  *
  */
 const noe = Symbol('noe');
-function getData({ data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern, selectedList }) {
+function getData({ data, list = {}, pid = noe, paths = [], idPath = [], unknownList = [], first = true, pattern, selectedList, disableKeys, disableChangeKeys }) {
     const newTree = _.cloneDeep(data || []);
     // paths.length &&
     if (data && data.length) {
@@ -266,14 +284,11 @@ function getData({ data, list = {}, pid = noe, paths = [], idPath = [], unknownL
                 const _idPath = _.assign([], idPath);
                 const { key, children, isChildren } = item;
                 // 判断是否存在选中列表中
-                if (selectedList && selectedList.has(key)) {
-                    item.checked = true;
-                }
                 _path.push(index); // 设置路径
                 _idPath.push(key); // 设置key的路径
 
                 if (!list[key]) {
-                    list[key] = new Children(item, pattern);
+                    list[key] = new Children({ item, pattern, disableKeys, disableChangeKeys, selectedList });
                 }
                 // 位置路径
                 newTree[index].treePath = _.cloneDeep(_path);
@@ -284,7 +299,7 @@ function getData({ data, list = {}, pid = noe, paths = [], idPath = [], unknownL
                 // 判断是否包含子项
                 if (children && children.length) {
                     _path.push('children');
-                    const _data = getData({ data: children, list, pid: key, paths: _path, idPath: _idPath, unknownList, first: false, pattern, selectedList });
+                    const _data = getData({ data: children, list, pid: key, paths: _path, idPath: _idPath, unknownList, first: false, pattern, selectedList, disableKeys, disableChangeKeys });
                     list = _data.list;
 
                     newTree[index].children = _data.newTree;
@@ -565,8 +580,7 @@ export default class Tree extends Component {
     }
     // 初始化各种数据
     initState(props) {
-        let { max, type, isIntegration = false, tree, selectedList = [] } = _.cloneDeep(props);
-        selectedList = _.map(selectedList, item => item);
+        let { max, type, isIntegration = false, tree, selectedList = [], disableKeys = [], disableChangeKeys = [] } = _.cloneDeep(props);
         // 模式
         if (type === 'radio') {
             max = 1;
@@ -574,15 +588,16 @@ export default class Tree extends Component {
         } else {
             type = 'check';
         }
-        selectedList = _.map(selectedList, item => [item.key.toString(), { ...item, isDel: true }]);
+        selectedList = _.map(selectedList, item => [item.key.toString(), { isDel: true, ...item }]);
         selectedList = new Map(selectedList);
         // 获取数据
-        const { list, newTree } = getData({ data: tree, pattern: type, selectedList });
-
+        const { list, newTree } = getData({ data: tree, pattern: type, selectedList, disableKeys, disableChangeKeys });
+        const selected = this.getSelected(list, selectedList);
+        // _.forEach(disableKeys, item => selected.delete(item));
         const state = {
             list,
             tree: newTree,
-            selected: this.getSelected(list, selectedList)
+            selected
         };
 
         const config = {
@@ -627,13 +642,12 @@ export default class Tree extends Component {
         const keyList = _.map([...selected], ([, { key, isDel }]) => {
             key = key.toString();
             const item = list[key];
+            // 是否可以删除
+            if (isDel) selected.delete(key);
             // 是否存在于本地数据
             if (item) {
-                // 是否可以删除
-                isDel && selected.delete(key);
                 return key;
             }
-            selected.delete(key);
         });
 
         list = setChecked(list, keyList, false);
@@ -665,6 +679,7 @@ export default class Tree extends Component {
         if (typeof ck === 'function') {
             let _callback = function (res) {
                 const { list, tree, selected } = self.state;
+                const { props } = self;
                 let { key, treePath } = data;
                 // debugger;
                 treePath = _.cloneDeep(treePath);
@@ -689,7 +704,9 @@ export default class Tree extends Component {
                     paths: _data.treePath,
                     idPath: _data.treeIdPath,
                     pattern: self.config.type,
-                    selectedList: selected
+                    selectedList: selected,
+                    disableKeys: props.disableKeys,
+                    disableChangeKeys: props.disableChangeKeys
                 });
                 treePath.push('children');
                 _.set(tree, treePath, _.get(newTree, _data.l).children);
@@ -905,14 +922,19 @@ export default class Tree extends Component {
     // 选中列表
     get selectedList() {
         const { selected, list } = this.state;
-        const { isIntegration } = this.props;
+        const { isIntegration, disableKeys = [] } = this.props;
         // item.isSelected
         const lists = [];
         _.forEach([...selected], ([, item]) => {
             const _item = list[item.key];
             // 判断是否在当前数据中
             if (!_item) {
-                lists.push(item);
+                if (!~_.indexOf(disableKeys, item.key)) {
+                    lists.push(item);
+                }
+                return;
+            }
+            if (!_item.isSelected) {
                 return;
             }
             // console.log(_.some(_item.paths, ({ state }) => state.isChildren));
