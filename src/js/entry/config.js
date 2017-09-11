@@ -39,7 +39,7 @@ const mainListObj = { // 载入文件的配置
          // 依赖库
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon', './tree.css', './tree.js', 'bridgeWs']
     },
-    '_index': { // 入口文件 签名
+    '_component': { // 入口文件 签名
         ToLoad: true, // 是否马上加载
          // 依赖库
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']

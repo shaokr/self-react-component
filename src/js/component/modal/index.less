@@ -4,3 +4,49 @@
 @import "~global/var.less";
 @import "~global/mixins.less";
 
+.@{prefix}-modal {
+    width: @u*520;
+    border-radius: @u*4;
+    border: 1px solid @bc1;
+    background: #fff;
+    box-shadow: 0 5px 18px 0 rgba(0,34,77,0.10);
+    &--head{
+        .dpr(@fs2);
+        padding: @u*12 @u*20;
+        border-bottom: 1px solid @bc1;
+        position: relative;
+        min-height: @u*17;
+        line-height: 1.2;
+        background: @bgc1;
+    }
+    &--title{
+        // text-align: center;
+    }
+    &--close{
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: @u*40;
+        height: 100%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &--body{
+        .dpr(@fs2);
+        padding: @u*20;
+    }
+    &--footer{
+        border-top: 1px solid @bc1;
+        display: flex;
+        justify-content: flex-end;
+        align-self: center;
+        flex-wrap: wrap;
+        padding: @u*14 @u*20;
+        >*{
+            margin: @u*5 0 0 @u*5;
+        }
+    }
+}
