@@ -13,8 +13,8 @@ export class ShowDom {
 
         this.dom = document.createElement('div');
         document.body.appendChild(this.dom);
-
         this.rectdom = ReactDOM.render(component, this.dom);
+
         this.initPromise.resolve = true;
         return this.rectdom;
     }

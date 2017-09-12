@@ -45,14 +45,15 @@ const Footer = ({ btn, footer, action }) => {
     return (
         <div className={`${_prefix}--footer`}>
             {
-                _.map(btn, (item, index) => <Button loading={item.loading} type={item.type} onClick={e => action.onClickKey(e, index)}>{item.txt}</Button>)
+                _.map(btn, (item, index) => <Button key={index} loading={item.loading} type={item.type} onClick={e => action.onClickKey(e, index)}>{item.txt}</Button>)
             }
         </div>
     );
 };
 
+
 @superDom
-class Modal extends Component {
+export default class Modal extends Component {
     constructor(props) {
         super(props);
         this.state = {

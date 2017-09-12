@@ -12,16 +12,16 @@ Modal.success = ({ onClickKey, title, content }) => {
     rdom.init(<Confirm rdom={rdom} type="success" content={content} title={title} onClickKey={onClickKey} />);
     return rdom;
 };
-// Modal.info
-// Modal.success
-Modal.error = ({ onClickKey, title, content }) => {
-    const rdom = new ShowDom();
-    return rdom.init(<Modal visible title={title} onClickKey={(...res) => { onClickKey(...res); rdom.remove(); }}>{content}</Modal>);
-};
-Modal.warning = ({ onClickKey, title, content }) => {
-    const rdom = new ShowDom();
-    return rdom.init(<Modal visible title={title} onClickKey={(...res) => { onClickKey(...res); rdom.remove(); }}>{content}</Modal>);
-};
+// // Modal.info
+// // Modal.success
+// Modal.error = ({ onClickKey, title, content }) => {
+//     const rdom = new ShowDom();
+//     return rdom.init(<Modal visible title={title} onClickKey={(...res) => { onClickKey(...res); rdom.remove(); }}>{content}</Modal>);
+// };
+// Modal.warning = ({ onClickKey, title, content }) => {
+//     const rdom = new ShowDom();
+//     return rdom.init(<Modal visible title={title} onClickKey={(...res) => { onClickKey(...res); rdom.remove(); }}>{content}</Modal>);
+// };
 // Modal.confirm = ({ onClickKey, title, content }) => {
 //     const rdom = new ShowDom();
 //     return rdom.init(<Modal visible title={title} onClickKey={(...res) => { onClickKey(...res); rdom.remove(); }}>{content}</Modal>);

@@ -6,7 +6,6 @@ import { prefix } from 'config/const';
 
 import Icon from '../icon';
 import Modal from './modal';
-
 import './confirm.less';
 
 const _prefix = `${prefix}-confirm`;
@@ -29,24 +28,22 @@ export default class Confirm extends Component {
             title: null,
             visible: true,
             onClickKey: this.onClickKey,
-            btn: props.btn
+            btn: props.btn,
+            maskClosable: props.maskClosable
         };
     }
     get calssName() {
+        const { props } = this;
         return classnames([
-            _prefix,
-            {
-
-            }
+            _prefix, `${_prefix}__${props.type}`
         ]);
     }
     get content() {
         const { props } = this;
-        return null;
         return (
-            <div className={_prefix}>
+            <div className={this.calssName}>
                 <div className={`${_prefix}--title`}>
-                    <Icon type="success" />
+                    <i className={`${_prefix}--icon`}><Icon type="success" /></i>
                     {props.title}
                 </div>
                 <div className={`${_prefix}--body`}>{props.content}</div>
@@ -54,7 +51,8 @@ export default class Confirm extends Component {
         );
     }
     render() {
-        return <Modal {...this.modalProps} >{this.content}</Modal>;
+        const { modalProps } = this;
+        return <Modal {...modalProps} >{this.content}</Modal>;
     }
 }
 
@@ -65,5 +63,6 @@ Confirm.defaultProps = {
             type: 'primary',
             loading: false
         }
-    ]
+    ],
+    maskClosable: false
 };
