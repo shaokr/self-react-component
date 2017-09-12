@@ -16,13 +16,24 @@ export default class Main extends Component {
     }
     get className() {
         return classnames([
-            this.props.className, `${_prefix}--box`
+            this.props.className, `${_prefix}--box`,
+            {
+                
+            }
+        ]);
+    }
+    get classNameMain() {
+        return classnames([
+            _prefix,
+            {
+                [`${_prefix}__hide`]: !this.props.visible
+            }
         ]);
     }
     render() {
         const { props } = this;
         return (
-            <div className={_prefix} onClick={props.onClickMask} >
+            <div className={this.classNameMain} onClick={props.onClickMask} style={props.style} >
                 <div className={this.className} onClick={props.onClick}>
                     {props.children}
                 </div>
