@@ -45,7 +45,7 @@ const Footer = ({ btn, footer, action }) => {
     return (
         <div className={`${_prefix}--footer`}>
             {
-                _.map(btn, (item, index) => <Button key={index} loading={item.loading} type={item.type} onClick={e => action.onClickKey(e, index)}>{item.txt}</Button>)
+                _.map(btn, (item, index) => <Button key={index} loading={item.loading} type={item.type} onClick={e => action.onClickKey(e, index, !item.loading)}>{item.txt}</Button>)
             }
         </div>
     );
@@ -67,9 +67,9 @@ export default class Modal extends Component {
             visible: nextProps.visible
         });
     }
-    onClickKey(e, key) {
+    onClickKey(e, key, close = true) {
         const { props } = this;
-        let isClose = true;
+        let isClose = close; // true;
         if (!props.maskClosable && key === '-2') {
             isClose = false;
         }

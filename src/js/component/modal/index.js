@@ -6,25 +6,23 @@ import Confirm from './confirm';
 import Modal from './modal';
 import { ShowDom } from '../super-dom';
 
-Modal.success = ({ onClickKey, title, content }) => {
-    console.log(123123);
+const showConfirm = ({ onClickKey, title, content, type, btn }) => {
     const rdom = new ShowDom();
-    rdom.init(<Confirm rdom={rdom} type="success" content={content} title={title} onClickKey={onClickKey} />);
+    rdom.init(<Confirm rdom={rdom} type={type} content={content} title={title} onClickKey={onClickKey} btn={btn} />);
     return rdom;
 };
-// // Modal.info
-// // Modal.success
-// Modal.error = ({ onClickKey, title, content }) => {
-//     const rdom = new ShowDom();
-//     return rdom.init(<Modal visible title={title} onClickKey={(...res) => { onClickKey(...res); rdom.remove(); }}>{content}</Modal>);
-// };
-// Modal.warning = ({ onClickKey, title, content }) => {
-//     const rdom = new ShowDom();
-//     return rdom.init(<Modal visible title={title} onClickKey={(...res) => { onClickKey(...res); rdom.remove(); }}>{content}</Modal>);
-// };
-// Modal.confirm = ({ onClickKey, title, content }) => {
-//     const rdom = new ShowDom();
-//     return rdom.init(<Modal visible title={title} onClickKey={(...res) => { onClickKey(...res); rdom.remove(); }}>{content}</Modal>);
-// };
+
+Modal.success = param => showConfirm({
+    ...param,
+    type: 'success'
+});
+Modal.error = param => showConfirm({
+    ...param,
+    type: 'error'
+});
+Modal.warning = param => showConfirm({
+    ...param,
+    type: 'warning'
+});
 
 export default Modal;
