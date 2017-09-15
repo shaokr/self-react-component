@@ -18,7 +18,7 @@
     &:active{
         background: linear-gradient(hsv(@hue, .75, .70), hsv(@hue, .75, .70));
     }
-    &.@{_prefix}__sidabled{
+    &[disabled]{
         background: linear-gradient(hsv(@hue, .40, 1), hsv(@hue, .40, .95));
         border-color: hsv(@hue, .30, .85);
         color: @fColor;
@@ -38,7 +38,7 @@
             color: hsv(@hue, .75, .70);
             border-color: hsv(@hue, .75, .70);
         }
-        &.@{prefix}-button__sidabled{
+        &[disabled]{
             // background: transparent;
             color: #BEC7D0;
             border-color: #DAE0E6;
@@ -61,7 +61,7 @@
             background: linear-gradient(hsv(@hue, .75, .70), hsv(@hue, .75, .70));
             border-color: hsv(@hue, .75, .70);
         }
-        &.@{_prefix}__sidabled{
+        &[disabled]{
             background: linear-gradient(#FAFAFA, #FAFAFA);
             color: #BEC7D0;
             border-color: #DAE0E6;
@@ -95,7 +95,7 @@
             background: linear-gradient(#DAE0E6, #DAE0E6);
             border-color: #C3CED9;
         }
-        &.@{_prefix}__sidabled{
+        &[disabled]{
             background: linear-gradient(#FAFAFA, #FAFAFA);
             color: #BEC7D0;
             border-color: #DAE0E6;

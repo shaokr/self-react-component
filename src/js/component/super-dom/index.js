@@ -4,31 +4,40 @@ import PromiseClass from 'util/promise-class';
 
 
 export class ShowDom {
-    isRemove = true; // 是否已经删除
+    isShow = false; // 是否已经显示
+    dom = document.createElement('div');
     // 初始化
     init = (component) => {
         this.remove(); // 删除上一次的元素
-        this.initPromise = new PromiseClass(); // 赋值新的promise
-        this.isRemove = false; // 设置为还为删除
 
-        this.dom = document.createElement('div');
+        this.initPromise = new PromiseClass(); // 赋值新的promise
+        this.removePromise = new PromiseClass(); // 赋值新的promise
+
+        this.isShow = true;
         document.body.appendChild(this.dom);
         this.rectdom = ReactDOM.render(component, this.dom);
-
-        this.initPromise.resolve = true;
+        this.initPromise.resolve(true);
         return this.rectdom;
     }
     // 删除dom元素
     remove = () => {
         if (this.initPromise) {
             this.initPromise.promise.then(() => {
-                if (this.dom) {
+                if (this.isShow) {
+                    this.isShow = false;
+                    this.removePromise.resolve(true);
                     document.body.removeChild(this.dom);
-                    this.dom = null;
                 }
             });
         }
     }
+    onUpdate() {
+
+    }
+    update(nextProps, nextState) {
+        
+    }
+
 }
 
 
@@ -37,6 +46,23 @@ export default Comp => class SuperDom extends Component {
         super(props);
 
         this.rootDom = props.getContainer || document.createElement('div');
+        this.remove = this.remove.bind(this);
+        if (props.rdom) {
+            props.rdom.removePromise.promise.then(this.remove);
+        }
+    }
+    remove() {
+        const { getContainer } = this.props;
+        if (!getContainer) {
+            if (this.appOK) {
+                document.body.removeChild(this.rootDom);
+            }
+        }
+    }
+    componentWillUpdate(nextProps, nextState) {
+        if (this.props.rdom) {
+            this.props.rdom.update(nextProps, nextState);
+        }
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.visible) {
@@ -56,12 +82,7 @@ export default Comp => class SuperDom extends Component {
         ReactDOM.render(<Comp {...this.props} rootDom={this.rootDom} />, this.rootDom);
     }
     componentWillUnmount() {
-        const { getContainer } = this.props;
-        if (!getContainer) {
-            if (this.appOK) {
-                document.body.removeChild(this.rootDom);
-            }
-        }
+        this.remove();
     }
     render() {
         return null;

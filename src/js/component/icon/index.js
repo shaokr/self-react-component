@@ -1,26 +1,27 @@
 /**
  * 字体图标
  */
-import './index.less';
-import {Component} from 'react';
+import { Component } from 'react';
 import classnames from 'classnames';
 
-import {prefix} from 'config/const';
+import { prefix } from 'config/const';
 
-let _prefix = `${prefix}-icon`;
+import './index.less';
+
+const _prefix = `${prefix}-icon`;
 
 export default class extends Component {
-    render() {
-        let {style, type} = this.props;
-        return (
-			<svg className={this.css} aria-hidden="true" style={style}>
-				<use xlinkHref={`#icon-${type}`}></use>
-			</svg>
-        );
-    }
     get css() {
         return classnames([
             _prefix, this.props.className
         ]);
+    }
+    render() {
+        const { style, type, onClick } = this.props;
+        return (
+            <svg className={this.css} aria-hidden="true" style={style} onClick={onClick}>
+                <use xlinkHref={`#icon-${type}`} />
+            </svg>
+        );
     }
 }

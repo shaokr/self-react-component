@@ -40,20 +40,22 @@ export default class extends Component {
             classNmae,
             ghost,
             loading,
-            size
+            size,
+            default: Default
         } = this.props;
 
         const _class = classnames([
             _prefix, classNmae,
             {
                 [`${_prefix}--${type}`]: type,
-                [`${_prefix}__${size}`]: size
+                [`${_prefix}__${size}`]: size,
+                [`${_prefix}__default`]: Default
             }
         ]);
         // 判断是否使用加载中样式
         if (loading) {
             return classnames([
-                _class, `${_prefix}__sidabled`, `${_prefix}__load`
+                _class, `${_prefix}__load`
             ]);
         }
         return classnames([
@@ -63,13 +65,17 @@ export default class extends Component {
             }
         ]);
     }
+    get disabled() {
+        const { disabled, loading } = this.props;
+        return disabled || loading;
+    }
     render() {
         const {
             onClick,
             children
         } = this.props;
         return (
-            <button className={this.css} onClick={onClick}>{this.icon}<span>{children}</span></button>
+            <button className={this.css} onClick={onClick} disabled={this.disabled} >{this.icon}<span>{children}</span></button>
         );
     }
 }

@@ -14,22 +14,29 @@ export default class Confirm extends Component {
     constructor(props) {
         super(props);
 
-        this.onClickKey = this.onClickKey.bind(this);
+        // this.onClickKey = this.onClickKey.bind(this);
     }
-    onClickKey(...res) {
-        const { props } = this;
+    // onClickKey(key, col) {
+    //     const { props } = this;
 
-        props.onClickKey(...res);
-        props.rdom.remove();
-    }
+    //     if (typeof props.onClickKey === 'function') {
+    //         const props.onClickKey(key, col)
+    //         if () {
+    //             props.rdom.remove();
+    //         }
+    //     } else if (col) {
+    //         props.rdom.remove();
+    //     }
+    // }
     get modalProps() {
         const { props } = this;
         return {
             title: null,
             visible: true,
-            onClickKey: this.onClickKey,
+            onClickKey: props.onClickKey,
             btn: props.btn,
-            maskClosable: props.maskClosable
+            maskClosable: props.maskClosable,
+            rdom: props.rdom
         };
     }
     get calssName() {
@@ -43,7 +50,7 @@ export default class Confirm extends Component {
         return (
             <div className={this.calssName}>
                 <div className={`${_prefix}--title`}>
-                    <i className={`${_prefix}--icon`}><Icon type="success" /></i>
+                    <i className={`${_prefix}--icon`}><Icon type={props.type} /></i>
                     {props.title}
                 </div>
                 <div className={`${_prefix}--body`}>{props.content}</div>

@@ -12,7 +12,7 @@ import './modal.less';
 
 const _prefix = `${prefix}-modal`;
 
-const Head = ({ title, action }) => {
+const Head = ({ title, action, closable }) => {
     if (title === null) {
         return null;
     }
@@ -22,9 +22,12 @@ const Head = ({ title, action }) => {
     return (
         <div className={`${_prefix}--head`}>
             <div className={`${_prefix}--title`}>{title}</div>
-            <i className={`${_prefix}--close`} onClick={e => action.onClickKey(e, '-1')}>
-                <Icon type="close" />
-            </i>
+            {
+                closable &&
+                <i className={`${_prefix}--close`} onClick={e => action.onClickKey(e, '-1')}>
+                    <Icon type="close" />
+                </i>
+            }
         </div>
     );
 };
@@ -45,7 +48,9 @@ const Footer = ({ btn, footer, action }) => {
     return (
         <div className={`${_prefix}--footer`}>
             {
-                _.map(btn, (item, index) => <Button key={index} loading={item.loading} type={item.type} onClick={e => action.onClickKey(e, index, !item.loading)}>{item.txt}</Button>)
+                _.map(btn, (item, index) =>
+                    <Button key={index} {...item} onClick={e => action.onClickKey(e, index, !(item.loading || item.disabled))}>{item.txt}</Button>
+                )
             }
         </div>
     );
@@ -74,9 +79,9 @@ export default class Modal extends Component {
             isClose = false;
         }
         try {
-            const res = props.onClickKey(key.toString());
+            const res = props.onClickKey(key.toString(), close);
             if (typeof res !== 'undefined') {
-                isClose = false;
+                isClose = !!res;
             }
         } catch (err) {
             console.error(err);
@@ -87,6 +92,9 @@ export default class Modal extends Component {
     }
     // 关闭
     close() {
+        if (this.props.rdom) {
+            this.props.rdom.remove();
+        }
         this.setState({
             visible: false
         });
@@ -106,13 +114,39 @@ export default class Modal extends Component {
             visible: true
         });
     }
+    get maskProps() {
+        const { maskProps } = this.props;
+        return {
+            ...maskProps,
+            onClick: (e) => {
+                if (typeof maskProps.onClick === 'function') {
+                    maskProps.onClick(e);
+                }
+                this.onClickKey(e, '-2');
+            }
+        };
+    }
+    get modalProps() {
+        const { maskProps, ...props } = this.props;
+        return {
+            ...props,
+            onClick: (e) => {
+                if (typeof props.onClick === 'function') {
+                    props.onClick(e);
+                }
+                e.stopPropagation();
+            }
+        };
+    }
     render() {
-        const { state, props, action } = this;
+        const { state, props, action, maskProps, modalProps } = this;
         return (
-            <Mask visible={state.visible} className={this.className} onClickMask={e => this.onClickKey(e, '-2')} onClick={e => e.stopPropagation()}>
-                <Head title={props.title} action={action} />
-                <Content>{props.children}</Content>
-                <Footer footer={props.footer} btn={props.btn} action={action} />
+            <Mask {...maskProps} visible={state.visible}>
+                <div {...modalProps} className={this.className} >
+                    <Head title={props.title} action={action} closable={props.closable} />
+                    <Content>{props.children}</Content>
+                    <Footer footer={props.footer} btn={props.btn} action={action} />
+                </div>
             </Mask>
         );
     }
@@ -139,5 +173,6 @@ Modal.defaultProps = {
         }
     ],
     onClickKey() { }, // 点击按钮的情况 -1 为x -2 为蒙层 其他为按钮顺序
-    getContainer: '' //	指定 Modal 挂载的 HTML 节点	(instance): HTMLElement	() => document.body
+    getContainer: '', //	指定 Modal 挂载的 HTML 节点	(instance): HTMLElement	() => document.body
+    maskProps: {}
 };
