@@ -12,16 +12,20 @@ const _prefix = `${prefix}-icon`;
 
 export default class extends Component {
     get css() {
+        const { props } = this;
         return classnames([
-            _prefix, this.props.className
+            _prefix, props.className, `${_prefix}-${props.type}`
         ]);
     }
+    get iProps() {
+        const { children, ...props } = this.props;
+        return props;
+    }
     render() {
-        const { style, type, onClick } = this.props;
+        const { props } = this;
+        // const { style, type, onClick } = this.props;
         return (
-            <svg className={this.css} aria-hidden="true" style={style} onClick={onClick}>
-                <use xlinkHref={`#icon-${type}`} />
-            </svg>
+            <i {...props} className={this.css} >{props.children}</i>
         );
     }
 }

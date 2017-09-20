@@ -57,6 +57,12 @@
     }
     .header-right{
         cursor: pointer;
+        &:hover{
+            color: @error-c;
+        }
+        .@{px-icon}{
+            .dpr(30);
+        }
     }
     
 }
@@ -172,6 +178,7 @@
         }
     }
     &--icon{
+        .dpr(22);
         width: @w;
         height: @h;
     }
@@ -214,7 +221,7 @@
                 flex:1;
                 line-height: 1.5;
             }
-            >i{
+            >span{
                 cursor: pointer;
                 border-radius: 50%;
                 border: 1px solid @c3;
@@ -226,7 +233,10 @@
                 padding: 4px;
                 transition: 0.2s;
                 &:hover{
-                    transform: scale(1.2);
+                    color: @error-c;
+                }
+                .@{px-icon} {
+                    .dpr(18);
                 }
             }
         }
@@ -382,7 +392,6 @@
             //     padding-left: 0;
             // }
         }
-        
     }
     &-info{
         height: @u*32;
@@ -399,19 +408,19 @@
             height:100%;
             display: flex;
             align-items: center;
-            i{
-                .dpr(20);
-                padding: 0 @u*5 0 0;
+            .tree-icon-expand{
+                .dpr(22);
+                color: @c3;
+                // padding: 0 @u*5 0 0;
                 width: @u*22;
                 height:100%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 box-sizing: content-box;
-                // font-size: 20px;
-                .zy-icon{
-                    width: 0.5em;
-                    height: 0.5em;
+                transition: transform 0.2s;
+                &.close-type{
+                    transform: rotateZ(-90deg);
                 }
             }
             .tree-avatar{
@@ -442,9 +451,13 @@
         padding: @u*4;
         margin-left: @u*5;
         box-sizing: border-box;
+        .@{px-icon} {
+            .dpr(18);
+            color: @c4;
+        }
     }
     &-son{
-        padding-left: @u*(22+5);
+        padding-left: @u*(22);
     }
     &-box{
         position: relative;

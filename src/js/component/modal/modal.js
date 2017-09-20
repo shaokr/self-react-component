@@ -23,10 +23,7 @@ const Head = ({ title, action, closable }) => {
         <div className={`${_prefix}--head`}>
             <div className={`${_prefix}--title`}>{title}</div>
             {
-                closable &&
-                <i className={`${_prefix}--close`} onClick={e => action.onClickKey(e, '-1')}>
-                    <Icon type="close" />
-                </i>
+                closable && <Icon className={`${_prefix}--close`} type="close" onClick={e => action.onClickKey(e, '-1')} />
             }
         </div>
     );
@@ -49,7 +46,7 @@ const Footer = ({ btn, footer, action }) => {
         <div className={`${_prefix}--footer`}>
             {
                 _.map(btn, (item, index) =>
-                    <Button key={index} {...item} onClick={e => action.onClickKey(e, index, !(item.loading || item.disabled))}>{item.txt}</Button>
+                    <Button key={index} {...item} onClick={e => action.onClickKey(e, index, !(item.loading || item.disabled))}>{item.text || item.txt}</Button>
                 )
             }
         </div>

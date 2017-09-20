@@ -2,10 +2,61 @@
 * 字体图标
 */
 @import '~global/var.less';
+@import "~global/mixins.less";
 
-.@{prefix}-icon {
-    width: 1em; height: 1em;
-    vertical-align: -0.15em;
-    fill: currentColor;
-    overflow: hidden;
+@prefix-font: ~'@{px-icon}-font';
+
+@font-face {
+    font-family: @prefix-font;
+    src: url('./font/iconfont.woff?t=1505097537608') format('woff'),
+    url('./font/iconfont.ttf?t=1505097537608') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
 }
+  
+.@{px-icon} {
+    .dpr(@fs2);
+    font-family: @prefix-font !important;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    &::before {
+        display: inline-block;
+    } 
+}
+
+// .@{prefix}-icon {
+//     width: 1em; height: 1em;
+//     vertical-align: -0.15em;
+//     fill: currentColor;
+//     overflow: hidden;
+// }
+
+
+.@{px-icon}-loading:before { content: "\e601"; }
+
+.@{px-icon}-search:before { content: "\e628"; }
+
+.@{px-icon}-folder-open:before { content: "\e6c2"; }
+
+.@{px-icon}-folder:before { content: "\e6c3"; }
+
+.@{px-icon}-company:before { content: "\e651"; }
+
+.@{px-icon}-bag:before { content: "\e6f2"; }
+
+.@{px-icon}-group:before { content: "\e6f3"; }
+
+.@{px-icon}-stars:before { content: "\e6f4"; }
+
+.@{px-icon}-success:before { content: "\e6fa"; }
+
+.@{px-icon}-error:before { content: "\e6fb"; }
+
+.@{px-icon}-warning:before { content: "\e6fc"; }
+
+.@{px-icon}-caret-down:before { content: "\e653"; }
+
+.@{px-icon}-close:before { content: "\e64a"; }
+
+.@{px-icon}-check:before { content: "\e655"; }
+
+.@{px-icon}-minus:before { content: "\e657"; }

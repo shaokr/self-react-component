@@ -50,7 +50,7 @@ export default class Confirm extends Component {
         return (
             <div className={this.calssName}>
                 <div className={`${_prefix}--title`}>
-                    <i className={`${_prefix}--icon`}><Icon type={props.type} /></i>
+                    <Icon className={`${_prefix}--icon`} type={props.type} />
                     {props.title}
                 </div>
                 <div className={`${_prefix}--body`}>{props.content}</div>

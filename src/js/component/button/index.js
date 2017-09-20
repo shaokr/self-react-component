@@ -1,13 +1,14 @@
 /**
  * 按钮
  */
-import './index.less';
+
 import { Component } from 'react';
 import classnames from 'classnames';
-
 import { prefix } from 'config/const';
 
 import Icon from '../icon';
+
+import './index.less';
 
 const _prefix = `${prefix}-button`;
 
@@ -28,9 +29,7 @@ export default class extends Component {
         ]);
         if (icon) {
             return (
-                <i className={css}>
-                    <Icon type={icon} />
-                </i>
+                <Icon className={css} type={icon} />
             );
         }
     }

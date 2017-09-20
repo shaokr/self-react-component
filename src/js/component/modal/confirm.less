@@ -4,17 +4,16 @@
 @import "~global/var.less";
 @import "~global/mixins.less";
 
-@_prefix: ~'@{prefix}-confirm';
 // 设置各种icon的type情况颜色
 .setIconColor(@name){
     &__@{name}{
-        .@{_prefix}--icon{
+        .@{px-confirm}--icon{
             @c: ~'@{name}-c';
             color: @@c;
         }
     }
 }
-.@{_prefix} {
+.@{px-confirm} {
     padding-left: @u*40;
     position: relative;
     &--title{
@@ -26,10 +25,7 @@
         position: absolute;
         left: 0;
         top: 0;
-        .@{prefix}-icon{
-            width: @u*30;
-            height: @u*30;
-        }
+        .dpr(30);
     }
     &--body{
         color: @c1;

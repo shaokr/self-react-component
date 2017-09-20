@@ -13,9 +13,9 @@ const { CSSTransitionGroup } = addons;
 const Del = ({ onClick, isDel }) => {
     if (isDel) {
         return (
-            <i onClick={onClick}>
+            <span onClick={onClick}>
                 <Icon type="close" />
-            </i>
+            </span>
         );
     }
     return null;

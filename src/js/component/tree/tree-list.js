@@ -24,19 +24,17 @@ const iconConfigList = {
     }
 };
 
-const ItemIcon = ({ onClick, icon }) => (
-    <i onClick={onClick} style={icon.style}>
-        {
-            icon && <Icon type={icon.key} />
-        }
-    </i>
-);
-
 const Expand = ({ dataState, onClick }) => {
     if (dataState.isExpand) {
-        const iconName = dataState.expand ? 'open' : 'close';
-        const icon = iconConfigList[iconName];
-        return <ItemIcon onClick={onClick} icon={icon} />;
+        // const iconName = dataState.expand ? 'open' : 'close';
+        // const icon = iconConfigList[iconName];
+        const css = classnames([
+            'tree-icon-expand',
+            {
+                'close-type': !dataState.expand
+            }
+        ]);
+        return <Icon onClick={onClick} className={css} type="caret-down" />;
     }
     return null;
 };

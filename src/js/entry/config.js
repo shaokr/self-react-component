@@ -32,7 +32,7 @@ const mainListObj = { // 载入文件的配置
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']
     },
     '_tool-tree-pc-management': { // 入口文件 签名
-        // ToLoad: true, // 是否马上加载
+        ToLoad: true, // 是否马上加载
          // 依赖库
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon', './tree.css', './tree.js', 'Apiutil']
     },
@@ -42,7 +42,7 @@ const mainListObj = { // 载入文件的配置
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon', './tree.css', './tree.js', 'bridgeWs']
     },
     '_component': { // 入口文件 签名
-        ToLoad: true, // 是否马上加载
+        // ToLoad: true, // 是否马上加载
          // 依赖库
         deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']
     }

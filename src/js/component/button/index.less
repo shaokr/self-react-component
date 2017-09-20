@@ -1,7 +1,6 @@
 @import '~global/var.less';
 @import '~global/mixins.less';
 
-@_prefix: ~'@{prefix}-button';
 @large: @u*36; // 大
 @in: @u*30; // 中
 @small: @u*22; // 小
@@ -25,7 +24,7 @@
         cursor: no-drop;
     }
     // 幽灵按钮
-    &.@{_prefix}__ghost {
+    &.@{px-button}__ghost {
         background: transparent;
         color: @color;
         &:hover{
@@ -46,7 +45,7 @@
         }
     }
     // 默认
-    &.@{_prefix}__default{
+    &.@{px-button}__default{
         color: @color;
         background: linear-gradient(#fff , #f6f6f6);
         border-color: #DAE0E6;
@@ -69,7 +68,7 @@
         }
     }
 }
-.@{_prefix} {
+.@{px-button} {
     .dpr(@fs2);
     min-width:@u*90;
     min-height: @in;
@@ -135,9 +134,9 @@
         }
     }
     &__load {
-        .@{_prefix}--icon{
-            svg {
-                animation: loadingCircle 1s infinite linear;
+        .@{px-button}--icon{
+            &::before{  
+               animation: loadingCircle 1s infinite linear;
             }
         }
     }
