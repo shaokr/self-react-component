@@ -4,22 +4,13 @@
 import { Component, addons } from 'react';
 import _ from 'lodash';
 
-import Scroll from 'component/scroll';
-import Icon from 'component/icon';
+// import Scroll from 'component/scroll';
+// import Icon from 'component/icon';
 import Avatar from './avatar';
+import { Checked } from './circle';
 
 const { CSSTransitionGroup } = addons;
 
-const Del = ({ onClick, isDel }) => {
-    if (isDel) {
-        return (
-            <span onClick={onClick}>
-                <Icon type="close" />
-            </span>
-        );
-    }
-    return null;
-};
 class Li extends Component {
     shouldComponentUpdate() {
         return false;
@@ -33,7 +24,7 @@ class Li extends Component {
                     <Avatar name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} icon={data.icon} />
                 </div>
                 <p>{data.name}</p>
-                <Del isDel={data.isDel} onClick={() => action.hasSelectedItem(data)} />
+                <Checked show={data.isDel} type="-1" onClick={() => action.hasSelectedItem(data)} />
             </li>
         );
     }

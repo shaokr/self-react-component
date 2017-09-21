@@ -1,0 +1,17 @@
+@import "~global/var.less";
+@import "~global/mixins.less";
+
+// 圈
+@px-circle: ~'@{prefix}-circle';
+.@{px-circle}{
+    border-radius: 50%;
+    border: 1px solid @c3;
+    height: @u*18;
+    width: @u*18;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // padding: @u*4;
+    // margin-left: @u*5;
+    box-sizing: border-box;
+}

@@ -1,0 +1,94 @@
+@import "~global/var.less";
+@import "~global/mixins.less";
+
+@ch1:#EFF9FF;
+// 搜索
+.@{px-tree}-search{
+    // position: relative;
+    position: static;
+    border: 1px solid @bc1;
+    margin-top: @u*10;
+    border-radius: @u*100;
+    display: flex;
+    align-items: center;
+    &--search{
+        .dpr(16);
+        padding: @u*7;
+        color: @c3;
+    }
+    &--close{
+        .dpr(30);
+        transition: 0.2s;
+        color: @c3;
+        cursor: pointer;
+        &:hover{
+            transform: scale(1.2);
+            color: @c2;
+        }
+    }
+    >input{
+        flex: 1;
+        height: @u*30;
+        border: none;
+        outline:none;
+        background: transparent;
+        margin-right: @u*14;
+    }
+    // 搜索列表数据
+    &-list{
+        @topH: @u*52;;
+        position: absolute;
+        top: @topH;
+        height: calc(~'100% - @{topH}');
+        left: 0;
+        width: 100%;
+        z-index: 100;
+        background: #fff;
+        ul{
+            li{
+                padding: @u*5 @u*10;
+                display: flex;
+                align-items: center;
+                transition: 0.2s;
+                cursor: pointer;
+                .tree-avatar{
+                    margin-right: @u*5;
+                }
+                &:hover{
+                    background: @ch1;
+                }
+                .list-content{
+                    .dpr(@fs2);
+                    .slh();
+                    flex: 1;
+                    padding-right:@u*8;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    *{
+                        .slh();
+                        max-width: 100%;
+                        margin-right: @u*5;
+                        line-height: 1.3;
+                    }
+                    small{
+                        color: @c3;
+                    }
+                }
+            }
+        }
+    }
+    // 组
+    &-group{
+        &--title{
+            .slh();
+            .dpr(@fs2);
+            height: @u*32;
+            line-height: @u*32;
+            margin: 0 @u*8;
+            border-bottom: 1px solid @bc1;
+            font-weight: normal;
+            color: @c2;
+        }
+    }
+}

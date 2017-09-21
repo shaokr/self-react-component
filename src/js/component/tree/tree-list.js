@@ -8,6 +8,7 @@ import _ from 'lodash';
 
 import Icon from 'component/icon';
 import Avatar from './avatar';
+import { Checked } from './circle';
 
 const iconConfigList = {
     close: { // 向右
@@ -61,22 +62,6 @@ const Front = ({ data, onClick, dataState }) => (
         <Avatar icon={getFrontIcon(data.icon, dataState)} name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
     </div>
     );
-// 勾选状态
-const Checked = ({ item, onClick }) => {
-    if (!item.isCheckedShow) {
-        return null;
-    }
-
-    const config = {
-        1: 'check',
-        2: 'minus'
-    };
-    return (
-        <div className="tree-children-checkbox" onClick={onClick}>
-            <Icon type={config[item.typeChecked]} />
-        </div>
-    );
-};
 // 名称
 const Name = ({ name, small }) => (
     <div className="tree-children-info-name">
@@ -176,7 +161,7 @@ class TreeList extends Component {
 
                     <Name name={data.name} small={item.small} />
 
-                    <Checked onClick={this.onCheck} item={item} />
+                    <Checked className="tree-checkbox" onClick={this.onCheck} type={item.typeChecked} show={item.isCheckedShow} />
                 </div>
 
                 <Children item={item} data={data} store={store} action={action} dataState={dataState} onHover={onHover} />

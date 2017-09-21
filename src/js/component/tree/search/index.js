@@ -3,15 +3,22 @@
  */
 import { Component } from 'react';
 import _ from 'lodash';
+import { prefix } from 'config/const';
 
 import Icon from 'component/icon';
-// import Scroll from 'component/scroll';
 
-import Avatar from './avatar';
+import Avatar from '../avatar';
+import { Checked } from '../circle';
+
+import './index.less';
+
+const _prefix = `${prefix}-tree-search`;
 
 const Li = ({ onCheck, item, selected, list }) => {
     const key = item.key.toString();
     const data = list[key] || {};
+    const show = selected.has(key) || data.checked;
+    const checkedType = show ? 1 : 9999;
     return (
         <li onClick={() => onCheck(item)}>
             <Avatar
@@ -25,12 +32,7 @@ const Li = ({ onCheck, item, selected, list }) => {
                 <div>{item.name}</div>
                 <small>{item.small}</small>
             </div>
-            <i>
-                {
-                    (selected.has(key) || data.checked) &&
-                    <Icon type="check" />
-                }
-            </i>
+            <Checked className="tree-checkbox" type={checkedType} />
         </li>
     );
 };
@@ -116,6 +118,7 @@ export default class Selected extends Component {
             }
         });
     }
+    // 失去焦点
     onBlurHandler() {
         const { listShow } = this.state;
         if (listShow) {
@@ -143,27 +146,28 @@ export default class Selected extends Component {
                 action: { onCheck }
             } = this.props;
             return (
-                <div className="tree-search-list scroll" >
+                <div className={`${_prefix}-list scroll`}>
                     {
                         _.map(list, (item) => {
                             const { title, children } = item;
                             return (
-                                <div className="tree-search-group">
-                                    <h4 className="tree-search-group--title">{title}</h4>
+                                <div className={`${_prefix}-group`}>
+                                    <h4 className={`${_prefix}-group--title`}>{title}</h4>
                                     <ul>
                                         {
                                             _.map(children, (item2) => {
                                                 const { key } = item2;
-                                                return (
-                                                    typeof key !== 'undefined' &&
-                                                    <Li
-                                                        key={key}
-                                                        onCheck={onCheck}
-                                                        selected={selected}
-                                                        list={storeList}
-                                                        item={item2}
-                                                    />
-                                                );
+                                                if (typeof key !== 'undefined') {
+                                                    return (
+                                                        <Li
+                                                            key={key}
+                                                            onCheck={onCheck}
+                                                            selected={selected}
+                                                            list={storeList}
+                                                            item={item2}
+                                                        />
+                                                    );
+                                                }
                                             })
                                         }
                                     </ul>
@@ -175,14 +179,19 @@ export default class Selected extends Component {
             );
         }
     }
+    get closeIcon() {
+        if (this.state.value) {
+            return <Icon type="close" className={`${_prefix}--close`} onClick={this.onClose} />;
+        }
+    }
     render() {
         const {
             placeholder
         } = this.props;
 
         return (
-            <label className="tree-search" htmlFor="male" onClickCapture={this.onClickThis}>
-                <i><Icon type="search" /></i>
+            <label className={_prefix} htmlFor="male" onClickCapture={this.onClickThis}>
+                <Icon className={`${_prefix}--search`} type="search" />
                 <input
                     type="text"
                     id="male"
@@ -190,9 +199,7 @@ export default class Selected extends Component {
                     placeholder={placeholder}
                     onChange={this.onChange}
                 />
-                {
-                    !!this.state.value && <i className="tree-search--close" onClick={this.onClose}><Icon type="close" /></i>
-                }
+                {this.closeIcon}
                 {this.list}
             </label>
         );
