@@ -3,6 +3,7 @@
  */
 import { Component } from 'react';
 import _ from 'lodash';
+import classnames from 'classnames';
 
 import Icon from 'component/icon';
 
@@ -44,17 +45,20 @@ export default class Avatar extends Component {
             showImg: true
         });
     }
-    get iconStyle() {
+    get iconProps() {
         const { icon } = this.props;
-        const config = {
-            'folder-open': {
-                color: '#86BAF1'
-            },
-            'folder': {
-                color: '#86BAF1'
-            }
+        const _className = 'tree-avatar--icon';
+        if (typeof icon === 'object') {
+            const { className } = icon;
+            return {
+                ...icon,
+                className: classnames([_className, className])
+            };
+        }
+        return {
+            type: icon,
+            className: _className
         };
-        return config[icon];
     }
     render() {
         const { name, avatar, icon } = this.props;
@@ -62,7 +66,7 @@ export default class Avatar extends Component {
 
         return (
             <div className="tree-avatar" >
-                { !!icon && <Icon type={icon} className="tree-avatar--icon" style={this.iconStyle} />}
+                { !!icon && <Icon {...this.iconProps} />}
                 { !icon && showImg && avatar && <img className="tree-avatar--img" alt={name} src={avatar} onLoad={this._onLoad} />}
                 { !icon && !showImg && !avatar && <div className="tree-avatar--name" style={baColor}>{name[0]}</div>}
             </div>
