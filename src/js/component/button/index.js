@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import { prefix } from 'config/const';
 
 import Icon from '../icon';
+import Loading from '../loading';
 
 import './index.less';
 
@@ -17,19 +18,13 @@ export default class extends Component {
         const {
             loading
         } = this.props;
-        let { icon } = this.props;
         if (loading) {
-            icon = 'loading';
+            return <Loading className={`${_prefix}--icon`} size="small" />;
         }
-        const css = classnames([
-            `${_prefix}--icon`,
-            {
-                [`${_prefix}--icon`]: loading
-            }
-        ]);
+        const { icon } = this.props;
         if (icon) {
             return (
-                <Icon className={css} type={icon} />
+                <Icon className={`${_prefix}--icon`} type={icon} />
             );
         }
     }
@@ -74,7 +69,12 @@ export default class extends Component {
             children
         } = this.props;
         return (
-            <button className={this.css} onClick={onClick} disabled={this.disabled} >{this.icon}<span>{children}</span></button>
+            <button className={this.css} onClick={onClick} disabled={this.disabled} >
+                <div className={`${_prefix}--box`}>
+                    {this.icon}
+                    <span>{children}</span>
+                </div>
+            </button>
         );
     }
 }

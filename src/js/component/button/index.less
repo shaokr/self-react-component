@@ -101,6 +101,11 @@
             cursor: no-drop;
         }
     // }
+    &--box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
     // 主要
     &--primary{
         .establish-btn(@primary-c);
@@ -129,17 +134,22 @@
         padding: 0 @small/2;
     }
     &--icon{
+        flex: 0;
+        min-width: @u*14;
         &+&,+span{
             margin-left: .5em;
         }
-    }
-    &__load {
-        .@{px-button}--icon{
-            &::before{  
-               animation: loadingCircle 1s infinite linear;
-            }
+        .@{px-loading}--box{
+            color: inherit;
         }
     }
+    // &__load {
+    //     .@{px-button}--icon{
+    //         &::before{  
+    //            animation: loadingCircle 1s infinite linear;
+    //         }
+    //     }
+    // }
 
     // 不可用按钮
     // &-sidabled{
@@ -147,11 +157,11 @@
     //     cursor:default;
     // }
 }
-@keyframes loadingCircle {
-    0%{
-        transform: rotateZ(0);
-    }
-    100% {
-        transform: rotateZ(360deg);
-    }
-}
+// @keyframes loadingCircle {
+//     0%{
+//         transform: rotateZ(0);
+//     }
+//     100% {
+//         transform: rotateZ(360deg);
+//     }
+// }
