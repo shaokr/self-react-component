@@ -15,10 +15,11 @@ export default class Main extends Component {
         super(props);
     }
     get className() {
+        const { props } = this;
         return classnames([
-            this.props.className, _prefix,
+            props.className, _prefix, `${_prefix}__opacity${props.opacity}`,
             {
-                [`${_prefix}__hide`]: !this.props.visible
+                [`${_prefix}__hide`]: !props.visible
             }
         ]);
     }
@@ -31,3 +32,7 @@ export default class Main extends Component {
         );
     }
 }
+
+Main.defaultProps = {
+    opacity: 6
+};

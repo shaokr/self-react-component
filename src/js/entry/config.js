@@ -29,22 +29,22 @@ const mainListObj = { // 载入文件的配置
     '_main': { // 入口文件 签名
         // ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']
+        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact']
     },
     '_tool-tree-pc-management': { // 入口文件 签名
-        ToLoad: true, // 是否马上加载
+        // ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon', './tree.css', './tree.js', 'Apiutil']
+        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'Apiutil']
     },
     '_tool-tree-web-module': { // 入口文件 签名
         // ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon', './tree.css', './tree.js', 'bridgeWs']
+        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'bridgeWs']
     },
     '_component': { // 入口文件 签名
-        // ToLoad: true, // 是否马上加载
+        ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'treeIcon']
+        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', '_tool-tree-pc-management', '_tool-tree-web-module']
     }
 };
 

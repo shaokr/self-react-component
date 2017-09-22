@@ -4,6 +4,13 @@
 @import "~global/var.less";
 @import "~global/mixins.less";
 
+.loop-mask(@counter) when (@counter >= 0) {
+    &__opacity@{counter}{
+        background: rgba(55, 55, 55, 0.1*@counter)
+    }
+    .loop-mask((@counter - 1));    // next iteration
+}
+
 .@{px-mask} {
     position: fixed;
     top:0;
@@ -21,4 +28,6 @@
     &--box{
         
     }
+    
+    .loop-mask(9);
 }

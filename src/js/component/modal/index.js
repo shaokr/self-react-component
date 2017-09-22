@@ -12,14 +12,22 @@ const showConfirm = ({ onClickKey, title, content, type, btn }) => {
     return rdom;
 };
 
+Modal.show = (props) => {
+    const rdom = new ShowDom();
+    rdom.init(<Modal {...props} rdom={rdom} visible >{props.content}</Modal>);
+    return rdom;
+};
+
 Modal.success = param => showConfirm({
     ...param,
     type: 'success'
 });
+
 Modal.error = param => showConfirm({
     ...param,
     type: 'error'
 });
+
 Modal.warning = param => showConfirm({
     ...param,
     type: 'warning'

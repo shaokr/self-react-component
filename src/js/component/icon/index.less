@@ -11,13 +11,13 @@
     src: url('./font/iconfont.woff?t=1505097537608') format('woff'),
     url('./font/iconfont.ttf?t=1505097537608') format('truetype'); /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
 }
-  
+
 .@{px-icon} {
-    .dpr(@fs2);
     font-family: @prefix-font !important;
     font-style:normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    line-height: 1;
     &::before {
         display: inline-block;
     } 

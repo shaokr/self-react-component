@@ -16,7 +16,7 @@
         padding: @u*12 @u*20;
         border-bottom: 1px solid @bc1;
         position: relative;
-        min-height: @u*17;
+        min-height: @u*40;
         line-height: 1.2;
         background: @bgc1;
     }
@@ -24,15 +24,20 @@
         // text-align: center;
     }
     &--close{
+        .dpr(40);
         position: absolute;
         right: 0;
         top: 0;
-        width: @u*40;
+        // width: @u*40;
         height: 100%;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
+        color: @c3;
+        &:hover{
+            color: @c1;
+        }
     }
 
     &--body{
