@@ -2,6 +2,7 @@
  * 入口文件
  */
 import { Component } from 'react';
+import { ShowDom } from 'component/super-dom';
 // import Scroll from 'component/scroll';
 import Button from 'component/button';
 import Icon from 'component/icon';
@@ -16,6 +17,7 @@ import Tree from 'component/tree';
 if (__DEV__) {
     const { render } = require('react-dom');
     const param = require('util/param').default;
+    const Tree = require('component/tree');
     
     if (param.debug == 2) {
         // Modal.success({
@@ -224,5 +226,6 @@ module.exports = {
     Modal,
     Mask,
     Checkbox,
-    Loading
+    Loading,
+    ShowDom
 };

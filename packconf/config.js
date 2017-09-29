@@ -18,8 +18,10 @@ function Last({data, build, path}) {
 
     // const entry = {};
     // _.forEach([
-    //     'tree',
-    //     'tool-tree'
+    //     'config',
+    //     'component',
+    //     'tool-tree-pc-management',
+    //     'tool-tree-web-module'
     // ], (item) => entry[item] = data.entry[item]);
     // data.entry = entry;
 
@@ -36,7 +38,8 @@ function Last({data, build, path}) {
     data.externals['zy-tree'] = 'ZYtree';
     data.externals['Apiutil'] = 'Apiutil';
     data.externals['bridgeWs'] = 'bridgeWs';
-    data.externals['lodash'] = '_';
+    data.externals['web-tool-tree'] = 'ZYtool-tree-web-module';
+    data.externals['pc-tool-tree'] = 'ZYtool-tree-pc-management';
     
     // console.log(data);
     return data;
@@ -53,7 +56,7 @@ function Copy(path) {
         _data.push({ context: 'node_modules/systemjs/dist', from: '*', to: 'systemjs' });
     }
     _data.push({ context: `${path}/js/conf/lang`, from: '**', to: 'lang' });
-    _data.push({ context: `${path}/icon`, from: '**', to: 'icon' });
+    // _data.push({ context: `${path}/icon`, from: '**', to: 'icon' });
 
     return new CopyWebpackPlugin(_data);
 }
