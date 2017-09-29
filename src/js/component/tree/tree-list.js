@@ -75,7 +75,7 @@ const Children = ({ dataState, data, store, action, onHover }) => {
         return (
             <div className="tree-children-son" >
                 {
-                    _.map(data.children, val => <TreeList data={val} store={store} action={action} onHover={onHover} />)
+                    _.map(data.children, (item, index) => <TreeList key={index} data={item} store={store} action={action} onHover={onHover} />)
                 }
             </div>
         );
@@ -178,7 +178,7 @@ export default class TreeListBox extends Component {
         const { tree, store, action } = this.props;
         return (
             <div className={this.class}>
-                { _.map(tree, item => <TreeList data={item} store={store} action={action} />) }
+                { _.map(tree, (item, index) => <TreeList key={index} data={item} store={store} action={action} />) }
             </div>
         );
     }

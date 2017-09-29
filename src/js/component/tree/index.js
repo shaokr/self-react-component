@@ -118,11 +118,11 @@ class Children {
                     checked = false, // 勾选状态
 
                     childrenNumber = 1,
-                    isSelected = true
+                    isSelected
 
                 } = item;
                 this.self = item;
-                
+
                 this.key = key;
                 this.name = name;
                 this.avatar = avatar;  // 头像
@@ -142,15 +142,16 @@ class Children {
                     this.isChangeChecked = !!isChangeChecked;
                 }
 
+                this.isCheckedShow = !!isCheckedShow;
                 // 是否可以选中到另一个栏目
                 if (disableKeys && ~_.indexOf(disableKeys, key)) {
                     this.isSelected = false;
                     this.isChangeChecked = false;
+                } else if (typeof isSelected === 'undefined') {
+                    this.isSelected = this.isCheckedShow;
                 } else {
                     this.isSelected = !!isSelected;
                 }
-                
-                this.isCheckedShow = !!isCheckedShow;
 
                 this.typeChecked = this.checked ? 1 : 0; // 勾选类型 0全不选 1全选 2部分选中
 
@@ -160,7 +161,6 @@ class Children {
                 this.childrenNumber = childrenNumber;// 可选子类项目( addPaths中可能变化
                 // this.isChildren = isChildren; // 是否包含子类
                 this.allNexusChecked = {};
-                
             },
             // 添加方法
             addPaths({ item, list, pid, path, children, idPath }) {
@@ -572,7 +572,8 @@ export default class Tree extends Component {
             onSearchChange: this._onSearchChange.bind(this, props.onSearchChange),
             onExceedMax: this._onExceedMax.bind(this, props.onExceedMax),
             hasSelectedItem: this.hasSelectedItem.bind(this),
-            getDataState: this.getDataState.bind(this)
+            getDataState: this.getDataState.bind(this),
+            onClose: this.onClose.bind(this, props.onClose)
         };
     }
     get action() {
@@ -588,7 +589,7 @@ export default class Tree extends Component {
         } else {
             type = 'check';
         }
-        selectedList = _.map(selectedList, item => [item.key.toString(), { isDel: true, ...item }]);
+        selectedList = _.map(selectedList, item => [item.key.toString(), { isDel: true, ...item, path: [item] }]);
         selectedList = new Map(selectedList);
         // 获取数据
         const { list, newTree } = getData({ data: tree, pattern: type, selectedList, disableKeys, disableChangeKeys });
@@ -764,7 +765,8 @@ export default class Tree extends Component {
                     key, // 关键字
                     avatar: item.avatar, // 头像
                     icon: item.icon, // 头像
-                    isDel: true // 是否可以删除
+                    isDel: true, // 是否可以删除
+                    path: [item]
                 });
             }
             this.setState({
@@ -799,7 +801,8 @@ export default class Tree extends Component {
                 key, // 关键字
                 avatar: item.avatar, // 头像
                 icon: item.icon, // 头像
-                isDel: true // 是否可以删除
+                isDel: true, // 是否可以删除
+                path: [item]
             });
             if (list[key]) {
                 list[key].checked = true;
@@ -828,7 +831,11 @@ export default class Tree extends Component {
     }
 
     // 关闭窗口
-    _onClose() {
+    onClose(ck) {
+        // const { action } = this;
+        if (ck) {
+            ck();
+        }
     }
 
     // 点击按钮
@@ -940,13 +947,14 @@ export default class Tree extends Component {
             // console.log(_.some(_item.paths, ({ state }) => state.isChildren));
             // 判断是否含有子类
             if (_.some(_item.paths, ({ state }) => state.isChildren)) {
+                // 判断是否整合模式
                 if (isIntegration) {
-                    if (!_.every(_item.paths, ({ pid }) => selected.has(pid))) {
+                    if (!_.every(_item.paths, ({ pid }) => selected.has(pid) && list[pid].isSelected)) {
                         lists.push(item);
                     }
                 }
             } else if (isIntegration) {
-                if (!_.every(_item.paths, ({ pid }) => selected.has(pid))) {
+                if (!_.every(_item.paths, ({ pid }) => selected.has(pid) && list[pid].isSelected)) {
                     lists.push(item);
                 }
             } else {
@@ -1004,7 +1012,7 @@ export default class Tree extends Component {
                 {
                     show &&
                     <div className="tree-main">
-                        <Header title={title} onClick={onClose} />
+                        <Header title={title} onClick={action.onClose} />
 
                         <div className="tree-box">
 

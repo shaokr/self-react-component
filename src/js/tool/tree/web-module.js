@@ -1,5 +1,65 @@
 import _ from 'lodash';
-import Tree from 'zy-tree';
+// import Tree from 'zy-tree';
+
+
+const typeUser = 'user';
+const typeDept = 'dept';
+const typeGroup = 'group';
+/**
+ * 获取用户信息
+ */
+const getUserInfo = async function ({ users }) {
+    const GsInfo = await this.io.user.GoGetUserInfo({
+        uids: users,
+        mask: ['name', 'uid']
+    }).then((res) => {
+        if (res.res.err_code === '0') {
+            return _.map(res.users, item => ({
+                key: item.uid,
+                name: item.name,
+                itemType: typeUser
+            }));
+        }
+        return [];
+    });
+    return GsInfo;
+};
+
+/**
+ * 获取部门信息
+ */
+const getDeptInfo = async function ({ depts }) {
+    const GsInfo = await this.io.contacts.GoGetDeptInfo({
+        dept_ids: depts,
+        mask: ['dept_name', 'dept_id']
+    }).then((res) => {
+        if (res.res.err_code === '0') {
+            // const data = res.depts[0].datas;
+            return _.map(res.depts, ({ datas }) => ({
+                key: datas.dept_id,
+                icon: 'folder',
+                name: datas.dept_name,
+                itemType: typeDept
+            }));
+        }
+        return [];
+    });
+    return GsInfo;
+};
+
+/**
+ * 获取用户和部门信息
+ */
+const getUserAndDeptInfo = async function ({ users, depts }) {
+    const [userRes, deptRes] = await Promise.all([
+        this.getUserInfo({ users }),
+        this.getDeptInfo({ depts })
+    ]);
+    return {
+        users: userRes,
+        depts: deptRes
+    };
+};
 
 /**
  * 获取部门信息
@@ -17,12 +77,33 @@ const getDept = async function ({ key }, ck) {
     }
     return GsInfo;
 };
+/**
+ * 获取自己所在部门
+ * @param {*} data
+ */
+const getSelfDept = async function ({ type }, ck) {
+    const GsInfo = await this.io.contacts.GoGetUserDeptList().then(res => _.map(res.dept_list, (item) => {
+        const _data = item.depts[0];
+        return {
+                key: _data.dept_id,
+                isChildren: true,
+                type,
+                icon: 'folder',
+                name: _data.dept_name,
+                itemType: typeDept
+            };
+    }));
+    if (typeof ck === 'function') {
+        ck(GsInfo);
+    }
+    return GsInfo;
+};
 
 /**
  * 获取用户列表
  * @param {*} data
  */
-const getUserList = async function ({ key, type = 'user' }, ck) {
+const getUserList = async function ({ key, type = typeUser }, ck) {
     const did = key;
     const userList = await this.io.contacts.GoGetCorpData({ type: 2, ids: [did] }).then((res) => {
         if (res.res.err_code === '0') {
@@ -36,7 +117,7 @@ const getUserList = async function ({ key, type = 'user' }, ck) {
                     return {
                         key: userData.uid,
                         name: userData.user_name,
-                        itemType: 'user',
+                        itemType: typeUser,
                         type
                     };
                 })
@@ -54,7 +135,7 @@ const getUserList = async function ({ key, type = 'user' }, ck) {
  * 获取部门列表
  * @param {*} data
  */
-const getDeptList = async function ({ key, type = 'dept', children }, ck) {
+const getDeptList = async function ({ key, type = typeDept, children }, ck) {
     const did = key;
     const deptList = await this.io.contacts.GoGetCorpData({ type: 1, ids: [did] }).then((res) => {
         if (res.res.err_code === '0') {
@@ -71,7 +152,7 @@ const getDeptList = async function ({ key, type = 'dept', children }, ck) {
                         name: deptData.dept_name,
                         isChildren: true,
                         icon: 'folder',
-                        itemType: 'dept',
+                        itemType: typeDept,
                         type,
                         children: _item.children
                     };
@@ -107,53 +188,74 @@ const getDeptAndUserList = async function (data, ck) {
     return RData;
 };
 
+
 /**
  * 获取搜索数据
  */
-const getSearch = async function (data, ck) {
-    let _data = {};
-    if (typeof data === 'string') {
-        _data.keyword = data;
-    }
-    if (typeof data === 'object') {
-        _data = {
-            ...data,
-            keyword: data.key
+const getSearch = function (params, callback) {
+    const _function = async (data, ck) => {
+        let _data = {};
+        if (typeof data === 'string') {
+            _data.keyword = data;
+        }
+        if (typeof data === 'object') {
+            _data = {
+                ...data,
+                keyword: data.key
+            };
+        }
+        if (_data.keyword) {
+            const res = await this.io.search.GoSearchUser(_data);
+            if (res.err_code === '0') {
+                let list = [];
+                _.forEach(res.hits, (item) => {
+                    const _item = {
+                        name: item.name,
+                        itemType: typeUser,
+                        key: item.uid
+                    };
+                    list.push(
+                        ..._.map(item.depts, dept => ({
+                            ..._item,
+                            title: dept.name.split('-')[0]
+                        }))
+                    );
+                });
+                list = _.groupBy(list, 'title');
+                const RData = _.map(list, (item, key) => ({
+                    title: key,
+                    children: item
+                }));
+                if (typeof ck === 'function') {
+                    ck(RData);
+                }
+                return RData;
+            }
+        }
+    };
+    
+    if (_.isArray(params)) {
+        return async (data2, ck) => {
+            let _data = { did: params };
+            if (typeof data2 === 'string') {
+                _data.key = data2;
+            }
+            if (typeof data2 === 'object') {
+                _data = {
+                    ...data2,
+                    ..._data
+                };
+            }
+            return _function(_data, ck);
         };
     }
-    if (_data.keyword) {
-        const res = await this.io.search.GoSearchUser(_data);
-        if (res.err_code === '0') {
-            let list = [];
-            _.forEach(res.hits, (item) => {
-                const _item = {
-                    name: item.name,
-                    key: item.uid
-                };
-                list.push(
-                    ..._.map(item.depts, dept => ({
-                        ..._item,
-                        title: dept.name.split('-')[0]
-                    }))
-                );
-            });
-            list = _.groupBy(list, 'title');
-            const RData = _.map(list, (item, key) => ({
-                title: key,
-                children: item
-            }));
-
-            if (typeof ck === 'function') {
-                ck(RData);
-            }
-            return RData;
-        }
-    }
+    return _function(params, callback);
 };
+
 /**
  * 获取群用户系列
  */
-const getGroup = async function ({ key, type = 'group' }, ck) {
+const getGroup = async function ({ key, type = typeGroup }, ck) {
     const res = await this.io.group.GoGetUserList({
         group_id: key
     });
@@ -170,16 +272,19 @@ const getGroup = async function ({ key, type = 'group' }, ck) {
 };
 
 const onExpand = async function (data, ck) {
-    if (data.type === 'group') {
+    if (data.key === '-1') {
+        return;
+    }
+    if (data.type === typeGroup) {
         return this.getGroup(data, ck);
     }
-    if (data.type === 'dept-user') {
+    if (data.type === `${typeDept}-${typeUser}` || data.type === `${typeUser}-${typeDept}`) {
         return this.getDeptAndUserList(data, ck);
     }
-    if (data.type === 'dept') {
+    if (data.type === typeDept) {
         return this.getDeptList(data, ck);
     }
-    if (data.type === 'user') {
+    if (data.type === typeUser) {
         return this.getUserList(data, ck);
     }
 };
@@ -189,17 +294,30 @@ const onExpand = async function (data, ck) {
  */
 const initData = async function (data = {}) {
     const { key = '0', type = 'dept-user' } = data;
-    const GsInfo = await this.getDept({ key });
-    const list = await this.onExpand({
-        key: GsInfo.dept_id,
-        type
-    });
+    if (key != '-1') {
+        const GsInfo = await this.getDept({ key });
+        const list = await this.onExpand({
+            key: GsInfo.dept_id,
+            type
+        });
+        return {
+            key: GsInfo.dept_id,
+            name: GsInfo.dept_name,
+            isChildren: true,
+            type,
+            icon: GsInfo.dept_id === '0' ? 'company' : 'folder',
+            expand: true,
+            children: list
+        };
+    }
+    const list = await this.getSelfDept({ type });
     return {
-        key: GsInfo.dept_id,
-        name: GsInfo.dept_name,
+        key: '-1',
+        name: '我的部门',
         isChildren: true,
+        isSelected: false,
         type,
-        icon: GsInfo.dept_id === '0' ? 'company' : 'folder',
+        icon: 'bag',
         expand: true,
         children: list
     };
@@ -207,6 +325,12 @@ const initData = async function (data = {}) {
 class Default {
     constructor({ io }) {
         this.io = io;
+        this.getUserInfo = getUserInfo.bind(this);
+        this.getDeptInfo = getDeptInfo.bind(this);
+        this.getUserAndDeptInfo = getUserAndDeptInfo.bind(this);
+
+        this.getSelfDept = getSelfDept.bind(this);
+
         this.getDept = getDept.bind(this);
         this.getUserList = getUserList.bind(this);
         this.getDeptList = getDeptList.bind(this);
