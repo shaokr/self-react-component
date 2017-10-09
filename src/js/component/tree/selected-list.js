@@ -1,7 +1,7 @@
 /**
  * 电子公告主要框
  */
-import { Component, addons } from 'react';
+import { Component } from 'react';
 import _ from 'lodash';
 
 // import Scroll from 'component/scroll';
@@ -9,7 +9,7 @@ import _ from 'lodash';
 import Avatar from './avatar';
 import { Checked } from './circle';
 
-const { CSSTransitionGroup } = addons;
+// const { CSSTransitionGroup } = addons;
 
 class Li extends Component {
     shouldComponentUpdate() {
