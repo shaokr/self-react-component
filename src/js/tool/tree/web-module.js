@@ -208,7 +208,8 @@ const getSearch = function (params, callback) {
             const res = await this.io.search.GoSearchUser(_data);
             if (res.err_code === '0') {
                 let list = [];
-                _.forEach(res.hits, (item) => {
+                const hits = _.get(res, ['datas', 'hits']);
+                _.forEach(hits, (item) => {
                     const _item = {
                         name: item.name,
                         itemType: typeUser,

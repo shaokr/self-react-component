@@ -89,9 +89,9 @@ export default class Modal extends Component {
     }
     // 关闭
     close() {
-        if (this.props.rdom) {
-            this.props.rdom.remove();
-        }
+        // if (this.props.rdom) {
+        //     this.props.rdom.remove();
+        // }
         this.setState({
             visible: false
         });

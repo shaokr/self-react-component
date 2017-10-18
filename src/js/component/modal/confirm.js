@@ -14,26 +14,37 @@ export default class Confirm extends Component {
     constructor(props) {
         super(props);
 
-        // this.onClickKey = this.onClickKey.bind(this);
+        this.state = {
+            visible: true
+        };
+        this.onClickKey = this.onClickKey.bind(this);
+        this.hide = this.hide.bind(this);
     }
-    // onClickKey(key, col) {
-    //     const { props } = this;
-
-    //     if (typeof props.onClickKey === 'function') {
-    //         const props.onClickKey(key, col)
-    //         if () {
-    //             props.rdom.remove();
-    //         }
-    //     } else if (col) {
-    //         props.rdom.remove();
-    //     }
-    // }
-    get modalProps() {
+    onClickKey(key, col) {
         const { props } = this;
+
+        if (_.isFunction(props.onClickKey)) {
+            const res = props.onClickKey(key, col);
+            if (_.isUndefined(res) || res) {
+                this.hide();
+            }
+        } else if (col) {
+            this.hide();
+        }
+    }
+    hide() {
+        const { props } = this;
+        props.rdom.remove();
+        this.setState({
+            visible: false
+        });
+    }
+    get modalProps() {
+        const { props, state } = this;
         return {
             title: null,
-            visible: true,
-            onClickKey: props.onClickKey,
+            visible: state.visible,
+            onClickKey: this.onClickKey,
             btn: props.btn,
             maskClosable: props.maskClosable,
             rdom: props.rdom
@@ -59,6 +70,9 @@ export default class Confirm extends Component {
     }
     render() {
         const { modalProps } = this;
+        if (!modalProps.visible) {
+            return null;
+        }
         return <Modal {...modalProps} >{this.content}</Modal>;
     }
 }

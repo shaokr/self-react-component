@@ -35,7 +35,7 @@ export class ShowDom {
 
     }
     update(nextProps, nextState) {
-        
+
     }
 
 }
@@ -47,44 +47,54 @@ export default Comp => class SuperDom extends Component {
 
         this.rootDom = props.getContainer || document.createElement('div');
         this.remove = this.remove.bind(this);
+        this.removeChild = this.removeChild.bind(this);
+        this.appendChild = this.appendChild.bind(this);
         if (props.rdom) {
             props.rdom.removePromise.promise.then(this.remove);
         }
     }
-    remove() {
-        const { getContainer } = this.props;
-        if (!getContainer) {
-            if (this.appOK) {
-                document.body.removeChild(this.rootDom);
-            }
-        }
-    }
     componentWillUpdate(nextProps, nextState) {
-        if (this.props.rdom) {
-            this.props.rdom.update(nextProps, nextState);
+        const { props } = this;
+        if (props.rdom) {
+            props.rdom.update(nextProps, nextState);
         }
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.visible) {
-            if (!this.appOK) {
-                this.appOK = document.body.appendChild(this.rootDom);
-            }
+            this.appendChild();
         } else {
-            this.appOK = null;
-            document.body.removeChild(this.rootDom);
+            this.removeChild();
         }
-        ReactDOM.render(<Comp {...nextProps} rootDom={this.rootDom} />, this.rootDom);
     }
     componentDidMount() {
         if (this.props.visible) {
-            this.appOK = document.body.appendChild(this.rootDom);
+            this.appendChild();
         }
-        ReactDOM.render(<Comp {...this.props} rootDom={this.rootDom} />, this.rootDom);
     }
     componentWillUnmount() {
         this.remove();
     }
+    // 删除
+    remove() {
+        const { getContainer } = this.props;
+        if (!getContainer) {
+            this.removeChild();
+        }
+    }
+    // 添加dom元素到页面
+    appendChild() {
+        if (!this.appOK) {
+            this.appOK = document.body.appendChild(this.rootDom);
+        }
+    }
+    // 删除dom元素
+    removeChild() {
+        if (this.appOK) {
+            this.appOK = null;
+            document.body.removeChild(this.rootDom);
+        }
+    }
     render() {
-        return null;
+        return ReactDOM.createPortal(<Comp {...this.props} />, this.rootDom);
     }
 };

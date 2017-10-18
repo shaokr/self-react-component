@@ -39,33 +39,37 @@ if (__DEV__) {
         //     title: '提示',
         //     content: '确定删除此文件吗？'
         // });
-        // Modal.success();
+        window.sss = Modal.show({
+            title: '1231'
+        });
+        
         // Modal.info();
         // console.log()
         // <Modal visible />;
         // return Apiutil;
-        // class Div2 extends Component {
-        //     constructor(props) {
-        //         super(props);
-        //         this.state = {
-        //             visible: false
-        //         };
-        //     }
-        //     onClick = () => {
-        //         this.setState({
-        //             visible: !this.state.visible
-        //         });
-        //     }
-        //     render() {
-        //         return (
-        //             <div className={this.className} onClickMask={e => this.onClickKey(e, '-2')} onClick={e => e.stopPropagation()}>
-        //                 <div onClick={this.onClick}>显示</div>
-        //                 <Modal visible={this.state.visible} title="标题" onClickKey={(res) => console.log(res)}>我都没搜啊么的搜</Modal>
-        //             </div>
-        //         );
-        //     }
-        // }
-        render(<Loading tip="123123" >12341231</Loading>, document.getElementById('app-main'));
+        class Div2 extends Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    visible: false
+                };
+            }
+            onClick = () => {
+                this.setState({
+                    visible: !this.state.visible
+                });
+            }
+            render() {
+                return (
+                    <div className={this.className} onClickMask={e => this.onClickKey(e, '-2')} onClick={e => e.stopPropagation()}>
+                        <div onClick={this.onClick}>显示</div>
+                        <Modal visible={this.state.visible} title="标题" onClickKey={(res) => console.log(res)}>我都没搜啊么的搜</Modal>
+                    </div>
+                );
+            }
+        }
+        render(<Div2 />, document.getElementById('app-main'));
+        // render(<Loading tip="123123" >12341231</Loading>, document.getElementById('app-main'));
     }
 
     if (param.debug == 1) {

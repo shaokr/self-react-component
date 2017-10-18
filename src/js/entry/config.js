@@ -29,22 +29,22 @@ const mainListObj = { // 载入文件的配置
     '_main': { // 入口文件 签名
         // ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact']
+        deps: ['react', 'mobx', 'mobx-react']
     },
     '_tool-tree-pc-management': { // 入口文件 签名
         // ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'Apiutil']
+        deps: ['react', 'mobx', 'mobx-react', 'Apiutil']
     },
     '_tool-tree-web-module': { // 入口文件 签名
         // ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', 'bridgeWs']
+        deps: ['react', 'mobx', 'mobx-react', 'bridgeWs']
     },
     '_component': { // 入口文件 签名
         ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['React', 'ReactRouter', 'mobx', 'mobxReact', '_tool-tree-pc-management', '_tool-tree-web-module']
+        deps: ['react', 'mobx', 'mobx-react', '_tool-tree-pc-management', '_tool-tree-web-module']
     }
 };
 
@@ -54,7 +54,7 @@ for (const key in mainListObj) {
         mainListObj[key].deps = mainListObj[key].deps.concat(SystemJSConfigMain[_key].css);
     }
 }
-Systemjs.import(`${cdnHost}/config/1.0.6/config.js`).then((res) => {
+Systemjs.import(`${cdnHost}/config/2.1.0/config.js`).then((res) => {
     // res中的map查看cdn目录下config.js文件
     Systemjs.config(res(cdnHost));
     Systemjs.config(mapListObj);
