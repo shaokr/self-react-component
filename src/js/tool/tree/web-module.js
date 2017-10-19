@@ -17,6 +17,7 @@ const getUserInfo = async function ({ users }) {
             return _.map(res.users, item => ({
                 key: item.uid,
                 name: item.name,
+                avatar: item.avatar_url,
                 itemType: typeUser
             }));
         }
@@ -85,13 +86,13 @@ const getSelfDept = async function ({ type }, ck) {
     const GsInfo = await this.io.contacts.GoGetUserDeptList().then(res => _.map(res.dept_list, (item) => {
         const _data = item.depts[0];
         return {
-                key: _data.dept_id,
-                isChildren: true,
-                type,
-                icon: 'folder',
-                name: _data.dept_name,
-                itemType: typeDept
-            };
+            key: _data.dept_id,
+            isChildren: true,
+            type,
+            icon: 'folder',
+            name: _data.dept_name,
+            itemType: typeDept
+        };
     }));
     if (typeof ck === 'function') {
         ck(GsInfo);
@@ -112,11 +113,13 @@ const getUserList = async function ({ key, type = typeUser }, ck) {
                     const {
                         sync_data: {
                             user_data: userData
-                        }
+                        },
+                        user_datas: userDatas
                     } = item;
                     return {
                         key: userData.uid,
                         name: userData.user_name,
+                        avatar: userDatas.avatar_url,
                         itemType: typeUser,
                         type
                     };
@@ -213,16 +216,20 @@ const getSearch = function (params, callback) {
                     const _item = {
                         name: item.name,
                         itemType: typeUser,
-                        key: item.uid
+                        key: item.uid,
+                        avatar: item.avatar_url,
+                        title: item.corp_name
                     };
-                    list.push(
-                        ..._.map(item.depts, dept => ({
-                            ..._item,
-                            title: dept.name.split('-')[0]
-                        }))
-                    );
+                    list.push(_item);
+                    // list.push(
+                    //     ..._.map(item.depts, dept => ({
+                    //         ..._item,
+                    //         title: dept.name.split('-')[0]
+                    //     }))
+                    // );
                 });
                 list = _.groupBy(list, 'title');
+
                 const RData = _.map(list, (item, key) => ({
                     title: key,
                     children: item
@@ -234,7 +241,7 @@ const getSearch = function (params, callback) {
             }
         }
     };
-    
+
     if (_.isArray(params)) {
         return async (data2, ck) => {
             let _data = { did: params };

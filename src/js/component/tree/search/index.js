@@ -148,10 +148,10 @@ export default class Selected extends Component {
             return (
                 <div className={`${_prefix}-list scroll`}>
                     {
-                        _.map(list, (item) => {
+                        _.map(list, (item, index) => {
                             const { title, children } = item;
                             return (
-                                <div className={`${_prefix}-group`}>
+                                <div key={index} className={`${_prefix}-group`}>
                                     <h4 className={`${_prefix}-group--title`}>{title}</h4>
                                     <ul>
                                         {
@@ -188,7 +188,6 @@ export default class Selected extends Component {
         const {
             placeholder
         } = this.props;
-
         return (
             <label className={_prefix} htmlFor="male" onClickCapture={this.onClickThis}>
                 <Icon className={`${_prefix}--search`} type="search" />

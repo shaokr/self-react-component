@@ -823,7 +823,7 @@ export default class Tree extends Component {
     // 搜索值变化
     _onSearchChange(ck, event, searchCk) {
         const { value } = event.target;
-        if (typeof ck === 'function') {
+        if (_.isFunction(ck)) {
             ck(value, searchCk, event);
         } else {
             searchCk(value);

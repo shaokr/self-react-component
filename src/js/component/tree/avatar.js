@@ -60,14 +60,27 @@ export default class Avatar extends Component {
             className: _className
         };
     }
+    get avatarProps() {
+        const { name, avatar } = this.props;
+        const { showImg } = this.state;
+        return {
+            alt: name,
+            src: avatar,
+            onLoad:this._onLoad,
+            className: classnames(['tree-avatar--img',
+                {
+                    'tree-avatar--img__show': showImg
+                }
+            ])
+        }
+    }
     render() {
         const { name, avatar, icon } = this.props;
         const { baColor, showImg } = this.state;
-
         return (
             <div className="tree-avatar" >
                 { !!icon && <Icon {...this.iconProps} />}
-                { !icon && showImg && avatar && <img className="tree-avatar--img" alt={name} src={avatar} onLoad={this._onLoad} />}
+                { !icon && avatar && <img {...this.avatarProps} />}
                 { !icon && !showImg && !avatar && <div className="tree-avatar--name" style={baColor}>{name[0]}</div>}
             </div>
         );
