@@ -342,12 +342,13 @@
         
         &-name{
             flex: 1;
-            // margin-left:  @box-p;
-            i{
-                width: @u*20;
-                height: @u*20;
+            display: flex;
+            overflow: hidden;
+            p{
+                .slh();
             }
             small{
+                margin:0 @u*4;
                 color: @c3;
             }
         }

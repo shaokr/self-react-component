@@ -65,10 +65,11 @@ const Front = ({ data, onClick, dataState }) => (
 // 名称
 const Name = ({ name, small }) => (
     <div className="tree-children-info-name">
-        {name}
+        <p>{name}</p>
         <small>{small}</small>
     </div>
 );
+
 // 子类展示
 const Children = ({ dataState, data, store, action, onHover }) => {
     if (dataState.isChildren && dataState.expand) {

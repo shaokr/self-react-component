@@ -23,7 +23,10 @@ class Li extends Component {
                 <div className="tree-selected-front">
                     <Avatar name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} icon={data.icon} />
                 </div>
-                <p>{data.name}</p>
+                <p>
+                    {data.name}
+                    <small>{data.small}</small>
+                </p>
                 <Checked show={data.isDel} type="-1" onClick={() => action.hasSelectedItem(data)} />
             </li>
         );

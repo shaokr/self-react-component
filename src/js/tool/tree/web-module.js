@@ -147,7 +147,8 @@ const getDeptList = async function ({ key, type = typeDept, children }, ck) {
                     const {
                         sync_data: {
                             dept_data: deptData
-                        }
+                        },
+                        dept_datas: deptDatas
                     } = item;
                     const _item = _.find(children, ['key', deptData.dept_id]) || {};
                     return {
@@ -157,7 +158,9 @@ const getDeptList = async function ({ key, type = typeDept, children }, ck) {
                         icon: 'folder',
                         itemType: typeDept,
                         type,
-                        children: _item.children
+                        children: _item.children,
+                        small: deptDatas.dept_mem_num ? `(${deptDatas.dept_mem_num})` : '',
+                        childrenNumber: deptDatas.dept_mem_num * 1
                     };
                 })
             );
