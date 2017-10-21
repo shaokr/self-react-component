@@ -83,7 +83,7 @@ const getDept = async function ({ key }, ck) {
  * @param {*} data
  */
 const getSelfDept = async function ({ type }, ck) {
-    const GsInfo = await this.io.contacts.GoGetUserDeptList().then(res => _.map(res.dept_list, (item) => {
+    let GsInfo = await this.io.contacts.GoGetUserDeptList().then(res => _.map(res.dept_list, (item) => {
         const _data = item.depts[0];
         return {
             key: _data.dept_id,
@@ -94,6 +94,15 @@ const getSelfDept = async function ({ type }, ck) {
             itemType: typeDept
         };
     }));
+    const list = _.map(GsInfo, async (item) => {
+        const dept = await this.getDept({ key: item.key });
+        return {
+            ...item,
+            small: dept.dept_mem_num ? `(${dept.dept_mem_num})` : '',
+            childrenNumber: dept.dept_mem_num * 1
+        };
+    });
+    GsInfo = await Promise.all(list);
     if (typeof ck === 'function') {
         ck(GsInfo);
     }
@@ -318,7 +327,9 @@ const initData = async function (data = {}) {
             type,
             icon: GsInfo.dept_id === '0' ? 'company' : 'folder',
             expand: true,
-            children: list
+            children: list,
+            small: GsInfo.dept_mem_num ? `(${GsInfo.dept_mem_num})` : '',
+            childrenNumber: GsInfo.dept_mem_num * 1
         };
     }
     const list = await this.getSelfDept({ type });
@@ -330,7 +341,9 @@ const initData = async function (data = {}) {
         type,
         icon: 'bag',
         expand: true,
-        children: list
+        children: list,
+        small: `(${list.length})`,
+        childrenNumber: _.sumBy(list, ({ childrenNumber = 0 }) => childrenNumber)
     };
 };
 class Default {
