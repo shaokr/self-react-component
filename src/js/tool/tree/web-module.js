@@ -11,7 +11,8 @@ const typeGroup = 'group';
 const getUserInfo = async function ({ users }) {
     const GsInfo = await this.io.user.GoGetUserInfo({
         uids: users,
-        mask: ['name', 'uid']
+        mask: ['name', 'uid'],
+        if_dept_list: '0'
     }).then((res) => {
         if (res.res.err_code === '0') {
             return _.map(res.users, item => ({
@@ -83,7 +84,7 @@ const getDept = async function ({ key }, ck) {
  * @param {*} data
  */
 const getSelfDept = async function ({ type }, ck) {
-    let GsInfo = await this.io.contacts.GoGetUserDeptList().then(res => _.map(res.dept_list, (item) => {
+    const GsInfo = await this.io.contacts.GoGetUserDeptList().then(res => _.map(res.dept_list, (item) => {
         const _data = item.depts[0];
         return {
             key: _data.dept_id,
@@ -91,18 +92,21 @@ const getSelfDept = async function ({ type }, ck) {
             type,
             icon: 'folder',
             name: _data.dept_name,
-            itemType: typeDept
+            itemType: typeDept,
+            small: _data.dept_mem_num ? `(${_data.dept_mem_num})` : '',
+            childrenNumber: _data.dept_mem_num * 1
         };
     }));
-    const list = _.map(GsInfo, async (item) => {
-        const dept = await this.getDept({ key: item.key });
-        return {
-            ...item,
-            small: dept.dept_mem_num ? `(${dept.dept_mem_num})` : '',
-            childrenNumber: dept.dept_mem_num * 1
-        };
-    });
-    GsInfo = await Promise.all(list);
+
+    // const list = _.map(GsInfo, async (item) => {
+    //     const dept = await this.getDept({ key: item.key });
+    //     return {
+    //         ...item,
+    //         small: dept.dept_mem_num ? `(${dept.dept_mem_num})` : '',
+    //         childrenNumber: dept.dept_mem_num * 1
+    //     };
+    // });
+    // GsInfo = await Promise.all(list);
     if (typeof ck === 'function') {
         ck(GsInfo);
     }
@@ -314,7 +318,8 @@ const onExpand = async function (data, ck) {
  */
 const initData = async function (data = {}) {
     const { key = '0', type = 'dept-user' } = data;
-    if (key != '-1') {
+    // 判断是否获取我的部门
+    if (key !== '-1') {
         const GsInfo = await this.getDept({ key });
         const list = await this.onExpand({
             key: GsInfo.dept_id,
@@ -332,6 +337,7 @@ const initData = async function (data = {}) {
             childrenNumber: GsInfo.dept_mem_num * 1
         };
     }
+    // 我的部门
     const list = await this.getSelfDept({ type });
     return {
         key: '-1',
