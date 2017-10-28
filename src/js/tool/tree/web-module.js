@@ -93,8 +93,8 @@ const getSelfDept = async function ({ type }, ck) {
             icon: 'folder',
             name: _data.dept_name,
             itemType: typeDept,
-            small: _data.dept_mem_num ? `(${_data.dept_mem_num})` : '',
-            childrenNumber: _data.dept_mem_num * 1
+            small: item.dept_mem_num ? `(${item.dept_mem_num})` : '',
+            childrenNumber: item.dept_mem_num * 1
         };
     }));
 
