@@ -20,11 +20,11 @@ export default class Confirm extends Component {
         this.onClickKey = this.onClickKey.bind(this);
         this.hide = this.hide.bind(this);
     }
-    onClickKey(key, col) {
+    onClickKey(key, e, col) {
         const { props } = this;
 
         if (_.isFunction(props.onClickKey)) {
-            const res = props.onClickKey(key, col);
+            const res = props.onClickKey(key, e, col);
             if (_.isUndefined(res) || res) {
                 this.hide();
             }

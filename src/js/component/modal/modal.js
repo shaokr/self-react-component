@@ -76,7 +76,7 @@ export default class Modal extends Component {
             isClose = false;
         }
         try {
-            const res = props.onClickKey(key.toString(), close);
+            const res = props.onClickKey(key.toString(), e, close);
             if (typeof res !== 'undefined') {
                 isClose = !!res;
             }
