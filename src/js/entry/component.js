@@ -12,12 +12,12 @@ import Mask from 'component/mask';
 import Checkbox from 'component/checkbox';
 import Loading from 'component/loading';
 import Tree from 'component/tree';
+import Message from 'component/message';
 
 
 if (__DEV__) {
     const { render } = require('react-dom');
     const param = require('util/param').default;
-    const Tree = require('component/tree');
     
     if (param.debug == 2) {
         // Modal.success({
@@ -160,7 +160,7 @@ if (__DEV__) {
 
     if (param.debug == 3) {
         const ToolTree = require('web-tool-tree');
-        const bridgeWs = require('bridgeWs').default;
+        const bridgeWs = require('bridgeWs');
         const io = bridgeWs.init();
         (async () => {
             // ip	是	 	''	登录的ip地址
@@ -187,37 +187,84 @@ if (__DEV__) {
             const tree = [
                 companyData
             ];
-            // // return Apiutil;
-            render(<Tree
-                // isIntegration
-                onClickBtn={(...res) => {
-                    console.log(res);
-                }}
-                expandType="1"
-                onSearchChange={ddd.getSearch}
-                disableKeys={['4563403140', '4563442200']}
-                disableChangeKeys={['4563403139', '4563442200']}
-                        // consfig
-                        // type="radio"
-                bottomBtn={
-                    [
-                        {
-                            txt: '确定',
-                            key: 'yes',
-                            type: 'primary',
-                            load: false
-                        }
-                    ]
+            class Div3 extends Component {
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        btn: [
+                            {
+                                txt: '确定',
+                                key: 'yes',
+                                type: 'primary',
+                            }
+                        ]
+                    };
                 }
-                tree={tree}
-                onExpand={ddd.onExpand}
-                max="7"
-            />, document.getElementById('app-main'));
+                onSelectedChange = (res) => {
+                    console.log(res);
+                    if (res.length !== 0) {
+                        this.setState({
+                            btn: [
+                                {
+                                    txt: '确定',
+                                    key: 'yes',
+                                    type: 'primary'
+                                }
+                            ]
+                        });
+                    } else {
+                        this.setState({
+                            btn: [
+                                {
+                                    txt: '确定',
+                                    key: 'yes',
+                                    type: 'primary',
+                                    disabled: true
+                                }
+                            ]
+                        });
+                    }
+                }
+                render() {
+                    return (
+                        <Tree
+                            onSelectedChange={this.onSelectedChange}
+                            isIntegration
+                            onClickBtn={(...res) => {
+                                console.log(res);
+                            }}
+                            expandType="1"
+                            onSearchChange={ddd.getSearch}
+                            disableKeys={['4563403140', '4563442200']}
+                            disableChangeKeys={['4563403139', '4563442200']}
+                                    // consfig
+                                    // type="radio"
+                            bottomBtn={this.state.btn}
+                            tree={tree}
+                            onExpand={ddd.onExpand}
+                            max="7"
+                        />
+                    );
+                }
+            }
+            render(<Div3 />, document.getElementById('app-main'));
         })();
     }
 
-    if (param.debug == 4){
+    if (param.debug == 4) {
         Loading.show();
+    }
+    if (param.debug == 'message') {
+        console.log(Message);
+        // success: ({ content, duration, onClose, animate }) => (
+        //     notice({ content, duration, type: 'success', onClose, animate })
+        // ),
+        Message.success({
+            content: '123123'
+        });
+        Message.error({
+            content: '23523'
+        });
     }
 }
 
@@ -231,5 +278,6 @@ module.exports = {
     Mask,
     Checkbox,
     Loading,
-    ShowDom
+    ShowDom,
+    Message
 };
