@@ -7,16 +7,6 @@
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.1);
-    &::after{
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        z-index: 1000;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0)
-    }
     &--spin{
         &::before{  
             animation: loadingCircle 1s infinite linear;
@@ -27,11 +17,21 @@
         .@{px-loading}--spin{
             .dpr(14);
         }
+        .@{px-loading}--box{
+            >p{
+                .dpr(@fs3);
+            }
+        }
     }
     // 默认大小
     &__default{
         .@{px-loading}--spin{
             .dpr(22);
+        }
+        .@{px-loading}--box{
+            >p{
+                .dpr(@fs2);
+            }
         }
     }
     // 大号
@@ -39,9 +39,34 @@
         .@{px-loading}--spin{
             .dpr(32);
         }
+        .@{px-loading}--box{
+            >p{
+                .dpr(@fs1);
+            }
+        }
     }
-    
+    // 显示loading状态
+    &__show{
+        &::after{
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0)
+        }
+        .@{px-loading}--box{
+            display: block;
+        }
+        .@{px-loading}--children{
+            opacity: .7;
+            filter: blur(.5px);
+        }
+    }
     &--box{
+        display: none;
         color: @c4;
         position: absolute;
         // display: inline;
@@ -52,12 +77,11 @@
         z-index: 100;
         >p{
             .slh();
-            margin: @u*8 0 0 0;
+            width: 61.8%; // 又是完美的黄金比例！！！
+            margin: @u*4 0 0 0;
         }
     }
     &--children{
-        opacity: .7;
-        filter: blur(.5px);
         height: 100%;
         width: 100%;
     }
