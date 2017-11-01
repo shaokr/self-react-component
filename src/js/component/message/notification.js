@@ -51,17 +51,12 @@ class Notification extends Component {
             notices
         });
     }
-    get renderContent() {
-        return (
-            _.map(this.state.notices, notice => (
-                <Notice key={notice.key} close={notice.close} keys={notice.key} duration={notice.duration} onClose={this.remove}>{notice.content}</Notice>
-            ))
-        );
-    }
     render() {
         return (
             <div className={`${prefix}-modal-warp`}>
-                {this.renderContent}
+                {
+                    _.map(this.state.notices, notice => <Notice key={notice.key} close={notice.close} keys={notice.key} duration={notice.duration} onClose={this.remove}>{notice.content}</Notice>)
+                }
             </div>
         );
     }

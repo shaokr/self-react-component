@@ -14,7 +14,6 @@ class Notice extends Component {
     }
     componentDidMount() {
         this.clearCloseTimer();
-
         if (this.props.duration) {
             this.closeTimer = setTimeout(() => {
                 this.close();
@@ -25,9 +24,6 @@ class Notice extends Component {
         if (nextProps.close) {
             this.close();
         }
-    }
-    componentDidUpdate() {
-        this.componentDidMount();
     }
     clearCloseTimer() {
         if (this.closeTimer) {
