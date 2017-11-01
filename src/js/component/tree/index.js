@@ -8,11 +8,13 @@ import classnames from 'classnames';
 import _ from 'lodash';
 
 import Icon from 'component/icon';
+import message from 'component/message';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
 import BottomBox from './bottom-box';
 import TreeList from './tree-list';
+
 
 import './index.less';
 // 头部
@@ -573,7 +575,8 @@ export default class Tree extends Component {
             onExceedMax: this._onExceedMax.bind(this, props.onExceedMax),
             hasSelectedItem: this.hasSelectedItem.bind(this),
             getDataState: this.getDataState.bind(this),
-            onClose: this.onClose.bind(this, props.onClose)
+            onClose: this.onClose.bind(this, props.onClose),
+            onSelectedChange: this.onSelectedChange.bind(this, props.onSelectedChange)
         };
     }
     get action() {
@@ -582,6 +585,7 @@ export default class Tree extends Component {
     // 初始化各种数据
     initState(props) {
         let { max, type, isIntegration = false, tree, selectedList = [], disableKeys = [], disableChangeKeys = [] } = _.cloneDeep(props);
+        this.disableChangeKeys = disableChangeKeys;
         // 模式
         if (type === 'radio') {
             max = 1;
@@ -589,10 +593,16 @@ export default class Tree extends Component {
         } else {
             type = 'check';
         }
-        selectedList = _.map(selectedList, item => [item.key.toString(), { isDel: true, ...item, path: [item] }]);
+        selectedList = _.map(selectedList, (item) => {
+            const _key = item.key.toString();
+            if (!_.isUndefined(item.isDel) && !item.isDel) {
+                this.disableChangeKeys.push(_key);
+            }
+            return [_key, { isDel: true, ...item, path: [item] }];
+        });
         selectedList = new Map(selectedList);
         // 获取数据
-        const { list, newTree } = getData({ data: tree, pattern: type, selectedList, disableKeys, disableChangeKeys });
+        const { list, newTree } = getData({ data: tree, pattern: type, selectedList, disableKeys, disableChangeKeys: this.disableChangeKeys });
         const selected = this.getSelected(list, selectedList);
         // _.forEach(disableKeys, item => selected.delete(item));
         const state = {
@@ -654,7 +664,7 @@ export default class Tree extends Component {
         list = setChecked(list, keyList, false);
         this.setState({
             list, selected
-        });
+        }, this.action.onSelectedChange);
     }
 
 	/**
@@ -707,7 +717,7 @@ export default class Tree extends Component {
                     pattern: self.config.type,
                     selectedList: selected,
                     disableKeys: props.disableKeys,
-                    disableChangeKeys: props.disableChangeKeys
+                    disableChangeKeys: self.disableChangeKeys
                 });
                 treePath.push('children');
                 _.set(tree, treePath, _.get(newTree, _data.l).children);
@@ -726,7 +736,18 @@ export default class Tree extends Component {
     }
     // 超过最大
     _onExceedMax(ck) {
-        ck && ck();
+        const { max } = this.props;
+        if (_.isFunction(ck)) {
+            ck(max);
+        } else {
+            let set = `超过可选最大值(${max})`;
+            if (_.isString(ck)) {
+                set = ck;
+            }
+            message.error({
+                content: set
+            });
+        }
     }
 
 	// 点击复选框触发
@@ -749,7 +770,7 @@ export default class Tree extends Component {
                 this.setState({
                     list,
                     selected: this.getSelected(list, selected)
-                });
+                }, this.action.onSelectedChange);
                 return;
             }
             // 判断是否已经存在选中项中
@@ -771,7 +792,7 @@ export default class Tree extends Component {
             }
             this.setState({
                 selected
-            });
+            }, this.action.onSelectedChange);
         }
         if (typeof ck === 'function') {
             ck(item);
@@ -813,7 +834,7 @@ export default class Tree extends Component {
         this.setState({
             list,
             selected
-        });
+        }, this.action.onSelectedChange);
     }
 
 	// 点击树节点触发
@@ -888,7 +909,26 @@ export default class Tree extends Component {
         });
         return selected;
     }
-
+    /**
+     * 选中值变化
+     */
+    onSelectedChange(ck) {
+        let { oldSelectedData } = this;
+        const { list } = this.state;
+        oldSelectedData = _.map(oldSelectedData.list, (item) => {
+            const _item = list[item.key];
+            if (_item) {
+                item.path = [];
+                _.forEach(_item.paths, ({ path, self }) => {
+                    item.path.push({ ...self, path });
+                });
+            }
+            return item;
+        });
+        if (_.isFunction(ck)) {
+            ck(oldSelectedData);
+        }
+    }
     /**
      * 反选项目
      * @param {*} item 需要反选的项目
