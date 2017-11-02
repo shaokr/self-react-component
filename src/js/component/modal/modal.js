@@ -12,6 +12,7 @@ import './modal.less';
 
 const _prefix = `${prefix}-modal`;
 
+// 头
 const Head = ({ title, action, closable }) => {
     if (title === null) {
         return null;
@@ -153,7 +154,7 @@ Modal.defaultProps = {
     visible: false, // 对话框是否可见	boolean	无
     title: '', // 标题	string|ReactNode	无
     closable: true, // 是否显示右上角的关闭按钮	boolean	true
-    maskClosable: true, // 点击蒙层是否允许关闭	boolean	true
+    maskClosable: false, // 点击蒙层是否允许关闭	boolean	false
     style: {},	// 可用于设置浮层的样式，调整浮层位置等	object	-
     className: '', // 对话框外层容器的类名	string	-
     // footer: '',

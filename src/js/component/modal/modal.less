@@ -1,28 +1,42 @@
 /**
-* 滚动条
+* 弹出框
 */
 @import "~global/var.less";
 @import "~global/mixins.less";
 
-.@{prefix}-modal {
-    width: @u*460;
+.@{px-modal} {
+    
     border-radius: @u*4;
     border: 1px solid @bc1;
     background: #fff;
-    box-shadow: 0 5px 18px 0 rgba(0,34,77,0.10);
-    margin: @u*150 auto 0;
+    box-shadow: 0 @u*5 @u*18 0 rgba(0,34,77,0.10);
+    // margin: @u*150 auto 0;
+    max-height: 61.8%;
+    width: @u*460;
+    position: absolute;
+    top: 100 - 61.8%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+
+    // 头
     &--head{
         .dpr(@fs2);
         padding: @u*12 @u*20;
+        box-sizing: border-box;
         border-bottom: 1px solid @bc1;
         position: relative;
         min-height: @u*40;
         line-height: 1.2;
         background: @bgc1;
+        width: 100%;
     }
+    // 在头部里的标题
     &--title{
         // text-align: center;
     }
+    // 关闭按钮
     &--close{
         .dpr(40);
         position: absolute;
@@ -39,19 +53,28 @@
             color: @c1;
         }
     }
-
+    // 主要内容展示区域
     &--body{
         .dpr(@fs2);
         padding: @u*20;
         min-height: @u*100;
+        max-height: 61.8%; // 又是完美黄金比例！！
+        word-wrap: break-word;
+        box-sizing: border-box;
+        flex: 1;
+        width: 100%;
     }
+    // 底部
     &--footer{
         border-top: 1px solid @bc1;
         display: flex;
         justify-content: flex-end;
         align-self: center;
-        flex-wrap: wrap;
+        width: 100%;
+        max-height: @u*62;
         padding: @u*14 @u*20;
+        flex-wrap: wrap;
+        box-sizing: border-box;
         >*{
             margin: @u*5 0 0 @u*5;
         }

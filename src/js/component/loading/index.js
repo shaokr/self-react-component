@@ -47,14 +47,22 @@ class Loading extends Component {
             </div>
         );
     }
-    render() {
+    get children() {
         const { props } = this;
+        if (!props.children) {
+            return null;
+        }
+        return (
+            <div className={`${props.className} ${_prefix}--children`}>
+                {props.children}
+            </div>
+        );
+    }
+    render() {
         return (
             <div className={this.className}>
                 {this.box}
-                <div className={`${props.className} ${_prefix}--children`}>
-                    {props.children}
-                </div>
+                {this.children}
             </div>
         );
         // return (

@@ -19,7 +19,7 @@ export default class extends Component {
             loading
         } = this.props;
         if (loading) {
-            return <Loading className={`${_prefix}--icon`} size="small" />;
+            return <Loading wrapperClassName={`${_prefix}--icon`} size="small" />;
         }
         const { icon } = this.props;
         if (icon) {
