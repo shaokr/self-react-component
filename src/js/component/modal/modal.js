@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
-import { prefix } from 'config/const';
+import { prefixScrollbar, prefixModal } from 'config/const';
 
 import Button from '../button';
 import Icon from '../icon';
@@ -10,7 +10,7 @@ import superDom from '../super-dom';
 
 import './modal.less';
 
-const _prefix = `${prefix}-modal`;
+const _prefix = prefixModal;
 
 // 头
 const Head = ({ title, action, closable }) => {
@@ -31,7 +31,7 @@ const Head = ({ title, action, closable }) => {
 };
 
 const Content = ({ children }) => (
-    <div className={`${_prefix}--body`}>
+    <div className={`${_prefix}--body ${prefixScrollbar}`}>
         {children}
     </div>
 );
@@ -116,6 +116,7 @@ export default class Modal extends Component {
         const { maskProps } = this.props;
         return {
             ...maskProps,
+            title: null,
             onClick: (e) => {
                 if (typeof maskProps.onClick === 'function') {
                     maskProps.onClick(e);
@@ -128,6 +129,7 @@ export default class Modal extends Component {
         const { maskProps, ...props } = this.props;
         return {
             ...props,
+            title: null,
             onClick: (e) => {
                 if (typeof props.onClick === 'function') {
                     props.onClick(e);

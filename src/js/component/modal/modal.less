@@ -5,7 +5,6 @@
 @import "~global/mixins.less";
 
 .@{px-modal} {
-    
     border-radius: @u*4;
     border: 1px solid @bc1;
     background: #fff;
@@ -19,7 +18,6 @@
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-
     // 头
     &--head{
         .dpr(@fs2);
@@ -71,7 +69,7 @@
         justify-content: flex-end;
         align-self: center;
         width: 100%;
-        max-height: @u*62;
+        min-height: @u*62;
         padding: @u*14 @u*20;
         flex-wrap: wrap;
         box-sizing: border-box;
