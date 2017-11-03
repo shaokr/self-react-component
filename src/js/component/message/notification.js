@@ -1,7 +1,7 @@
 /* global document : true*/
 import { Component } from 'react';
-import ReactDom from 'react-dom';
 import _ from 'lodash';
+import PromiseClass from 'util/promise-class';
 
 import superDom, { ShowDom } from '../super-dom';
 
@@ -22,12 +22,13 @@ class Notification extends Component {
 
         this.remove = this.remove.bind(this);
     }
-    add(notice) {
+    add = async (notice) => {
+        await this.PromiseClass.promise;
         const key = notice.key || getUuid();
         const { notices } = this.state;
 
         notice.key = key;
-        if (!_.find(notices, item => (item.key === key))) {
+        if (!_.find(notices, item => item.key === key)) {
             notices.push(notice);
             this.setState({
                 notices
@@ -46,9 +47,12 @@ class Notification extends Component {
         });
     }
     remove(key) {
-        const notices = _.filter(this.state.notices, item => (item.key !== key));
+        const notices = _.filter(this.state.notices, item => item.key !== key);
+        this.PromiseClass = new PromiseClass();
         this.setState({
             notices
+        }, () => {
+            this.PromiseClass.resolve(true);
         });
     }
     render() {
@@ -98,6 +102,9 @@ Notification.newInstance = (properties) => {
         },
         animateRemove: (key) => {
             notifiaction.animateRemove(key);
+        },
+        removeNotice: (key) => {
+            notifiaction.remove(key);
         },
         component: notifiaction,
         // destroy: () => {

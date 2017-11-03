@@ -16,7 +16,7 @@ const instance = Notification.newInstance();
 const notice = ({ content = '', duration = 3, type = 'info', onClose }) => {
     const iconType = NoticeType[type];
     const classes = `${prefix}-notice`;
-
+    key++;
     instance.notice({
         key,
         duration,
@@ -28,8 +28,14 @@ const notice = ({ content = '', duration = 3, type = 'info', onClose }) => {
         ),
         onClose
     });
-    const target = key++;
-    return () => instance.animateRemove(target);
+    const target = key;
+    return (bol) => {
+        if (bol) {
+            instance.removeNotice(target);
+        } else {
+            instance.animateRemove(target);
+        }
+    };
 };
 
 
