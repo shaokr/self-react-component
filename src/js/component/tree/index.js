@@ -744,7 +744,10 @@ export default class Tree extends Component {
             if (_.isString(ck)) {
                 set = ck;
             }
-            message.error({
+            if (this.message) {
+                this.message(true);
+            }
+            this.message = message.error({
                 content: set
             });
         }
@@ -926,7 +929,7 @@ export default class Tree extends Component {
             return item;
         });
         if (_.isFunction(ck)) {
-            ck(oldSelectedData);
+            ck({ list: oldSelectedData });
         }
     }
     /**
