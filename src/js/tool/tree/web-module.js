@@ -191,16 +191,24 @@ const getDeptList = async function ({ key, type = typeDept, children }, ck) {
  * @param {*} data
  */
 const getDeptAndUserList = async function (data, ck) {
-    const _data = _.assign({}, data, { type: 'dept-user' });
+    const _data = _.assign({}, data, { type: data.type || 'user-dept' });
     const [userList, deptList] = await Promise.all([
         this.getUserList(_data),
         this.getDeptList(_data)
     ]);
-
-    const RData = [
-        ...deptList,
-        ...userList
-    ];
+    let RData = [];
+    if (_data.type === 'dept-user') {
+        RData = [
+            ...deptList,
+            ...userList
+        ];
+    } else {
+        RData = [
+            ...userList,
+            ...deptList
+        ];
+    }
+    
     if (typeof ck === 'function') {
         ck(RData);
     }
@@ -317,7 +325,7 @@ const onExpand = async function (data, ck) {
  * 获取初始的根部门和用户信息
  */
 const initData = async function (data = {}) {
-    const { key = '0', type = 'dept-user' } = data;
+    const { key = '0', type = 'user-dept' } = data;
     // 判断是否获取我的部门
     if (key !== '-1') {
         const GsInfo = await this.getDept({ key });
