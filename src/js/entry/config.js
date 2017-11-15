@@ -13,7 +13,7 @@ const mapListObj = { // 自定义map和依赖关系,可覆盖cdn中的配置(注
         // 'ReactDom': 'host/js/react/15.4.0/react-dom.min.js',
         'treeIcon': `//at.alicdn.com/t/font_232637_v7d429dlco3l3di.js`,
         'Apiutil': '//localhost:8080/web-api-config/trunk/dist/util.js',
-        'bridgeWs': '//localhost:8080/web-sdk/dist/bridge.js',
+        'bridgeWs': '//localhost:8080/web-bridge-ws/dist/bridge.js',
         'React': 'host:js/react/15.4.0/react-with-addons.js',
         'ReactDom': 'host:js/react/15.4.0/react-dom.js',
     },
@@ -56,7 +56,7 @@ for (const key in mainListObj) {
 }
 Systemjs.import(`${cdnHost}/config/2.1.0/config.js`).then((res) => {
     // res中的map查看cdn目录下config.js文件
-    Systemjs.config(res(cdnHost));
+    Systemjs.config(res(cdnHost, true));
     Systemjs.config(mapListObj);
     Systemjs.config({
         meta: mainListObj
