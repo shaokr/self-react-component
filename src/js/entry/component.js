@@ -296,5 +296,6 @@ module.exports = {
     Loading,
     ShowDom,
     Message,
-    Watermark
+    Watermark,
+    version: '1.0.5'
 };
