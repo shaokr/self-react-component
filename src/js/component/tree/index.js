@@ -9,6 +9,7 @@ import _ from 'lodash';
 
 import Icon from 'component/icon';
 import message from 'component/message';
+import Watermark from 'component/watermark';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
@@ -456,6 +457,8 @@ function setUc(list, key, isCache = {}) {
     }
     return list;
 }
+
+
 /**
  * props：
  * 基本设置-----------------
@@ -1038,7 +1041,8 @@ export default class Tree extends Component {
             selectedTitle,
 
             bottomBtn,
-            className
+            className,
+            watermark
         } = this.props;
         const {
             max,
@@ -1055,9 +1059,11 @@ export default class Tree extends Component {
                 {
                     show &&
                     <div className="tree-main">
+
                         <Header title={title} onClick={action.onClose} />
 
-                        <div className="tree-box">
+                        <div className="tree-box" >
+                            <Watermark text={watermark} />
 
                             <TreeLeft
                                 store={store} // 共用的一些数据
@@ -1087,7 +1093,6 @@ export default class Tree extends Component {
                                     isExistSelected={!!this.state.selected.size}
                                 />
                             </TreeRight>
-
                         </div>
 
                     </div>
@@ -1120,5 +1125,6 @@ Tree.defaultProps = {
             type: 'primary'
         }
     ],
-    className: ''
+    className: '',
+    watermark: '' // 水印
 };

@@ -14,7 +14,7 @@ import Checkbox from 'component/checkbox';
 import Loading from 'component/loading';
 import Tree from 'component/tree';
 import Message from 'component/message';
-
+import Watermark from 'component/watermark';
 
 
 if (__DEV__) {
@@ -177,10 +177,10 @@ if (__DEV__) {
             // password	否	 	 	 当login_type为1时需要填写
             // verify_code	否	 	 	当login_type为2时需要填写
             const res = await io.login.GoLogin({
-                ip: '192.168.1.251:82',
+                ip: '192.168.1.251:8282',
                 dev_type: 5,
                 login_type: 1,
-                client_ver: '0.0.1',
+                client_ver: '3.1.0',
                 account: 'shaokangrun',
                 password: '111111'
             });
@@ -239,6 +239,7 @@ if (__DEV__) {
                             onClickBtn={(...res) => {
                                 console.log(res);
                             }}
+                            watermark={['邵康润', '金伟是猪2']}
                             expandType="1"
                             onSearchChange={ddd.getSearch}
                             disableKeys={['4563403140', '4563442200']}
@@ -294,5 +295,6 @@ module.exports = {
     Checkbox,
     Loading,
     ShowDom,
-    Message
+    Message,
+    Watermark
 };

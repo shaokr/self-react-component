@@ -10,6 +10,7 @@ export const prefixTree = `${prefix}-tree`;
 export const prefixLoading = `${prefix}-loading`;
 export const prefixCheckbox = `${prefix}-checkbox`;
 export const prefixScrollbar = `${prefix}-scrollbar`;
+export const prefixWatermark = `${prefix}-watermark`;
 
 export default {
     prefix,
@@ -20,5 +21,6 @@ export default {
     prefixTree,
     prefixLoading,
     prefixCheckbox,
-    prefixScrollbar
+    prefixScrollbar,
+    prefixWatermark
 };

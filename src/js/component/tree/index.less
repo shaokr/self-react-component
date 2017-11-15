@@ -22,7 +22,6 @@
 }
 // 主框
 .tree-main{
-
     *{
         margin: 0;
         padding: 0;
@@ -71,6 +70,7 @@
 @box-p:@u*10;
 // 中间box
 .tree-box{
+    position: relative;
     @h:@u*398;
     @lw:@box-lw;
     display: flex;
@@ -83,6 +83,7 @@
     &-left,&-right{
         position: relative;
         // padding: @box-p 0 0 ;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         .scroll{
