@@ -11,6 +11,9 @@ export const prefixLoading = `${prefix}-loading`;
 export const prefixCheckbox = `${prefix}-checkbox`;
 export const prefixScrollbar = `${prefix}-scrollbar`;
 export const prefixWatermark = `${prefix}-watermark`;
+export const prefixDatePicker = `${prefix}-datePicker`;
+export const prefixCalendar = `${prefix}-calendar`;
+
 
 export default {
     prefix,
@@ -22,5 +25,7 @@ export default {
     prefixLoading,
     prefixCheckbox,
     prefixScrollbar,
-    prefixWatermark
+    prefixWatermark,
+    prefixDatePicker,
+    prefixCalendar
 };
