@@ -123,12 +123,8 @@ const getUserList = async function ({ key, type = typeUser }, ck) {
         if (res.res.err_code === '0') {
             return (
                 _.map(res.datas, (item) => {
-                    const {
-                        sync_data: {
-                            user_data: userData
-                        },
-                        user_datas: userDatas
-                    } = item;
+                    const userData = _.get(item, 'sync_data.user_data', {});
+                    const userDatas = _.get(item, 'user_datas', {});
                     return {
                         key: userData.uid,
                         name: userData.user_name,
@@ -157,12 +153,8 @@ const getDeptList = async function ({ key, type = typeDept, children }, ck) {
         if (res.res.err_code === '0') {
             return (
                 _.map(res.datas, (item) => {
-                    const {
-                        sync_data: {
-                            dept_data: deptData
-                        },
-                        dept_datas: deptDatas
-                    } = item;
+                    const deptData = _.get(item, 'sync_data.dept_data', {});
+                    const deptDatas = _.get(item, 'dept_datas', {});
                     const _item = _.find(children, ['key', deptData.dept_id]) || {};
                     return {
                         key: deptData.dept_id,
