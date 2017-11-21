@@ -14,7 +14,7 @@ const _prefix = prefixModal;
 
 // 头
 const Head = ({ title, action, closable }) => {
-    if (typeof title === 'object' || title === null) {
+    if (title || title === null) {
         return title;
     }
     return (
@@ -37,7 +37,7 @@ const Footer = ({ btn, footer, action }) => {
     if (footer || footer === null) {
         return footer;
     }
-    if (!btn || typeof btn !== 'object' || !btn.length) {
+    if (!_.isArray(btn)) {
         return null;
     }
     return (
