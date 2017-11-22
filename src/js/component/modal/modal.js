@@ -14,7 +14,7 @@ const _prefix = prefixModal;
 
 // 头
 const Head = ({ title, action, closable }) => {
-    if (title || title === null) {
+    if (_.isObject(title) || title === null) {
         return title;
     }
     return (
