@@ -284,6 +284,8 @@ if (__DEV__) {
     }
 }
 
+const { version } = require('../../../package');
+
 module.exports = {
     // Scroll,
     Button,
@@ -297,5 +299,5 @@ module.exports = {
     ShowDom,
     Message,
     Watermark,
-    version: '1.0.5'
+    version
 };
