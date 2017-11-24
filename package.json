@@ -1,4 +1,5 @@
 {
+  "version": "0.0.2",
   "dependencies": {
     "antd": "^2.13.0"
   }
