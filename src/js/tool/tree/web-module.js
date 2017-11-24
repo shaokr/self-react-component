@@ -237,12 +237,6 @@ const getSearch = function (params, callback) {
                         title: item.corp_name
                     };
                     list.push(_item);
-                    // list.push(
-                    //     ..._.map(item.depts, dept => ({
-                    //         ..._item,
-                    //         title: dept.name.split('-')[0]
-                    //     }))
-                    // );
                 });
                 list = _.groupBy(list, 'title');
 
@@ -328,6 +322,7 @@ const initData = async function (data = {}) {
         return {
             key: GsInfo.dept_id,
             name: GsInfo.dept_name,
+            itemType: typeDept,
             isChildren: true,
             type,
             icon: GsInfo.dept_id === '0' ? 'company' : 'folder',
