@@ -200,7 +200,7 @@ class Children {
     get radioType() {
         return {
             // 初始化
-            init(props) {
+            init({ item }) {
                 const {
                     key,
 
@@ -215,8 +215,8 @@ class Children {
 
                     isSelected
 
-                } = props;
-                this.self = props;
+                } = item;
+                this.self = item;
 
                 this.key = key;
                 this.name = name;
