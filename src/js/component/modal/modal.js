@@ -51,6 +51,38 @@ const Footer = ({ btn, footer, action }) => {
     );
 };
 
+const modalDefaultProps = {
+    visible: false, // 对话框是否可见	boolean	无
+    title: '', // 标题	string|ReactNode	无
+    closable: true, // 是否显示右上角的关闭按钮	boolean	true
+    maskClosable: false, // 点击蒙层是否允许关闭	boolean	false
+    // style: {},	// 可用于设置浮层的样式，调整浮层位置等	object	-
+    className: '', // 对话框外层容器的类名	string	-
+    // footer: '',
+    btn: [
+        {
+            txt: '取消',
+            type: '',
+            loading: false
+        },
+        {
+            txt: '确定',
+            type: 'primary',
+            loading: false
+        }
+    ],
+    onClickKey() { }, // 点击按钮的情况 -1 为x -2 为蒙层 其他为按钮顺序
+    getContainer: '', //	指定 Modal 挂载的 HTML 节点	(instance): HTMLElement	() => document.body
+    maskProps: {}
+};
+// function mmj(obj, props, ignoreObj) {
+//     const a = _.difference(_.keys(obj), ignoreObj);
+//     const w = {};
+//     _.forEach(a, (val) => {
+//         w[val] = '';
+//     });
+//     _.assign(props, w);
+// }
 
 @superDom
 export default class Modal extends Component {
@@ -113,6 +145,7 @@ export default class Modal extends Component {
         const { maskProps } = this.props;
         return {
             ...maskProps,
+            className: classnames([prefixScrollbar, _.get(maskProps, 'className', '')]),
             title: null,
             onClick: (e) => {
                 if (typeof maskProps.onClick === 'function') {
@@ -124,6 +157,7 @@ export default class Modal extends Component {
     }
     get modalProps() {
         const { maskProps, ...props } = this.props;
+        // const { } = mmj(modalDefaultProps, props, ['className']);
         return {
             ...props,
             title: null,
@@ -149,27 +183,4 @@ export default class Modal extends Component {
     }
 }
 
-Modal.defaultProps = {
-    visible: false, // 对话框是否可见	boolean	无
-    title: '', // 标题	string|ReactNode	无
-    closable: true, // 是否显示右上角的关闭按钮	boolean	true
-    maskClosable: false, // 点击蒙层是否允许关闭	boolean	false
-    style: {},	// 可用于设置浮层的样式，调整浮层位置等	object	-
-    className: '', // 对话框外层容器的类名	string	-
-    // footer: '',
-    btn: [
-        {
-            txt: '取消',
-            type: '',
-            loading: false
-        },
-        {
-            txt: '确定',
-            type: 'primary',
-            loading: false
-        }
-    ],
-    onClickKey() { }, // 点击按钮的情况 -1 为x -2 为蒙层 其他为按钮顺序
-    getContainer: '', //	指定 Modal 挂载的 HTML 节点	(instance): HTMLElement	() => document.body
-    maskProps: {}
-};
+Modal.defaultProps = modalDefaultProps;
