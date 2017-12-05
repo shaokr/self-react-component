@@ -1,7 +1,9 @@
 /**
  * 入口文件
  */
+import 'less/component/reset.less';
 import 'less/global/public.less';
+
 import { Component } from 'react';
 import { ShowDom } from 'component/super-dom';
 // import Scroll from 'component/scroll';
@@ -15,11 +17,42 @@ import Loading from 'component/loading';
 import Tree from 'component/tree';
 import Message from 'component/message';
 import Watermark from 'component/watermark';
+import Dropdown from 'component/dropdown';
+import Menu from 'component/menu';
 
 
 if (__DEV__) {
     const { render } = require('react-dom');
     const param = require('util/param').default;
+    if (param.debug == 'dropdown') {
+        const menu = (
+            <Menu>
+                <Menu.Item>
+                    1st menu item
+                </Menu.Item>
+                <Menu.Item>
+                    2nd menu item
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
+                </Menu.Item>
+                <Menu.Item>
+                    1st menu item
+                </Menu.Item>
+                <Menu.Item>
+                    2nd menu item
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
+                </Menu.Item>
+            </Menu>
+          );
+        render(<Dropdown overlay={menu}>
+            13123123
+            </Dropdown>, document.getElementById('app-main'));
+    }
     if (param.debug == 'message') {
         Message.success({
             content: '123123'
@@ -118,8 +151,8 @@ if (__DEV__) {
             ];
             // return Apiutil;
             render(
-            <Loading visible={false} tip="12312321">
-                <Tree
+                <Loading visible={false} tip="12312321">
+                    <Tree
                     isIntegration
                     onClickBtn={(...res) => {
                         console.log(res);
@@ -160,7 +193,7 @@ if (__DEV__) {
                     tree={tree}
                     onExpand={toolTree.onExpand}
                     max="7"
-            /></Loading>, document.getElementById('app-main'));
+                /></Loading>, document.getElementById('app-main'));
         })();
     }
 
@@ -201,7 +234,7 @@ if (__DEV__) {
                             {
                                 txt: '确定',
                                 key: 'yes',
-                                type: 'primary',
+                                type: 'primary'
                             }
                         ]
                     };

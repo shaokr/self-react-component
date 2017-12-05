@@ -1,0 +1,27 @@
+
+/**
+* 下拉菜单
+*/
+
+@import '~global/var.less';
+@import "~global/mixins.less";
+
+
+.@{px-dropdown}{
+    &--overlay{
+        position: absolute;
+        .@{px-menu} {
+            @br: @u*3;
+            outline: none;
+            position: relative;
+            list-style-type: none;
+            padding: @u*5 0;
+            margin: 0;
+            text-align: left;
+            background-color: #fff;
+            border-radius: @br;
+            box-shadow: 0 1px @u*6 rgba(0,0,0,.2);
+            background-clip: padding-box;
+        }
+    }
+}

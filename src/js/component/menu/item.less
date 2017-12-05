@@ -1,0 +1,30 @@
+@import '~global/var.less';
+@import "~global/mixins.less";
+
+.@{px-menu}{
+    &--item {
+        .dpr(@fs3);
+        position: relative;
+        padding: @u*6 @u*17;
+        margin: 0;
+        clear: both;
+        color: @c1;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all .3s;
+        &:hover{
+            background-color: @c4;
+            color: #fff;
+        }
+        >a {
+            &::before {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+            }
+        }
+    }
+}
