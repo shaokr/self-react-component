@@ -2,9 +2,12 @@ import _ from 'lodash';
 // import Tree from 'zy-tree';
 
 
-const typeUser = 'user';
-const typeDept = 'dept';
-const typeGroup = 'group';
+const typeUser = 'user'; // 用户
+const typeDept = 'dept'; // 部门
+const typeGroup = 'group'; // 组
+const typeCloudUser = 'cloudUser'; // 外部联系人
+const typeCloudGroup = 'cloudGroup'; // 外部群
+
 /**
  * 获取用户信息
  */
@@ -207,6 +210,22 @@ const getDeptAndUserList = async function (data, ck) {
     return RData;
 };
 
+/**
+ * 获取外部联系人
+ */
+const getCloudUserList = async function () {
+    const GsCloudUserList = await this.io.cloudContacts.GoGetUserList().then((res) => {
+        const datas = _.get(res, ['datas'], []);
+        return _.map(datas, item => ({
+            key: item.uid,
+            avatar: item.avatar_url,
+            name: item.name,
+            itemType: typeCloudUser
+        }));
+    });
+    console.log('获取外部联系人列表', GsCloudUserList);
+    return GsCloudUserList;
+};
 
 /**
  * 获取搜索数据
@@ -313,38 +332,53 @@ const onExpand = async function (data, ck) {
 const initData = async function (data = {}) {
     const { key = '0', type = 'user-dept' } = data;
     // 判断是否获取我的部门
-    if (key !== '-1') {
-        const GsInfo = await this.getDept({ key });
-        const list = await this.onExpand({
-            key: GsInfo.dept_id,
-            type
-        });
+    if (key === '-1') {
+        const list = await this.getSelfDept({ type });
         return {
-            key: GsInfo.dept_id,
-            name: GsInfo.dept_name,
-            itemType: typeDept,
+            key: '-1',
+            name: '我的部门',
             isChildren: true,
+            isSelected: false,
             type,
-            icon: GsInfo.dept_id === '0' ? 'company' : 'folder',
+            icon: 'bag',
             expand: true,
             children: list,
-            small: GsInfo.dept_mem_num ? `(${GsInfo.dept_mem_num})` : '',
-            childrenNumber: GsInfo.dept_mem_num * 1
+            small: `(${list.length})`,
+            childrenNumber: _.sumBy(list, ({ childrenNumber = 0 }) => childrenNumber)
         };
     }
-    // 我的部门
-    const list = await this.getSelfDept({ type });
+    // 外部联系人
+    if (key === '-2') {
+        const list = await this.getCloudUserList();
+        return {
+            key: '-2',
+            name: '外部联系人',
+            isChildren: true,
+            isSelected: false,
+            type: `${typeCloudUser}`,
+            icon: 'mobile',
+            expand: true,
+            children: list,
+            small: `(${list.length})`,
+            childrenNumber: list.length
+        };
+    }
+    const GsInfo = await this.getDept({ key });
+    const list = await this.onExpand({
+        key: GsInfo.dept_id,
+        type
+    });
     return {
-        key: '-1',
-        name: '我的部门',
+        key: GsInfo.dept_id,
+        name: GsInfo.dept_name,
+        itemType: typeDept,
         isChildren: true,
-        isSelected: false,
         type,
-        icon: 'bag',
+        icon: GsInfo.dept_id === '0' ? 'company' : 'folder',
         expand: true,
         children: list,
-        small: `(${list.length})`,
-        childrenNumber: _.sumBy(list, ({ childrenNumber = 0 }) => childrenNumber)
+        small: GsInfo.dept_mem_num ? `(${GsInfo.dept_mem_num})` : '',
+        childrenNumber: GsInfo.dept_mem_num * 1
     };
 };
 class Default {
@@ -355,6 +389,7 @@ class Default {
         this.getUserAndDeptInfo = getUserAndDeptInfo.bind(this);
 
         this.getSelfDept = getSelfDept.bind(this);
+        this.getCloudUserList = getCloudUserList.bind(this);
 
         this.getDept = getDept.bind(this);
         this.getUserList = getUserList.bind(this);
