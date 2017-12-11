@@ -126,6 +126,7 @@ class Children {
                 } = item;
                 this.self = item;
 
+                this.loading = false;
                 this.key = key;
                 this.name = name;
                 this.avatar = avatar;  // 头像
@@ -218,6 +219,7 @@ class Children {
                 } = item;
                 this.self = item;
 
+                this.loading = false;
                 this.key = key;
                 this.name = name;
                 this.avatar = avatar;  // 头像
@@ -505,6 +507,9 @@ export default class Tree extends Component {
         this._onExceedMax = this._onExceedMax.bind(this);
         this._onCheck = this._onCheck.bind(this);
         this._onCheckRadio = this._onCheckRadio.bind(this);
+        this.setChildren = this.setChildren.bind(this);
+        this.setDataState = this.setDataState.bind(this);
+        this.setItem = this.setItem.bind(this);
 
         const { state, config, uc } = this.initState(props);
         /**
@@ -632,7 +637,7 @@ export default class Tree extends Component {
      */
     getDataState(key, path) {
         const { list } = this.state;
-        return list[key].paths[JSON.stringify(path)].state;
+        return _.get(list, [key, 'paths', JSON.stringify(path), 'state']);
     }
     /**
      * 设置state.list中的某路径中的state数据
@@ -642,12 +647,32 @@ export default class Tree extends Component {
      */
     setDataState(key, path, obj) {
         const { list } = this.state;
-        list[key].paths[JSON.stringify(path)].state = {
-            ...this.getDataState(key, path),
-            ...obj
+        const dataState = this.getDataState(key, path);
+        _.set(list, [key, 'paths', JSON.stringify(path), 'state'], _.assign(dataState, obj));
+        return {
+            list: setUc(list, key),
+            item: _.get(list, [key])
         };
-        return list[key];
     }
+    getItem(key) {
+        const { list } = this.state;
+        return _.get(list, [key]);
+    }
+    setItem = _.curry((key, obj) => {
+        const { list } = this.state;
+        const item = this.getItem(key);
+        const {
+            paths,
+            pattern,
+            self,
+            ...filterObj
+        } = obj;
+        _.set(list, [key], _.assign(item, filterObj));
+        return {
+            list: setUc(list, key),
+            item: _.get(list, [key])
+        };
+    })
 	/**
      * 删除全部选中事件
      */
@@ -669,73 +694,102 @@ export default class Tree extends Component {
             list, selected
         }, this.action.onSelectedChange);
     }
+    /**
+     * 设置元素的子类
+     * @param {object} 需要设置元素的 data  {
+     *  key: // 关键词
+     *  treePath // 路径
+     * }
+     * @param {*} children 子类项目
+     */
+    setChildren(data, children) {
+        const { config, props, state } = this;
+        const { tree, selected } = state;
+        let { list } = state;
+        const { key } = data;
+        list = this.setItem(key, { loading: false }).list;
+        if (children) {
+            let { treePath } = data;
+            
+            treePath = _.cloneDeep(treePath); // 深拷贝路径
+            const _res = _.get(tree, _.slice(treePath, 0, -2), {});
 
+            data.children = children;
+            const _data = {
+                l: [_.last(treePath)], // 获取最后一个元素
+                pid: _res.key || noe,
+                treePath: _.cloneDeep(_res.treePath) || [],
+                treeIdPath: _.cloneDeep(_res.treeIdPath) || []
+            };
+
+            if (_data.treePath.length) _data.treePath.push('children');
+
+            let { list: newList, newTree } = getData({
+                data: _.set([], _data.l, data),
+                list,
+                pid: _data.pid,
+                paths: _data.treePath,
+                idPath: _data.treeIdPath,
+                pattern: config.type,
+                selectedList: selected,
+                disableKeys: props.disableKeys,
+                disableChangeKeys: this.disableChangeKeys
+            });
+            treePath.push('children');
+            _.set(tree, treePath, _.get(newTree, _.concat(_data.l, 'children')));
+
+            // 更新uc
+            newList = setUc(newList, key);
+            this.setState({
+                list: newList,
+                tree,
+                selected: this.getSelected(newList, selected)
+            });
+        } else {
+            this.setState({
+                list
+            });
+        }
+    }
 	/**
      * 展开/收起节点时触发
      */
     _onExpand(ck, data) {
-        const self = this;
         let { list } = this.state;
         const { key } = data;
-        const item = list[key];
+        const item = this.getItem(key);
+        const { loading } = item;
         const dataState = this.getDataState(key, data.treePath);
         if (dataState.isExpand) {
-            item.paths[JSON.stringify(data.treePath)].state = {
-                ...dataState,
-                expand: !dataState.expand
-            };
-            list = setUc(list, key);
+            const {
+                list: _list
+            } = this.setDataState(key, data.treePath, { expand: !dataState.expand });
+            list = _list;
         }
-
+        
+        if (_.isFunction(ck)) {
+            let _callback = (res) => {
+                this.setChildren(data, res);
+                _callback = () => {};
+            };
+            const res = ck(data, _callback, _.cloneDeep({
+                checked: !dataState.expand,
+                loading
+            }));
+            if (_.isObject(res) && res.then) {
+                res.then(_callback);
+                const {
+                    list: _list
+                } = this.setItem(key)({
+                    loading: true
+                });
+                list = _list;
+            }
+            // _callback(res);
+        }
         this.setState({
             list
         });
-        if (typeof ck === 'function') {
-            let _callback = function (res) {
-                const { list, tree, selected } = self.state;
-                const { props } = self;
-                let { key, treePath } = data;
-                // debugger;
-                treePath = _.cloneDeep(treePath);
-
-                // const _res = _.get(tree, _.slice(treePath, 0, -2), {});
-                const _res = _.get(tree, _.slice(treePath, 0, -2), {});
-
-                data.children = res;
-                const _data = {
-                    l: [_.last(treePath)],
-                    pid: _res.key || noe,
-                    treePath: _.cloneDeep(_res.treePath) || [],
-                    treeIdPath: _.cloneDeep(_res.treeIdPath) || []
-                };
-
-                _data.treePath.length && _data.treePath.push('children');
-
-                let { list: newList, newTree } = getData({
-                    data: _.set([], _data.l, data),
-                    list,
-                    pid: _data.pid,
-                    paths: _data.treePath,
-                    idPath: _data.treeIdPath,
-                    pattern: self.config.type,
-                    selectedList: selected,
-                    disableKeys: props.disableKeys,
-                    disableChangeKeys: self.disableChangeKeys
-                });
-                treePath.push('children');
-                _.set(tree, treePath, _.get(newTree, _data.l).children);
-
-                // 更新uc
-                newList = setUc(newList, key);
-                _callback = () => {};
-                self.setState({
-                    list: newList,
-                    tree,
-                    selected: self.getSelected(newList, selected)
-                });
-            };
-            ck(data, _callback);
-        }
     }
     // 超过最大
     _onExceedMax(ck) {

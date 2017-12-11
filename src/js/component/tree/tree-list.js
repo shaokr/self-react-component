@@ -7,6 +7,9 @@ import _ from 'lodash';
 
 
 import Icon from 'component/icon';
+import Loading from 'component/loading';
+import { prefixTree } from 'config/const';
+
 import Avatar from './avatar';
 import { Checked } from './circle';
 
@@ -25,7 +28,10 @@ const iconConfigList = {
     }
 };
 
-const Expand = ({ dataState, onClick }) => {
+const Expand = ({ dataState, onClick, item }) => {
+    if (item.loading) {
+        return <Loading size="small" wrapperClassName={`${prefixTree}--loading`} />;
+    }
     if (dataState.isExpand) {
         // const iconName = dataState.expand ? 'open' : 'close';
         // const icon = iconConfigList[iconName];
@@ -55,11 +61,11 @@ const getFrontIcon = (icon, dataState) => {
     return icon;
 };
 // 前面的下拉和头像等内容
-const Front = ({ data, onClick, dataState }) => (
+const Front = ({ data, onClick, dataState, item }) => (
     <div className="tree-children-info-front">
-        <Expand onClick={onClick} dataState={dataState} />
+        <Expand onClick={onClick} dataState={dataState} item={item} />
         {/* { !!icon && <ItemIcon icon={icon} /> }*/}
-        <Avatar icon={getFrontIcon(data.icon, dataState)} name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
+        <Avatar loading icon={getFrontIcon(data.icon, dataState)} name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
     </div>
     );
 // 名称
@@ -158,7 +164,7 @@ class TreeList extends Component {
             <div className={this.css} >
                 <div className="tree-children-info" onClick={this.onClickItem} onMouseOverCapture={onHover}>
 
-                    <Front onClick={this.onExpand} data={data} dataState={dataState} />
+                    <Front onClick={this.onExpand} item={item} data={data} dataState={dataState} />
 
                     <Name name={data.name} small={item.small} />
 

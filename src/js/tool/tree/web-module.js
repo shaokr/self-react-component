@@ -223,7 +223,6 @@ const getCloudUserList = async function () {
             itemType: typeCloudUser
         }));
     });
-    console.log('获取外部联系人列表', GsCloudUserList);
     return GsCloudUserList;
 };
 
@@ -308,9 +307,16 @@ const getGroup = async function ({ key, type = typeGroup }, ck) {
     return Rdata;
 };
 
-const onExpand = async function (data, ck) {
-    if (data.key === '-1') {
-        return;
+const onExpand = function (data, ck, obj = {}) {
+    const { checked, loading } = obj;
+    if (_.isBoolean(loading) && loading) {
+        return false;
+    }
+    if (_.isBoolean(checked) && checked) {
+        return false;
+    }
+    if (data.key === '-1' || data.key === '-2') {
+        return false;
     }
     if (data.type === typeGroup) {
         return this.getGroup(data, ck);
