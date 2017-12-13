@@ -4,7 +4,6 @@
 import { Component } from 'react';
 import _ from 'lodash';
 import fp from 'lodash/fp';
-
 import classnames from 'classnames';
 import PromiseClass from 'util/promise-class';
 import { prefixDropdown } from 'config/const';
@@ -24,8 +23,11 @@ const placementConfig = [
     'topCenter',
     'topRight'
 ];
-const defaultPlacementConfig = placementConfig[0];
-const getPlacementConfig = fp.includes(placementConfig);
+const defaultPlacementConfig = placementConfig[0]; // 默认使用配置
+/**
+ * 查询是属于配置（是一个方法
+ */
+const getPlacementConfig = _.curry(_.includes, 2)(placementConfig);
 
 /**
  * 分割
@@ -63,21 +65,19 @@ class OverlayMain extends Component {
             let left = parentDom.offsetLeft;
             let top = parentDom.offsetTop;
             const [topType, leftType] = splitCase(placement);
-
             if (topType === 'bottom') {
                 top += parentDom.clientHeight;
             } else if (topType === 'top') {
-                // top += parentDom.clientHeight;
+                top -= _.get(this, ['dom', 'clientHeight'], 0);
             }
 
             if (leftType === 'left') {
                 // top += parentDom.clientHeight;
-            } else if (topType === 'center') {
-                // left += parentDom.clientHeight;
-            } else if (topType === 'right') {
-                left += parentDom.clientWidth;
+            } else if (leftType === 'center') {
+                left += (parentDom.clientWidth - _.get(this, ['dom', 'clientWidth'], 0)) / 2;
+            } else if (leftType === 'right') {
+                left += parentDom.clientWidth - _.get(this, ['dom', 'clientWidth'], 0);
             }
-
             return {
                 left,
                 top
@@ -88,9 +88,10 @@ class OverlayMain extends Component {
     get className() {
         return `${prefixDropdown}--overlay`;
     }
+    dom = {}
     render() {
         return (
-            <div style={this.style} className={this.className}>
+            <div ref={(d) => { this.dom = d; }} style={this.style} className={this.className}>
                 {this.props.children}
             </div>
         );
@@ -100,7 +101,7 @@ class OverlayMain extends Component {
 /**
  * 下拉主体
  */
-@documentOn(['click'])
+@documentOn(['onClick'])
 export default class Dropdown extends Component {
     constructor(props) {
         super(props);
@@ -114,7 +115,7 @@ export default class Dropdown extends Component {
         this.onSetOverlay = this.onSetOverlay.bind(this);
         this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseLeave = this.onMouseLeave.bind(this);
-        this.documentClick = this.documentClick.bind(this);
+        this.documentOnClick = this.documentOnClick.bind(this);
     }
     /**
      * 统一修改显示入口
@@ -152,7 +153,7 @@ export default class Dropdown extends Component {
      * @param {*} e
      * @param {Boolean} contains 是否是自己的子元素
      */
-    documentClick(e, contains) {
+    documentOnClick(e, contains) {
         if (this.props.trigger === 'click' && !contains) {
             this.onSetOverlay(false);
         }
@@ -190,6 +191,7 @@ export default class Dropdown extends Component {
                 onClick={this.onClick}
                 onMouseEnter={this.onMouseEnter}
                 onMouseLeave={this.onMouseLeave}
+                style={props.style}
             >
                 {props.children}
                 <OverlayMain visible={this.overlayShow} getContainer={props.getContainer} placement={props.placement} parentDom={mainDom.promise} >
