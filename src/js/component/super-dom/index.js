@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import ReactDOM from 'react-dom';
+import QueueAnim from 'rc-queue-anim';
 import PromiseClass from 'util/promise-class';
+import { fail } from 'assert';
 
 
 export class ShowDom {
@@ -49,9 +51,13 @@ export default Comp => class SuperDom extends Component {
         this.remove = this.remove.bind(this);
         this.removeChild = this.removeChild.bind(this);
         this.appendChild = this.appendChild.bind(this);
+        this.onEnd = this.onEnd.bind(this);
         if (props.rdom) {
             props.rdom.removePromise.promise.then(this.remove);
         }
+        this.state = {
+            appOK: false
+        };
     }
     componentWillUpdate(nextProps, nextState) {
         const { props } = this;
@@ -83,18 +89,34 @@ export default Comp => class SuperDom extends Component {
     }
     // 添加dom元素到页面
     appendChild() {
-        if (!this.appOK) {
-            this.appOK = document.body.appendChild(this.rootDom);
+        const { appOK } = this.state;
+        if (!appOK) {
+            document.body.appendChild(this.rootDom);
+            this.setState({
+                appOK: true
+            });
         }
     }
     // 删除dom元素
     removeChild() {
-        if (this.appOK) {
-            this.appOK = null;
+        // if (this.appOK) {
+        //     this.appOK = null;
+        //     document.body.removeChild(this.rootDom);
+        // }
+        this.setState({
+            appOK: false
+        });
+    }
+    onEnd({ type }) {
+        if (type === 'leave') {
             document.body.removeChild(this.rootDom);
         }
     }
     render() {
-        return ReactDOM.createPortal(<Comp {...this.props} />, this.rootDom);
+        return ReactDOM.createPortal(
+            <QueueAnim animConfig={{ opacity: [1, 0] }} onEnd={this.onEnd}>
+                { this.state.appOK && <Comp key="JustForAnimation" {...this.props} />}
+            </QueueAnim>
+        , this.rootDom);
     }
 };
