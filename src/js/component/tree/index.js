@@ -766,7 +766,7 @@ export default class Tree extends Component {
             } = this.setDataState(key, data.treePath, { expand: !dataState.expand });
             list = _list;
         }
-        
+
         if (_.isFunction(ck)) {
             let _callback = (res) => {
                 this.setChildren(data, res);
@@ -802,11 +802,15 @@ export default class Tree extends Component {
                 set = ck;
             }
             if (this.message) {
-                this.message(true);
+                this.message.refresh();
+            } else {
+                this.message = message.error({
+                    content: set,
+                    onClose: () => {
+                        this.message = undefined;
+                    }
+                });
             }
-            this.message = message.error({
-                content: set
-            });
         }
     }
 

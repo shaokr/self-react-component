@@ -1,7 +1,9 @@
 /* global document : true */
-import Icon from '../icon';
+import { prefixMessage } from 'config/const';
+
+import Icon from 'component/icon';
+
 import Notification from './notification';
-import prefix from './prefix';
 import './index.less';
 
 let key = 1;
@@ -13,29 +15,33 @@ const NoticeType = {
 };
 
 const instance = Notification.newInstance();
-const notice = ({ content = '', duration = 3, type = 'info', onClose }) => {
+const notice = ({ content = '', duration = 3, type = 'info', onClose = () => {} }) => {
     const iconType = NoticeType[type];
-    const classes = `${prefix}-notice`;
+    const classes = `${prefixMessage}-notice`;
     key++;
     instance.notice({
         key,
         duration,
         content: (
             <div className={classes}>
-                <Icon type={iconType} className={`${prefix}-notice-icon ${prefix}-notice-${type}`} />
+                <Icon type={iconType} className={`${prefixMessage}-notice-icon ${prefixMessage}-notice-${type}`} />
                 <div className="">{content}</div>
             </div>
         ),
         onClose
     });
     const target = key;
-    return (bol) => {
+    function returnFun(bol) {
         if (bol) {
             instance.removeNotice(target);
         } else {
             instance.animateRemove(target);
         }
+    }
+    returnFun.refresh = () => {
+        instance.refresh(target);
     };
+    return returnFun;
 };
 
 

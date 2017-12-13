@@ -2,10 +2,11 @@
 import { Component } from 'react';
 import _ from 'lodash';
 import PromiseClass from 'util/promise-class';
+import { prefixMessage } from 'config/const';
+import QueueAnim from 'rc-queue-anim';
 
-import superDom, { ShowDom } from '../super-dom';
+import { ShowDom } from '../super-dom';
 
-import prefix from './prefix';
 import Notice from './notice';
 
 let seed = 0;
@@ -21,6 +22,10 @@ class Notification extends Component {
         };
 
         this.remove = this.remove.bind(this);
+        this.PromiseClass = new PromiseClass();
+    }
+    componentDidMount() {
+        this.PromiseClass.resolve(true);
     }
     add = async (notice) => {
         await this.PromiseClass.promise;
@@ -55,12 +60,40 @@ class Notification extends Component {
             this.PromiseClass.resolve(true);
         });
     }
+    /**
+     * 刷新能力
+     */
+    refresh(key, obj) {
+        const notices = _.map(this.state.notices, (item) => {
+            if (item.key === key) {
+                _.assign({}, item, obj);
+                item.refresh = +new Date();
+            }
+            return item;
+        });
+        this.setState({
+            notices
+        });
+    }
     render() {
         return (
-            <div className={`${prefix}-modal-warp`}>
-                {
-                    _.map(this.state.notices, notice => <Notice key={notice.key} close={notice.close} keys={notice.key} duration={notice.duration} onClose={this.remove}>{notice.content}</Notice>)
-                }
+            <div className={`${prefixMessage}-modal-warp`}>
+                <QueueAnim type="top" >
+                    {
+                        _.map(this.state.notices, notice => (
+                            <Notice
+                                key={notice.key}
+                                close={notice.close}
+                                keys={notice.key}
+                                duration={notice.duration * 1000}
+                                refresh={notice.refresh}
+                                onClose={() => { this.remove(notice.key); notice.onClose(); }}
+                            >
+                                {notice.content}
+                            </Notice>
+                        ))
+                    }
+                </QueueAnim>
             </div>
         );
     }
@@ -106,6 +139,9 @@ Notification.newInstance = (properties) => {
         removeNotice: (key) => {
             notifiaction.remove(key);
         },
+        refresh: (key) => {
+            notifiaction.refresh(key);
+        },
         component: notifiaction,
         // destroy: () => {
         //     ReactDom.unmountComponentAtNode(div);
@@ -113,7 +149,5 @@ Notification.newInstance = (properties) => {
         // }
     };
 };
-
-
 
 export default Notification;

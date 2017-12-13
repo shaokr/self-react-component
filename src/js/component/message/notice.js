@@ -1,60 +1,73 @@
 import { Component } from 'react';
 import classnames from 'classnames';
-import prefix from './prefix';
+import QueueAnim from 'rc-queue-anim';
+import { prefixMessage } from 'config/const';
 
 import './index.less';
 
-class Notice extends Component {
+export default class Notice extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             close: false
         };
+        this.closeTimer = 0; // 喵
+        this.onEnd = this.onEnd.bind(this);
+        this.setCloseTimeout = this.setCloseTimeout.bind(this);
     }
     componentDidMount() {
-        this.clearCloseTimer();
-        if (this.props.duration) {
-            this.closeTimer = setTimeout(() => {
-                this.close();
-            }, this.props.duration * 1000);
-        }
+        this.setCloseTimeout();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.close) {
             this.close();
         }
-    }
-    clearCloseTimer() {
-        if (this.closeTimer) {
-            clearTimeout(this.closeTimer);
-            this.closeTimer = null;
+        if (nextProps.refresh !== this.props.refresh) {
+            this.setCloseTimeout(nextProps.duration);
         }
     }
+    onEnd(obj) {
+        const { type } = obj;
+        if (type === 'leave') {
+            this.props.onClose();
+        }
+    }
+    setCloseTimeout(duration = this.props.duration) {
+        this.clearCloseTimer();
+        if (duration) {
+            this.closeTimer = setTimeout(() => {
+                this.close();
+            }, duration);
+        }
+    }
+    clearCloseTimer() {
+        clearTimeout(this.closeTimer);
+    }
     close() {
+        this.clearCloseTimer();
         this.setState({
             close: true
         });
-        this.clearCloseTimer();
-        this.state.close = false;
-        setTimeout(() => {
-            this.props.onClose(this.props.keys);
-        }, 300);
     }
     render() {
         const classes = classnames([
-            `${prefix}-notice-wrap`,
-            {
-                [`${prefix}-notice-close`]: this.state.close
-            }
+            `${prefixMessage}-notice-wrap`
         ]);
-
         return (
-            <div className={classes}>
-                { this.props.children }
-            </div>
+            <QueueAnim type="top" onEnd={this.onEnd} duration={[0, this.props.close ? 0 : 450]}>
+                {
+                    !this.state.close &&
+                    <div key={this.props.keys} className={classes}>
+                        { this.props.children }
+                    </div>
+                }
+            </QueueAnim>
         );
     }
 }
 
-export default Notice;
+Notice.defaultProps = {
+    close: false,
+    duration: 30000
+};
