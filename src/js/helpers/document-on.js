@@ -8,9 +8,82 @@
 import _ from 'lodash';
 import { Component } from 'react';
 
-const getKey = item => `document${_.upperFirst(item)}`;
-const getOnKey = item => `on${_.upperFirst(item)}`;
-const getIsKey = item => `is${_.upperFirst(item)}`;
+const enentList = {
+    onCopy: 'copy',
+    onCut: 'cut',
+    onPaste: 'paste',
+    onCompositionEnd: 'compositionend',
+    onCompositionStart: 'compositionstart',
+    onCompositionUpdate: 'compositionupdate',
+    onKeyDown: 'keydown',
+    onKeyPress: 'keypress',
+    onKeyUp: 'keyup',
+    onFocus: 'focus',
+    onBlur: 'blur',
+    onChange: 'change',
+    onInput: 'input',
+    onInvalid: 'invalid',
+    onSubmit: 'submit',
+    onClick: 'click',
+    onContextMenu: 'contextmenu',
+    onDoubleClick: 'doubleclick',
+    onDrag: 'drag',
+    onDragEnd: 'dragend',
+    onDragEnter: 'dragenter',
+    onDragExit: 'dragexit',
+    onDragLeave: 'dragleave',
+    onDragOver: 'dragover',
+    onDragStart: 'dragstart',
+    onDrop: 'drop',
+    onMouseDown: 'mousedown',
+    onMouseEnter: 'mouseenter',
+    onMouseLeave: 'mouseleave',
+    onMouseMove: 'mousemove',
+    onMouseOut: 'mouseout',
+    onMouseOver: 'mouseover',
+    onMouseUp: 'mouseup',
+    onSelect: 'select',
+    onTouchCancel: 'touchcancel',
+    onTouchEnd: 'touchend',
+    onTouchMove: 'touchmove',
+    onTouchStart: 'touchstart',
+    onScroll: 'scroll',
+    onWheel: 'wheel',
+    onAbort: 'abort',
+    onCanPlay: 'canplay',
+    onCanPlayThrough: 'canplaythrough',
+    onDurationChange: 'durationchange',
+    onEmptied: 'emptied',
+    onEncrypted: 'encrypted',
+    onEnded: 'ended',
+    onLoadedData: 'loadeddata',
+    onLoadedMetadata: 'loadedmetadata',
+    onLoadStart: 'loadstart',
+    onPause: 'pause',
+    onPlay: 'play',
+    onPlaying: 'playing',
+    onProgress: 'progress',
+    onRateChange: 'ratechange',
+    onSeeked: 'seeked',
+    onSeeking: 'seeking',
+    onStalled: 'stalled',
+    onSuspend: 'suspend',
+    onTimeUpdate: 'timeupdate',
+    onVolumeChange: 'volumechange',
+    onWaiting: 'waiting',
+    onLoad: 'load',
+    onAnimationStart: 'animationstart',
+    onAnimationEnd: 'animationend',
+    onAnimationIteration: 'animationiteration',
+    onName: 'name',
+    onTransitionEnd: 'transitionend',
+    onToggle: 'toggle'
+};
+
+const getKey = item => `document${_.upperFirst(item)}`; // 到页面中用户使用的key
+const getOnKey = item => enentList[item] || item; // document中的事件
+const getOnReactKey = item => item; // document中的事件
+const getIsKey = item => `is${item}`; // 是否触发了自己本身使用的对象关键词
 
 export default eventList => Comp => class extends Component {
     constructor(props) {
@@ -27,22 +100,21 @@ export default eventList => Comp => class extends Component {
                 this.invokeDom(key, e, this[isKey]);
                 this[isKey] = false;
             };
-
-            const onKey = getOnKey(item);
-            this[onKey] = (e) => {
+            const rKey = getOnReactKey(item);
+            this[rKey] = (e) => {
                 this[isKey] = true;
-                this.invokeProps(onKey, e);
+                this.invokeProps(rKey, e);
             };
         });
     }
     componentDidMount() {
         _.forEach(eventList, (item) => {
-            document.addEventListener(item, this[getKey(item)]);
+            document.addEventListener(getOnKey(item), this[getKey(item)]);
         });
     }
     componentWillUnmount() {
         _.forEach(eventList, (item) => {
-            document.removeEventListener(item, this[getKey(item)]);
+            document.removeEventListener(getOnKey(item), this[getKey(item)]);
         });
     }
     /**
@@ -66,8 +138,8 @@ export default eventList => Comp => class extends Component {
     get onEve() {
         const onObj = {};
         _.forEach(this.eventList, (item) => {
-            const key = getOnKey(item);
-            onObj[key] = this[key];
+            const rKey = getOnReactKey(item);
+            onObj[rKey] = this[rKey];
         });
         return onObj;
     }
