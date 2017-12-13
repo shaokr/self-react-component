@@ -44,7 +44,7 @@ const mainListObj = { // 载入文件的配置
     '_component': { // 入口文件 签名
         ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['react', 'mobx', 'mobx-react', '_tool-tree-pc-management', '_tool-tree-web-module']
+        deps: ['react', 'mobx', 'mobx-react', '_tool-tree-pc-management', '_tool-tree-web-module', 'antd']
     }
 };
 

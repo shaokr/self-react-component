@@ -49,9 +49,54 @@ if (__DEV__) {
                 </Menu.Item>
             </Menu>
           );
-        render(<Dropdown overlay={menu}>
-            13123123
+        render(<Dropdown
+                overlay={menu}
+                trigger="click"
+                placement="bottomLeft"
+                style={{
+                    position: 'relative',
+                    top: 100,
+                    left: 200,
+                    width: 200
+                }}
+            >
+            1312312315324123523tr
+            <br />
+            1312312315324123523trf
+            <br />
+            1312312315324123523t
             </Dropdown>, document.getElementById('app-main'));
+        const { Dropdown: ADropdown, Menu: AMenu } = window.antd;
+        const menu2 = (
+            <AMenu>
+                <AMenu.Item>
+                    1st menu item
+                </AMenu.Item>
+                <AMenu.Item>
+                    2nd menu item
+                </AMenu.Item>
+                <AMenu.Divider />
+                <AMenu.Item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
+                </AMenu.Item>
+                <AMenu.Item>
+                    1st menu item
+                </AMenu.Item>
+                <AMenu.Item>
+                    2nd menu item
+                </AMenu.Item>
+                <AMenu.Divider />
+                <AMenu.Item>
+                    <a target="_blank" rel="noopener noreferrer" href="http://www.tmall.com/">3rd menu item</a>
+                </AMenu.Item>
+            </AMenu>
+          );
+        // render(<ADropdown
+        //         overlay={menu2}
+        //         trigger="click"
+        //     >
+        //     13123123
+        //     </ADropdown>, document.getElementById('app-main2'));
     }
     if (param.debug == 'message') {
         Message.success({
@@ -197,7 +242,7 @@ if (__DEV__) {
         })();
     }
 
-    if (param.debug == 3) {
+    if (param.debug == 'web-tool-tree') {
         const ToolTree = require('web-tool-tree');
         const bridgeWs = require('bridgeWs');
         const io = bridgeWs.init();
