@@ -26,6 +26,7 @@ function Last({data, build, path}) {
     // data.entry = entry;
 
     // data.resolve.modules.push(...userConfig.modules)
+    data.resolve.modules.unshift(paths.resolve(__dirname, '../node_modules'));
 
     // 添加目录拷贝
     let _copyList = Copy(path);
