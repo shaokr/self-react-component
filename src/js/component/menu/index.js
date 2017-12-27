@@ -36,6 +36,7 @@ export default class Menu extends Component {
 }
 
 Menu.defaultProps = {
+    className: '',
     defaultOpenKeys: [], //     defaultOpenKeys	初始展开的 SubMenu 菜单项 key 数组
     defaultSelectedKeys: [], //     defaultSelectedKeys	初始选中的菜单项 key 数组	string[]
     inlineCollapsed: true, //     inlineCollapsed	inline 时菜单是否收起状态	boolean	-
