@@ -6,6 +6,7 @@ const prefix = 'zy';
 module.exports = {
     prefix,
     prefixModal: `${prefix}-modal`,
+    prefixInput: `${prefix}-input`,
     prefixButton: `${prefix}-button`,
     prefixIcon: `${prefix}-icon`,
     prefixMessage: `${prefix}-message`,

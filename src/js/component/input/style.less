@@ -1,0 +1,42 @@
+@import '~global/var.less';
+@import '~global/mixins.less';
+
+.@{px-input} {
+    background: #fff;
+    border: 1px solid @bc1;
+    border-radius: @u*4;
+    color: @c1;
+    outline:none;
+    padding: @u*8;
+    &:hover, &:focus {
+        border-color: @c4;
+    }
+    &:active {
+        box-shadow: 0 0 @u*2 @c4;
+    }
+    // 大小
+    &--large{
+        height: @u*26;
+    }
+    &--default{
+        height: @u*30;
+    }
+    &--small{
+        height: @u*34;
+    }
+    // 情况(颜色
+    &--primary{
+        border-color: @primary-c;
+        color: @primary-c;
+    }
+    // 危险
+    &--danger{
+        border-color: @danger-c;
+        color: @danger-c;
+    }
+    // 警告
+    &--warning{
+        border-color: @warning-c;
+        color: @warning-c;
+    }
+}
