@@ -97,13 +97,14 @@ export default eventList => Comp => class extends Component {
 
             const key = getKey(item);
             this[key] = (e) => {
-                this.invokeDom(key, e, this[isKey]);
+                const res = this.invokeDom(key, e, this[isKey]);
                 this[isKey] = false;
+                return res;
             };
             const rKey = getOnReactKey(item);
             this[rKey] = (e) => {
                 this[isKey] = true;
-                this.invokeProps(rKey, e);
+                return this.invokeProps(rKey, e);
             };
         });
     }
@@ -124,7 +125,7 @@ export default eventList => Comp => class extends Component {
      */
     invokeProps(key, ...args) {
         const _fun = _.get(this, ['props', key]);
-        if (_.isFunction(_fun)) _fun(...args);
+        if (_.isFunction(_fun)) return _fun(...args);
     }
     /**
      * 执行props上的方法
@@ -133,7 +134,7 @@ export default eventList => Comp => class extends Component {
      */
     invokeDom(key, ...args) {
         const _fun = _.get(this, ['dom', key]);
-        if (_.isFunction(_fun)) _fun(...args);
+        if (_.isFunction(_fun)) return _fun(...args);
     }
     get onEve() {
         const onObj = {};
