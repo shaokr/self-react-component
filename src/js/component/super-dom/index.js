@@ -2,7 +2,6 @@ import { Component } from 'react';
 import ReactDOM from 'react-dom';
 import QueueAnim from 'rc-queue-anim';
 import PromiseClass from 'util/promise-class';
-import { fail } from 'assert';
 
 
 export class ShowDom {
