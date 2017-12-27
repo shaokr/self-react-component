@@ -21,7 +21,8 @@ const placementConfig = [
     'bottomRight',
     'topLeft',
     'topCenter',
-    'topRight'
+    'topRight',
+    'mouse' // 鼠标所在位置
 ];
 const defaultPlacementConfig = placementConfig[0]; // 默认使用配置
 /**
@@ -40,6 +41,7 @@ const splitCase = fp.flow(
  * 菜单显示
  */
 @superDom
+@documentOn(['onMouseMove'])
 class OverlayMain extends Component {
     constructor(props) {
         super(props);
@@ -59,9 +61,12 @@ class OverlayMain extends Component {
     }
     // 获取样式
     get style() {
+        const { placement } = this;
+        if (placement === 'mouse') {
+            return;
+        }
         const { parentDom } = this.state;
         if (parentDom) {
-            const { placement } = this;
             let left = parentDom.offsetLeft;
             let top = parentDom.offsetTop;
             const [topType, leftType] = splitCase(placement);
@@ -89,6 +94,9 @@ class OverlayMain extends Component {
         return `${prefixDropdown}--overlay`;
     }
     dom = {}
+    documentOnMouseMove(e) {
+        console.log(e);
+    }
     render() {
         return (
             <div ref={(d) => { this.dom = d; }} style={this.style} className={this.className}>
@@ -101,13 +109,14 @@ class OverlayMain extends Component {
 /**
  * 下拉主体
  */
-@documentOn(['onClick'])
+@documentOn(['onClick', 'onContextMenu'])
 export default class Dropdown extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            overlayShow: false
+            overlayShow: false,
+            mouseType: {}
         };
 
         this.invokeProps = this.invokeProps.bind(this);
@@ -116,6 +125,8 @@ export default class Dropdown extends Component {
         this.onMouseEnter = this.onMouseEnter.bind(this);
         this.onMouseLeave = this.onMouseLeave.bind(this);
         this.documentOnClick = this.documentOnClick.bind(this);
+        this.onContextMenu = this.onContextMenu.bind(this);
+        this.documentOnContextMenu = this.documentOnContextMenu.bind(this);
     }
     /**
      * 统一修改显示入口
@@ -148,13 +159,30 @@ export default class Dropdown extends Component {
         }
         this.invokeProps('onClick', e);
     }
+    // 右键事件
+    onContextMenu(e) {
+        if (this.props.trigger === 'contextMenu') {
+            this.onSetOverlay(true);
+        }
+        this.invokeProps('onContextMenu', e);
+        return false;
+    }
     // document中点击事件
+    documentOnContextMenu(e, contains) {
+        if (!contains) {
+            this.onSetOverlay(false);
+        } else if (this.props.trigger === 'contextMenu') {
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+    }
     /**
      * @param {*} e
      * @param {Boolean} contains 是否是自己的子元素
      */
     documentOnClick(e, contains) {
-        if (this.props.trigger === 'click' && !contains) {
+        if (!contains) {
             this.onSetOverlay(false);
         }
     }
@@ -191,10 +219,16 @@ export default class Dropdown extends Component {
                 onClick={this.onClick}
                 onMouseEnter={this.onMouseEnter}
                 onMouseLeave={this.onMouseLeave}
+                onContextMenu={this.onContextMenu}
                 style={props.style}
             >
                 {props.children}
-                <OverlayMain visible={this.overlayShow} getContainer={props.getContainer} placement={props.placement} parentDom={mainDom.promise} >
+                <OverlayMain
+                    visible={this.overlayShow}
+                    getContainer={props.getContainer}
+                    placement={props.placement}
+                    parentDom={mainDom.promise}
+                >
                     {props.overlay}
                 </OverlayMain>
             </div>
@@ -203,10 +237,10 @@ export default class Dropdown extends Component {
 }
 
 Dropdown.defaultProps = {
-    disabled: '', //	菜单是否禁用	boolean	-
+    disabled: false, //	菜单是否禁用	boolean	-
     getContainer: '', //	菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。示例	Function(triggerNode)	() => document.body
-    overlay: '', //	菜单	Menu	-
-    placement: defaultPlacementConfig, //	菜单弹出位置：bottomLeft bottomCenter bottomRight topLeft topCenter topRight	String	bottomLeft
+    overlay: '', //	菜单	Menu
+    placement: defaultPlacementConfig, //	菜单弹出位置：bottomLeft bottomCenter bottomRight topLeft topCenter topRight String	bottomLeft
     trigger: 'hover', //	触发下拉的行为	Array<'click'|'hover'>	'hover'
     visible: undefined, //	菜单是否显示	boolean	-
     onVisibleChange: '' // 菜单显示状态改变时调用，参数为 visible	Function(visible)	-
