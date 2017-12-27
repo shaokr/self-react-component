@@ -8,6 +8,7 @@ import { Component } from 'react';
 import { ShowDom } from 'component/super-dom';
 // import Scroll from 'component/scroll';
 import Button from 'component/button';
+import Input from 'component/input';
 import Icon from 'component/icon';
 // import Alert from 'component/alert';
 import Modal from 'component/modal';
@@ -19,11 +20,17 @@ import Message from 'component/message';
 import Watermark from 'component/watermark';
 import Dropdown from 'component/dropdown';
 import Menu from 'component/menu';
-
+// import DatePicker from 'component/date-picker';
 
 if (__DEV__) {
     const { render } = require('react-dom');
     const param = require('util/param').default;
+    if (param.debug == 'date-picker') {
+        // render(<DatePicker />, document.getElementById('app-main'));
+    }
+    if (param.debug == 'input') {
+        render(<Input />, document.getElementById('app-main'));
+    }
     if (param.debug == 'dropdown') {
         const menu = (
             <Menu>
@@ -51,7 +58,7 @@ if (__DEV__) {
           );
         render(<Dropdown
                 overlay={menu}
-                trigger="click"
+                trigger="contextMenu"
                 placement="bottomLeft"
                 style={{
                     position: 'relative',
@@ -104,55 +111,57 @@ if (__DEV__) {
         });
     }
     if (param.debug == 2) {
-        Modal.success({
-            onClickKey(res) {
-                console.log(res);
-            },
-            btn: [
-                {
-                    txt: '12312',
-                    type: 'danger',
-                    disabled: true
-                },
-                {
-                    txt: '点啊！',
-                    type: 'warning',
-                    loading: true
-                }
-            ],
-            title: '提示',
-            content: '确定删除此文件吗？'
-        });
-        window.sss = Modal.show({
-            title: '1231'
-        });
+        // Modal.success({
+        //     onClickKey(res) {
+        //         console.log(res);
+        //     },
+        //     btn: [
+        //         {
+        //             txt: '12312',
+        //             type: 'danger',
+        //             disabled: true
+        //         },
+        //         {
+        //             txt: '点啊！',
+        //             type: 'warning',
+        //             loading: true
+        //         }
+        //     ],
+        //     title: '提示',
+        //     content: '确定删除此文件吗？'
+        // });
+        // window.sss = Modal.show({
+        //     title: '1231'
+        // });
 
         // Modal.info();
         // console.log()
         // <Modal visible />;
         // return Apiutil;
-        // class Div2 extends Component {
-        //     constructor(props) {
-        //         super(props);
-        //         this.state = {
-        //             visible: false
-        //         };
-        //     }
-        //     onClick = () => {
-        //         this.setState({
-        //             visible: !this.state.visible
-        //         });
-        //     }
-        //     render() {
-        //         return (
-        //             <div className={this.className} onClickMask={e => this.onClickKey(e, '-2')} onClick={e => e.stopPropagation()}>
-        //                 <div onClick={this.onClick}>显示</div>
-        //                 <Modal visible={this.state.visible} title="标题" onClickKey={(res) => console.log(res)}>我都没搜啊么的搜</Modal>
-        //             </div>
-        //         );
-        //     }
-        // }
-        // render(<Div2 />, document.getElementById('app-main'));
+        class Div2 extends Component {
+            constructor(props) {
+                super(props);
+                this.state = {
+                    visible: false
+                };
+            }
+            onClick = () => {
+                this.setState({
+                    visible: !this.state.visible
+                });
+            }
+            render() {
+                return (
+                    <div className={this.className} onClickMask={e => this.onClickKey(e, '-2')} onClick={e => e.stopPropagation()}>
+                        <div onClick={this.onClick}>显示</div>
+                        <Modal visible={this.state.visible} title="标题" onClickKey={(res) => console.log(res)}>
+                            <p>我都没搜啊么的搜</p>
+                        </Modal>
+                    </div>
+                );
+            }
+        }
+        render(<Div2 />, document.getElementById('app-main'));
         // render(<Loading tip="123123" >12341231</Loading>, document.getElementById('app-main'));
     }
 
