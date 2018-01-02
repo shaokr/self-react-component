@@ -4,7 +4,8 @@ import _ from 'lodash';
 
 const typeUser = 'user'; // 用户
 const typeDept = 'dept'; // 部门
-const typeGroup = 'group'; // 组
+const typeGroupUser = 'groupUser'; // 群用户
+const typeGroupList = 'groupList'; // 群列表
 const typeCloudUser = 'cloudUser'; // 外部联系人
 const typeCloudGroup = 'cloudGroup'; // 外部群
 
@@ -150,7 +151,7 @@ const getUserList = async function ({ key, type = typeUser }, ck) {
  * 获取部门列表
  * @param {*} data
  */
-const getDeptList = async function ({ key, type = typeDept, children }, ck) {
+const getDeptList = async function ({ key, type = typeDept, children, selectDept }, ck) {
     const did = key;
     const deptList = await this.io.contacts.GoGetCorpData({ type: 1, ids: [did] }).then((res) => {
         if (res.res.err_code === '0') {
@@ -165,6 +166,7 @@ const getDeptList = async function ({ key, type = typeDept, children }, ck) {
                         isChildren: true,
                         icon: 'folder',
                         itemType: typeDept,
+                        isCheckedShow: selectDept,
                         type,
                         children: _item.children,
                         small: deptDatas.dept_mem_num ? `(${deptDatas.dept_mem_num})` : '',
@@ -203,7 +205,6 @@ const getDeptAndUserList = async function (data, ck) {
             ...deptList
         ];
     }
-    
     if (typeof ck === 'function') {
         ck(RData);
     }
@@ -289,9 +290,9 @@ const getSearch = function (params, callback) {
 };
 
 /**
- * 获取群用户系列
+ * 获取群用户
  */
-const getGroup = async function ({ key, type = typeGroup }, ck) {
+const getGroupUser = async function ({ key, type = typeGroupUser }, ck) {
     const res = await this.io.group.GoGetUserList({
         group_id: key
     });
@@ -299,6 +300,7 @@ const getGroup = async function ({ key, type = typeGroup }, ck) {
     const Rdata = _.map(res.datas, item => ({
         key: item.uid,
         name: item.name,
+        itemType: typeGroupUser,
         type
     }));
     if (ck) {
@@ -306,6 +308,45 @@ const getGroup = async function ({ key, type = typeGroup }, ck) {
     }
     return Rdata;
 };
+/**
+ * 获取群列表
+ * @param {*} param0 
+ * @param {*} ck 
+ */
+const getGroupList = async function () {
+    const res = await this.io.group.GoGetList();
+    const groupsList = _.map(res.groups, item => ({
+        mem_type: item.mem_type,
+        key: item.group_id,
+        name: item.group_name,
+        avatar: item.avatar_url,
+        itemType: typeGroupList
+    }));
+    const { admin = [], join = [] } = _.groupBy(groupsList, tiem => (tiem.mem_type === '110' ? 'join' : 'admin'));
+    const resAdmin = {
+        key: '我管理的群',
+        name: '我管理的群',
+        icon: 'folder',
+        isSelected: false,
+        childrenNumber: admin.length,
+        small: `(${admin.length})`,
+        children: admin
+    };
+    const reqJoin = {
+        key: '我加入的群',
+        name: '我加入的群',
+        icon: 'folder',
+        isSelected: false,
+        childrenNumber: join.length,
+        small: `(${join.length})`,
+        children: join
+    };
+    return [
+        resAdmin,
+        reqJoin
+    ];
+};
+
 
 const onExpand = function (data, ck, obj = {}) {
     const { checked, loading } = obj;
@@ -318,7 +359,8 @@ const onExpand = function (data, ck, obj = {}) {
     if (data.key === '-1' || data.key === '-2') {
         return false;
     }
-    if (data.type === typeGroup) {
+    // 群用户列表
+    if (data.type === typeGroupUser) {
         return this.getGroup(data, ck);
     }
     if (data.type === `${typeDept}-${typeUser}` || data.type === `${typeUser}-${typeDept}`) {
@@ -336,15 +378,20 @@ const onExpand = function (data, ck, obj = {}) {
  * 获取初始的根部门和用户信息
  */
 const initData = async function (data = {}) {
-    const { key = '0', type = 'user-dept' } = data;
+    if (_.isArray(data)) {
+        const newLocal = await Promise.all(_.map(data, this.initData));
+        return newLocal;
+    }
+    const { key = '0', type = 'user-dept', selectDept = true } = data;
     // 判断是否获取我的部门
     if (key === '-1') {
-        const list = await this.getSelfDept({ type });
+        const list = await this.getSelfDept({ type, selectDept });
         return {
             key: '-1',
             name: '我的部门',
             isChildren: true,
             isSelected: false,
+            selectDept,
             type,
             icon: 'bag',
             expand: true,
@@ -369,10 +416,28 @@ const initData = async function (data = {}) {
             childrenNumber: list.length
         };
     }
-    const GsInfo = await this.getDept({ key });
+    // 我的群聊
+    if (key === '-3') {
+        const list = await this.getGroupList();
+        const childrenNumber = _.sumBy(list, 'childrenNumber');
+        return {
+            key: '-3',
+            name: '我的群聊',
+            isChildren: true,
+            isSelected: false,
+            type: `${typeGroupList}`,
+            icon: 'group',
+            expand: true,
+            children: list,
+            small: `(${childrenNumber})`,
+            childrenNumber
+        };
+    }
+    const GsInfo = await this.getDept({ key, selectDept });
     const list = await this.onExpand({
         key: GsInfo.dept_id,
-        type
+        type,
+        selectDept
     });
     return {
         key: GsInfo.dept_id,
@@ -402,7 +467,8 @@ class Default {
         this.getDeptList = getDeptList.bind(this);
         this.getDeptAndUserList = getDeptAndUserList.bind(this);
         this.getSearch = getSearch.bind(this);
-        this.getGroup = getGroup.bind(this);
+        this.getGroupUser = getGroupUser.bind(this);
+        this.getGroupList = getGroupList.bind(this);
         this.onExpand = onExpand.bind(this);
         this.initData = initData.bind(this);
     }
