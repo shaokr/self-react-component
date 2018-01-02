@@ -3,108 +3,17 @@
  */
 import { Component } from 'react';
 import _ from 'lodash';
-import fp from 'lodash/fp';
+
 import classnames from 'classnames';
 import PromiseClass from 'util/promise-class';
 import { prefixDropdown } from 'config/const';
 
 import documentOn from 'helpers/document-on';
 
-
-import superDom from '../super-dom';
+import OverlayMain from './overlay';
+import { defaultPlacementConfig } from './config';
 
 import './index.less';
-
-const placementConfig = [
-    'bottomLeft',
-    'bottomCenter',
-    'bottomRight',
-    'topLeft',
-    'topCenter',
-    'topRight',
-    'mouse' // 鼠标所在位置
-];
-const defaultPlacementConfig = placementConfig[0]; // 默认使用配置
-/**
- * 查询是属于配置（是一个方法
- */
-const getPlacementConfig = _.curry(_.includes, 2)(placementConfig);
-
-/**
- * 分割
- */
-const splitCase = fp.flow(
-    _.kebabCase,
-    fp.split('-'),
-);
-/**
- * 菜单显示
- */
-@superDom
-@documentOn(['onMouseMove'])
-class OverlayMain extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            parentDom: false
-        };
-        props.parentDom.then((parentDom) => {
-            this.setState({
-                parentDom
-            });
-        });
-    }
-    // 获取菜单弹出位置
-    get placement() {
-        const { placement } = this.props;
-        return getPlacementConfig(placement) ? placement : defaultPlacementConfig;
-    }
-    // 获取样式
-    get style() {
-        const { placement } = this;
-        if (placement === 'mouse') {
-            return;
-        }
-        const { parentDom } = this.state;
-        if (parentDom) {
-            let left = parentDom.offsetLeft;
-            let top = parentDom.offsetTop;
-            const [topType, leftType] = splitCase(placement);
-            if (topType === 'bottom') {
-                top += parentDom.clientHeight;
-            } else if (topType === 'top') {
-                top -= _.get(this, ['dom', 'clientHeight'], 0);
-            }
-
-            if (leftType === 'left') {
-                // top += parentDom.clientHeight;
-            } else if (leftType === 'center') {
-                left += (parentDom.clientWidth - _.get(this, ['dom', 'clientWidth'], 0)) / 2;
-            } else if (leftType === 'right') {
-                left += parentDom.clientWidth - _.get(this, ['dom', 'clientWidth'], 0);
-            }
-            return {
-                left,
-                top
-            };
-        }
-        return {};
-    }
-    get className() {
-        return `${prefixDropdown}--overlay`;
-    }
-    dom = {}
-    documentOnMouseMove(e) {
-        console.log(e);
-    }
-    render() {
-        return (
-            <div ref={(d) => { this.dom = d; }} style={this.style} className={this.className}>
-                {this.props.children}
-            </div>
-        );
-    }
-}
 
 /**
  * 下拉主体
@@ -133,10 +42,12 @@ export default class Dropdown extends Component {
      * @param {*} overlayShow 设置overlayShow的值
      */
     onSetOverlay(overlayShow = !this.state.overlayShow) {
-        this.invokeProps('onVisibleChange', overlayShow);
-        this.setState({
-            overlayShow
-        });
+        if (overlayShow !== this.state.overlayShow) {
+            this.invokeProps('onVisibleChange', overlayShow);
+            this.setState({
+                overlayShow
+            });
+        }
     }
     // 鼠标移入事件
     onMouseEnter(e) {
@@ -156,16 +67,31 @@ export default class Dropdown extends Component {
     onClick(e) {
         if (this.props.trigger === 'click') {
             this.onSetOverlay();
+        } else {
+            this.onSetOverlay(false);
         }
         this.invokeProps('onClick', e);
     }
     // 右键事件
     onContextMenu(e) {
+        e.persist();
         if (this.props.trigger === 'contextMenu') {
-            this.onSetOverlay(true);
+            if (!this.state.overlayShow) {
+                this.onSetOverlay(true);
+            }
+            this.setMouseType(e);
         }
         this.invokeProps('onContextMenu', e);
         return false;
+    }
+    setMouseType = (e) => {
+        this.mainDom.promise.then((dom) => {
+            if (dom.contains(e.target)) {
+                this.setState({
+                    mouseType: e
+                });
+            }
+        });
     }
     // document中点击事件
     documentOnContextMenu(e, contains) {
@@ -210,11 +136,19 @@ export default class Dropdown extends Component {
         }
         return !!visible;
     }
+    get placement() {
+        const { props } = this;
+        if (props.trigger === 'contextMenu') {
+            return 'mouse';
+        }
+        return props.placement;
+    }
     render() {
-        const { props, mainDom } = this;
+        const { state, props, mainDom } = this;
+        console.log(1);
         return (
             <div
-                ref={(d) => { mainDom.resolve(d); }}
+                ref={d => (mainDom.resolve(d))}
                 className={this.className}
                 onClick={this.onClick}
                 onMouseEnter={this.onMouseEnter}
@@ -226,8 +160,9 @@ export default class Dropdown extends Component {
                 <OverlayMain
                     visible={this.overlayShow}
                     getContainer={props.getContainer}
-                    placement={props.placement}
+                    placement={this.placement}
                     parentDom={mainDom.promise}
+                    mouseType={state.mouseType}
                 >
                     {props.overlay}
                 </OverlayMain>
