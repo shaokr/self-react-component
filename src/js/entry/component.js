@@ -5,7 +5,7 @@ import 'less/component/reset.less';
 import 'less/global/public.less';
 
 import { Component } from 'react';
-import { ShowDom } from 'component/super-dom';
+import SuperDom, { ShowDom } from 'component/super-dom';
 // import Scroll from 'component/scroll';
 import Button from 'component/button';
 import Input from 'component/input';
@@ -26,7 +26,7 @@ if (__DEV__) {
     const { render } = require('react-dom');
     const param = require('util/param').default;
     if (param.debug == 'date-picker') {
-        // render(<DatePicker />, document.getElementById('app-main'));
+        render(<DatePicker />, document.getElementById('app-main'));
     }
     if (param.debug == 'input') {
         render(<Input />, document.getElementById('app-main'));
@@ -59,7 +59,6 @@ if (__DEV__) {
         render(<Dropdown
                 overlay={menu}
                 trigger="contextMenu"
-                placement="bottomLeft"
                 style={{
                     position: 'relative',
                     top: 100,
@@ -274,12 +273,7 @@ if (__DEV__) {
             const ddd = new ToolTree({ io });
             // const data = await getDept({ key: 0 });
             // console.log(data);
-            const companyData = await ddd.initData();
-            console.log(companyData);
-            const groupIdData = await ddd.getGroup({ key: '115' });
-            const tree = [
-                companyData
-            ];
+            const tree = await ddd.initData([{ key: '-3' }, { key: '-1' }]);
             class Div3 extends Component {
                 constructor(props) {
                     super(props);
@@ -336,7 +330,7 @@ if (__DEV__) {
                             bottomBtn={this.state.btn}
                             tree={tree}
                             onExpand={ddd.onExpand}
-                            max="7"
+                            // max="7"
                         />
                     );
                 }
@@ -383,8 +377,12 @@ module.exports = {
     Mask,
     Checkbox,
     Loading,
-    ShowDom,
     Message,
     Watermark,
-    version
+    version,
+    Menu,
+    Dropdown,
+
+    ShowDom,
+    SuperDom
 };
