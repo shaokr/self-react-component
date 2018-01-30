@@ -23,7 +23,7 @@ export default class Item extends Component {
     render() {
         const { props } = this;
         return (
-            <li className={this.className}>
+            <li onClick={props.onClick} className={this.className} >
                 {props.children}
             </li>
         );

@@ -15,6 +15,13 @@ import Divider from './divider';
 export default class Menu extends Component {
     constructor(props) {
         super(props);
+        this.onClick = this.onClick.bind(this);
+    }
+    onClick(e) {
+        const { props } = this;
+        if (_.isFunction(props.onClick)) {
+            props.onClick(e);
+        }
     }
     get className() {
         const { props } = this;
@@ -27,6 +34,8 @@ export default class Menu extends Component {
         const { props, mainDom, state } = this;
         return (
             <ul
+                // {...props}
+                onClick={this.onClick}
                 className={this.className}
             >
                 {props.children}
