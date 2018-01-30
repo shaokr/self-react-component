@@ -24,7 +24,7 @@ export default class Dropdown extends Component {
         super(props);
 
         this.state = {
-            overlayShow: false,
+            overlayShow: props.defaultVisible, // false,
             mouseType: {}
         };
 
@@ -145,7 +145,6 @@ export default class Dropdown extends Component {
     }
     render() {
         const { state, props, mainDom } = this;
-        console.log(1);
         return (
             <div
                 ref={d => (mainDom.resolve(d))}
@@ -158,6 +157,7 @@ export default class Dropdown extends Component {
             >
                 {props.children}
                 <OverlayMain
+                    {...props.overlayProps}
                     visible={this.overlayShow}
                     getContainer={props.getContainer}
                     placement={this.placement}
@@ -175,8 +175,10 @@ Dropdown.defaultProps = {
     disabled: false, //	菜单是否禁用	boolean	-
     getContainer: '', //	菜单渲染父节点。默认渲染到 body 上，如果你遇到菜单滚动定位问题，试试修改为滚动的区域，并相对其定位。示例	Function(triggerNode)	() => document.body
     overlay: '', //	菜单	Menu
+    overlayProps: {},
     placement: defaultPlacementConfig, //	菜单弹出位置：bottomLeft bottomCenter bottomRight topLeft topCenter topRight String	bottomLeft
     trigger: 'hover', //	触发下拉的行为	Array<'click'|'hover'>	'hover'
+    defaultVisible: false,
     visible: undefined, //	菜单是否显示	boolean	-
     onVisibleChange: '' // 菜单显示状态改变时调用，参数为 visible	Function(visible)	-
 };

@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import _ from 'lodash';
 import fp from 'lodash/fp';
+import classnames from 'classnames';
 
 import { prefixDropdown } from 'config/const';
 
@@ -26,13 +27,26 @@ export default class OverlayMain extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            parentDom: false
+            parentDom: false,
+            initStyle: true
         };
         props.parentDom.then((parentDom) => {
             this.setState({
                 parentDom
             });
         });
+    }
+    componentWillReceiveProps() {
+        this.setState({
+            initStyle: true
+        });
+    }
+    componentDidUpdate() {
+        if (this.state.initStyle) {
+            this.setState({
+                initStyle: false
+            });
+        }
     }
     // 获取菜单弹出位置
     get placement() {
@@ -42,11 +56,16 @@ export default class OverlayMain extends Component {
     // 获取样式
     get style() {
         const { placement, props } = this;
+        if (!props.children) {
+            return {
+                display: 'none'
+            };
+        }
         // 在鼠标位置显示暂时没做自适应
         if (placement === 'mouse') {
             const { clientX, clientY } = props.mouseType;
-            let left = clientX;
-            let top = clientY;
+            const left = clientX;
+            const top = clientY;
             return {
                 left,
                 top
@@ -54,21 +73,30 @@ export default class OverlayMain extends Component {
         }
         const { parentDom } = this.state;
         if (parentDom) {
-            let left = parentDom.offsetLeft;
-            let top = parentDom.offsetTop;
-            const [topType, leftType] = splitCase(placement);
+            let { left, top, height, width } = parentDom.getBoundingClientRect();
+            const clientHeight = _.get(this, ['dom', 'clientHeight'], 0);
+            const clientWidth = _.get(this, ['dom', 'clientWidth'], 0);
+            
+            const [topType, leftType, edge = false] = splitCase(placement);
             if (topType === 'bottom') {
-                top += parentDom.clientHeight;
+                top += height;
             } else if (topType === 'top') {
-                top -= _.get(this, ['dom', 'clientHeight'], 0);
+                top -= clientHeight;
             }
-
+            
             if (leftType === 'left') {
+                if (edge === 'edge') {
+                    left -= clientWidth;
+                }
                 // top += parentDom.clientHeight;
             } else if (leftType === 'center') {
-                left += (parentDom.clientWidth - _.get(this, ['dom', 'clientWidth'], 0)) / 2;
+                left += (width - clientWidth) / 2;
             } else if (leftType === 'right') {
-                left += parentDom.clientWidth - _.get(this, ['dom', 'clientWidth'], 0);
+                if (edge === 'edge') {
+                    left += width;
+                } else {
+                    left += width - clientWidth;
+                }
             }
             return {
                 left,
@@ -78,10 +106,13 @@ export default class OverlayMain extends Component {
         return {};
     }
     get className() {
-        return `${prefixDropdown}--overlay`;
+        return classnames([
+            `${prefixDropdown}--overlay`, this.props.className
+        ]);
     }
     dom = {}
     render() {
+        // const { props } = this;
         return (
             <div ref={(d) => { this.dom = d; }} style={this.style} className={this.className}>
                 {this.props.children}
@@ -94,5 +125,6 @@ OverlayMain.defaultProps = {
     getContainer: '', // 渲染到的dom
     placement: '', // 显示类型
     parentDom: '', // 父级dom
-    mouseType: '' // 当前鼠标状态 placement='mouse' 的时候使用
+    mouseType: '', // 当前鼠标状态 placement='mouse' 的时候使用
+    className: ''
 };
