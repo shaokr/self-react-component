@@ -77,7 +77,10 @@ export default Comp => class SuperDom extends Component {
         }
     }
     componentWillUnmount() {
-        this.remove();
+        // this.remove();
+        if (this.state.appOK) {
+            document.body.removeChild(this.rootDom);
+        }
     }
     // 删除
     remove() {
