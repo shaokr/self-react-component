@@ -41,12 +41,32 @@ export class ShowDom {
 
 }
 
+class Child {
+    isAdd = false
+    constructor(dom, parent) {
+        this.container = dom || document.createElement('div');
+        if (!dom) {
+            this.parent = parent || document.body;
+        }
+    }
+    add = () => {
+        if (!this.isAdd) {
+            this.isAdd = true;
+            this.parent.appendChild(this.container);
+        }
+    }
+    remove = () => {
+        if (this.isAdd) {
+            this.isAdd = false;
+            this.parent.removeChild(this.container);
+        }
+    }
+}
 
 export default Comp => class SuperDom extends Component {
     constructor(props) {
         super(props);
-
-        this.rootDom = props.getContainer || document.createElement('div');
+        this.child = new Child(props.getContainer);
         this.remove = this.remove.bind(this);
         this.removeChild = this.removeChild.bind(this);
         this.appendChild = this.appendChild.bind(this);
@@ -77,10 +97,11 @@ export default Comp => class SuperDom extends Component {
         }
     }
     componentWillUnmount() {
+        this.child.remove();
         // this.remove();
-        if (this.state.appOK) {
-            document.body.removeChild(this.rootDom);
-        }
+        // if (!this.state.appOK) {
+            
+        // }
     }
     // 删除
     remove() {
@@ -93,7 +114,7 @@ export default Comp => class SuperDom extends Component {
     appendChild() {
         const { appOK } = this.state;
         if (!appOK) {
-            document.body.appendChild(this.rootDom);
+            this.child.add();
             this.setState({
                 appOK: true
             });
@@ -111,7 +132,7 @@ export default Comp => class SuperDom extends Component {
     }
     onEnd({ type }) {
         if (type === 'leave') {
-            document.body.removeChild(this.rootDom);
+            this.child.remove();
         }
     }
     render() {
@@ -119,6 +140,6 @@ export default Comp => class SuperDom extends Component {
             <QueueAnim animConfig={{ opacity: [1, 0] }} onEnd={this.onEnd}>
                 { this.state.appOK && <Comp key="JustForAnimation" {...this.props} />}
             </QueueAnim>
-        , this.rootDom);
+        , this.child.container);
     }
 };
