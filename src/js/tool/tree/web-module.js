@@ -87,12 +87,14 @@ const getDept = async function ({ key }, ck) {
  * 获取自己所在部门
  * @param {*} data
  */
-const getSelfDept = async function ({ type }, ck) {
+const getSelfDept = async function ({ type, selectDept }, ck) {
     const GsInfo = await this.io.contacts.GoGetUserDeptList().then(res => _.map(res.dept_list, (item) => {
         const _data = item.depts[0];
         return {
             key: _data.dept_id,
             isChildren: true,
+            selectDept,
+            isCheckedShow: selectDept,
             type,
             icon: 'folder',
             name: _data.dept_name,
@@ -166,6 +168,7 @@ const getDeptList = async function ({ key, type = typeDept, children, selectDept
                         isChildren: true,
                         icon: 'folder',
                         itemType: typeDept,
+                        selectDept,
                         isCheckedShow: selectDept,
                         type,
                         children: _item.children,
@@ -313,7 +316,7 @@ const getGroupUser = async function ({ key, type = typeGroupUser }, ck) {
  * @param {*} param0 
  * @param {*} ck 
  */
-const getGroupList = async function () {
+const getGroupList = async function ({ selectDept }) {
     const res = await this.io.group.GoGetList();
     const groupsList = _.map(res.groups, item => ({
         mem_type: item.mem_type,
@@ -328,6 +331,7 @@ const getGroupList = async function () {
         name: '我管理的群',
         icon: 'folder',
         isSelected: false,
+        isCheckedShow: selectDept,
         childrenNumber: admin.length,
         small: `(${admin.length})`,
         children: admin
@@ -337,6 +341,7 @@ const getGroupList = async function () {
         name: '我加入的群',
         icon: 'folder',
         isSelected: false,
+        isCheckedShow: selectDept,
         childrenNumber: join.length,
         small: `(${join.length})`,
         children: join
@@ -392,6 +397,7 @@ const initData = async function (data = {}) {
             isChildren: true,
             isSelected: false,
             selectDept,
+            isCheckedShow: selectDept,
             type,
             icon: 'bag',
             expand: true,
@@ -418,12 +424,13 @@ const initData = async function (data = {}) {
     }
     // 我的群聊
     if (key === '-3') {
-        const list = await this.getGroupList();
+        const list = await this.getGroupList({ selectDept });
         const childrenNumber = _.sumBy(list, 'childrenNumber');
         return {
             key: '-3',
             name: '我的群聊',
             isChildren: true,
+            isCheckedShow: selectDept,
             isSelected: false,
             type: `${typeGroupList}`,
             icon: 'group',
@@ -444,6 +451,7 @@ const initData = async function (data = {}) {
         name: GsInfo.dept_name,
         itemType: typeDept,
         isChildren: true,
+        isCheckedShow: selectDept,
         type,
         icon: GsInfo.dept_id === '0' ? 'company' : 'folder',
         expand: true,
