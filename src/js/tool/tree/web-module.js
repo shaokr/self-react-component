@@ -9,6 +9,9 @@ const typeGroupList = 'groupList'; // 群列表
 const typeCloudUser = 'cloudUser'; // 外部联系人
 const typeCloudGroup = 'cloudGroup'; // 外部群
 
+const fpFilter = _.curryRight(_.filter, 2);
+const fpMap = _.curryRight(_.map, 2);
+
 /**
  * 获取用户信息
  */
@@ -232,6 +235,7 @@ const getCloudUserList = async function () {
 
 /**
  * 获取搜索数据
+ * @param {'' || [''] || [{}]} params { key: '需要查找的关键词' }
  */
 const getSearch = function (params, callback) {
     const _function = async (data, ck) => {
@@ -291,6 +295,26 @@ const getSearch = function (params, callback) {
     }
     return _function(params, callback);
 };
+/**
+ * 搜索群用户
+ * @param {*} params {
+ *  key, // 群id
+ *  keyword, // 搜索关键词
+ *  filter // 需要过滤的uid数组
+ * }
+ */
+const searchGroupUser = async function name({ key, keyword, filter }) {
+    const res = await this.io.search.GoSearchGroupUser({ gid: key, keyword });
+    const userList = _.get(res, ['datas', 'hits']);
+    const _fpFilter = fpFilter(item => !_.includes(filter, item.uid));
+    const _fpMap = fpMap(item => ({ key: item.uid, name: item.name, avatar: item.avatar_url, itemType: typeGroupUser }));
+    const children = _.flow([_fpFilter, _fpMap])(userList);
+    const Rdata = {
+        title: children.length ? '群成员' : '暂无搜索结果',
+        children
+    };
+    return [Rdata];
+};
 
 /**
  * 获取群用户
@@ -300,7 +324,7 @@ const getGroupUser = async function ({ key, type = typeGroupUser }, ck) {
         group_id: key
     });
 
-    const Rdata = _.map(res.datas, item => ({
+    const Rdata = _.map(res.members, item => ({
         key: item.uid,
         name: item.name,
         itemType: typeGroupUser,
@@ -475,6 +499,7 @@ class Default {
         this.getDeptList = getDeptList.bind(this);
         this.getDeptAndUserList = getDeptAndUserList.bind(this);
         this.getSearch = getSearch.bind(this);
+        this.searchGroupUser = searchGroupUser.bind(this);
         this.getGroupUser = getGroupUser.bind(this);
         this.getGroupList = getGroupList.bind(this);
         this.onExpand = onExpand.bind(this);
