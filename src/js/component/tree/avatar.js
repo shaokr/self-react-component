@@ -8,12 +8,18 @@ import classnames from 'classnames';
 import Icon from 'component/icon';
 
 const bgColor = [
-    'rgb(92, 208, 166)',
-    'rgb(185, 185,185)',
-    'rgb(77, 188, 205)',
-    'rgb(244, 158, 92)',
-    'rgb(132, 131, 191)',
-    'rgb(80, 129, 191)'
+    // 'rgb(92, 208, 166)',
+    // 'rgb(185, 185,185)',
+    // 'rgb(77, 188, 205)',
+    // 'rgb(244, 158, 92)',
+    // 'rgb(132, 131, 191)',
+    // 'rgb(80, 129, 191)'
+    '#FA7976',
+    '#B7A0F1',
+    '#6890F3',
+    '#57BAB3',
+    '#61C7F1',
+    '#FAA77D'
 ];
 
 const getColor = (() => {
