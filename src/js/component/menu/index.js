@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, cloneElement } from 'react';
 import _ from 'lodash';
 import fp from 'lodash/fp';
 
@@ -30,15 +30,26 @@ export default class Menu extends Component {
             props.className
         ]);
     }
+    get children() {
+        const { selectedKeys, children } = this.props;
+        const _children = _.map(children, (item) => {
+            if (_.some(selectedKeys, val => _.toString(val) === item.key)) {
+                return cloneElement(item, { activ: true });
+            }
+            return item;
+        });
+        return _children;
+    }
     render() {
         const { props, mainDom, state } = this;
         return (
             <ul
                 // {...props}
+                ref={d => (this.ul = d)}
                 onClick={this.onClick}
                 className={this.className}
             >
-                {props.children}
+                {this.children}
             </ul>
         );
     }
