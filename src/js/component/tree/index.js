@@ -1100,7 +1100,8 @@ export default class Tree extends Component {
 
             bottomBtn,
             className,
-            watermark
+            watermark,
+            loading
         } = this.props;
         const {
             max,
@@ -1129,7 +1130,7 @@ export default class Tree extends Component {
 
                                 searchShow={searchShow}
                                 searchPlaceholder={searchPlaceholder}
-
+                                loading={loading}
                               // treeTitle={treeTitle}
                                 tree={this.state.tree} // 树
                             />
@@ -1184,5 +1185,6 @@ Tree.defaultProps = {
         }
     ],
     className: '',
-    watermark: '' // 水印
+    watermark: '', // 水印
+    loading: true // 无数据显示设置加载中
 };

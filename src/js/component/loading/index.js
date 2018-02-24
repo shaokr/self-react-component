@@ -6,7 +6,7 @@ import { Component } from 'react';
 import classnames from 'classnames';
 import { prefix } from 'config/const';
 
-import superDom, { ShowDom } from '../super-dom';
+import { ShowDom } from '../super-dom';
 import Icon from '../icon';
 import Mask from '../mask';
 
@@ -47,7 +47,7 @@ class Loading extends Component {
             </div>
         );
     }
-    get children() {
+    get childrens() {
         const { props } = this;
         if (!props.children) {
             return null;
@@ -62,7 +62,7 @@ class Loading extends Component {
         return (
             <div className={this.className}>
                 {this.box}
-                {this.children}
+                {this.childrens}
             </div>
         );
         // return (

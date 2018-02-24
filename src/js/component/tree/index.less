@@ -121,12 +121,17 @@
                 line-height: @u*32;
             }
         }
-        // .scroll{
-        //     // max-height: calc(~'100% - '@u*32*2);
-        //     height: 100%;
-        //     flex: 1;
-        //     overflow: auto;
-        // }
+        >.@{px-loading}{
+            display: flex;
+            flex: 1;
+            .scroll{
+                // max-height: calc(~'100% - '@u*32*2);
+                height: 100%;
+                // flex: 1;
+                // overflow: auto;
+            }
+        }
+        
     }
     &-right{
         flex: 1;
@@ -152,7 +157,6 @@
             }
         }
         // .scroll{
-        //     max-height: calc(~'100% - '@u*32+10);
         //     height: 100%;
         //     // margin-right: @u*-5;
         // }

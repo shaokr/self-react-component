@@ -14,10 +14,10 @@
     }
     // 小号
     &__small{
-        .@{px-loading}--spin{
-            .dpr(14);
-        }
-        .@{px-loading}--box{
+        >.@{px-loading}--box{
+            .@{px-loading}--spin{
+                .dpr(14);
+            }
             >p{
                 .dpr(@fs3);
             }
@@ -25,10 +25,10 @@
     }
     // 默认大小
     &__default{
-        .@{px-loading}--spin{
-            .dpr(22);
-        }
-        .@{px-loading}--box{
+        >.@{px-loading}--box{
+            .@{px-loading}--spin{
+                .dpr(22);
+            }
             >p{
                 .dpr(@fs2);
             }
@@ -36,10 +36,11 @@
     }
     // 大号
     &__large{
-        .@{px-loading}--spin{
-            .dpr(32);
-        }
-        .@{px-loading}--box{
+        
+        >.@{px-loading}--box{
+            .@{px-loading}--spin{
+                .dpr(32);
+            }
             >p{
                 .dpr(@fs1);
             }
@@ -70,6 +71,7 @@
         color: @c4;
         position: absolute;
         // display: inline;
+        max-width: 80%;
         left: 50%;
         top: 100 - 61.8%; // 完美黄金比例！！！！！鼓掌啪啪啪啪！！
         transform: translate(-50%, -50%);
@@ -77,8 +79,8 @@
         z-index: 100;
         >p{
             .slh();
-            width: 61.8%; // 又是完美的黄金比例！！！
-            margin: @u*4 0 0 0;
+            // width: 61.8%; // 又是完美的黄金比例！！！
+            margin: @u*4 auto 0;
         }
     }
     &--children{
