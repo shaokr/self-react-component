@@ -267,10 +267,12 @@ if (__DEV__) {
                 dev_type: 5,
                 login_type: 1,
                 client_ver: '3.1.0',
-                account: 'shaokangrun',
+                account: 'shaokr',
                 password: '111111'
             });
+            
             const ddd = new ToolTree({ io });
+            ddd.searchGroupUser({ key: '17660905607569', keyword: 's' });
             // const data = await getDept({ key: 0 });
             // console.log(data);
             const tree = await ddd.initData([{ key: '-3' }, { key: '-1' }]);
@@ -284,8 +286,16 @@ if (__DEV__) {
                                 key: 'yes',
                                 type: 'primary'
                             }
-                        ]
+                        ],
+                        tree: []
                     };
+                }
+                componentDidMount(){
+                    setTimeout(() => {
+                        this.setState({
+                            tree
+                        })
+                    }, 5000)
                 }
                 onSelectedChange = (res) => {
                     console.log(res);
@@ -328,8 +338,9 @@ if (__DEV__) {
                                     // consfig
                                     // type="radio"
                             bottomBtn={this.state.btn}
-                            tree={tree}
+                            tree={this.state.tree}
                             onExpand={ddd.onExpand}
+                            loading={false}
                             // max="7"
                         />
                     );
