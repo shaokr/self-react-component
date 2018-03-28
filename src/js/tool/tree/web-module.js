@@ -11,6 +11,7 @@ const typeCloudGroup = 'cloudGroup'; // 外部群
 
 const fpFilter = _.curryRight(_.filter, 2);
 const fpMap = _.curryRight(_.map, 2);
+const getCompanyName = _.curryRight(_.get, 3)('')(['corp_list', 0, 'name']);
 
 /**
  * 获取用户信息
@@ -26,6 +27,7 @@ const getUserInfo = async function ({ users }) {
                 key: item.uid,
                 name: item.name,
                 avatar: item.avatar_url,
+                companyName: getCompanyName(item),
                 itemType: typeUser
             }));
         }
@@ -139,6 +141,7 @@ const getUserList = async function ({ key, type = typeUser }, ck) {
                         name: userData.user_name,
                         avatar: userDatas.avatar_url,
                         itemType: typeUser,
+                        companyName: getCompanyName(userDatas),
                         type
                     };
                 })
@@ -227,6 +230,7 @@ const getCloudUserList = async function () {
             key: item.uid,
             avatar: item.avatar_url,
             name: item.name,
+            companyName: getCompanyName(item),
             itemType: typeCloudUser
         }));
     });
@@ -307,7 +311,15 @@ const searchGroupUser = async function name({ key, keyword, filter }) {
     const res = await this.io.search.GoSearchGroupUser({ gid: key, keyword });
     const userList = _.get(res, ['datas', 'hits']);
     const _fpFilter = fpFilter(item => !_.includes(filter, item.uid));
-    const _fpMap = fpMap(item => ({ key: item.uid, name: item.name, avatar: item.avatar_url, itemType: typeGroupUser }));
+    const _fpMap = fpMap(item => (
+        {
+            key: item.uid,
+            name: item.name,
+            avatar: item.avatar_url,
+            itemType: typeGroupUser,
+            companyName: getCompanyName(item)
+        }
+    ));
     const children = _.flow([_fpFilter, _fpMap])(userList);
     const Rdata = {
         title: children.length ? '群成员' : '暂无搜索结果',
@@ -323,11 +335,11 @@ const getGroupUser = async function ({ key, type = typeGroupUser }, ck) {
     const res = await this.io.group.GoGetUserList({
         group_id: key
     });
-
     const Rdata = _.map(res.members, item => ({
         key: item.uid,
         name: item.name,
         itemType: typeGroupUser,
+        companyName: getCompanyName(item),
         type
     }));
     if (ck) {
