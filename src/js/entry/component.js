@@ -263,16 +263,16 @@ if (__DEV__) {
             // password	否	 	 	 当login_type为1时需要填写
             // verify_code	否	 	 	当login_type为2时需要填写
             const res = await io.login.GoLogin({
-                ip: '192.168.1.251:8282',
+                ip: '192.168.1.180:8282',
                 dev_type: 5,
                 login_type: 1,
                 client_ver: '3.1.0',
-                account: 'shaokr',
-                password: '111111'
+                account: 'shaokangrun',
+                password: '123456`q'
             });
             
             const ddd = new ToolTree({ io });
-            ddd.searchGroupUser({ key: '17660905607569', keyword: 's' });
+            ddd.getGroupUser({ key: '35253091652675' });
             // const data = await getDept({ key: 0 });
             // console.log(data);
             const tree = await ddd.initData([{ key: '-3' }, { key: '-1' }]);
