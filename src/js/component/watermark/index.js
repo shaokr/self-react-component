@@ -95,10 +95,12 @@ export default class Watermark extends Component {
         ]);
     }
     render() {
+        if (!this.props.text) return null;
         return <canvas className={this.className} style={this.style} width={this.width} height={this.height} ref={(d) => { this.crw = d; }} />;
     }
 }
 
 Watermark.defaultProps = {
-    className: ''
+    className: '',
+    text: ''
 };
