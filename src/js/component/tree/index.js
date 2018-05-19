@@ -10,12 +10,12 @@ import _ from 'lodash';
 import Icon from 'component/icon';
 import message from 'component/message';
 import Watermark from 'component/watermark';
+import superDom from '../../component/super-dom';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
 import BottomBox from './bottom-box';
 import TreeList from './tree-list';
-
 
 import './index.less';
 // 头部
@@ -491,6 +491,7 @@ function setUc(list, key, isCache = {}) {
  * ----事件---
  * onCheck //
  */
+@superDom
 export default class Tree extends Component {
     constructor(props) {
         super(props);
@@ -1165,6 +1166,7 @@ Tree.defaultProps = {
     type: 'check', // 类型 check
     expandType: '2', // 可展开项展开类型
     show: true, // 是否显示
+    visible: true,
     isAlert: true, // 是否以弹窗的显示显示
     isSoLongAsTreeList: false, // 是否只需要列表树
     isSelect: false, // 是否必须有选项

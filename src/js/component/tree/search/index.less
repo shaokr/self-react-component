@@ -8,7 +8,7 @@
     // position: relative;
     position: static;
     border: 1px solid @bc1;
-    margin-top: @u*10;
+    // margin-top: @u*10;
     border-radius: @u*100;
     display: flex;
     align-items: center;
@@ -37,15 +37,17 @@
     }
     // 搜索列表数据
     &-list{
-        @topH: @u*52;;
+        @topH: @u*42;;
         position: absolute;
         top: @topH;
-        height: calc(~'100% - @{topH}');
+        height: ~'calc(100% - @{topH})';
         left: 0;
         width: 100%;
         z-index: 100;
         background: #fff;
         ul{
+            margin: 0;
+            padding: 0;
             li{
                 padding: @u*5 @u*10;
                 display: flex;
@@ -81,6 +83,7 @@
     }
     // 组
     &-group{
+        
         &--title{
             .slh();
             .dpr(@fs2);
