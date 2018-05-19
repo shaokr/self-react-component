@@ -10,6 +10,7 @@ import _ from 'lodash';
 import Icon from 'component/icon';
 import message from 'component/message';
 import Watermark from 'component/watermark';
+import Loading from 'component/loading';
 import superDom from '../../component/super-dom';
 
 import TreeLeft from './tree-left';
@@ -1082,7 +1083,11 @@ export default class Tree extends Component {
         });
         return num;
     }
-
+    get isLoadShow() {
+        const { tree } = this.state;
+        const { loading } = this.props;
+        return loading && !_.size(tree);
+    }
     render() {
         const { action, store } = this;
         const {
@@ -1116,47 +1121,49 @@ export default class Tree extends Component {
         }
         return (
             <div className={this.treeClass} style={this.treeStyle}>
+                
                 {
                     show &&
                     <div className="tree-main">
 
                         <Header title={title} onClick={action.onClose} />
+                        <Loading visible={this.isLoadShow} tip="数据加载中">
+                            <div className="tree-box" >
+                                <Watermark text={watermark} />
 
-                        <div className="tree-box" >
-                            <Watermark text={watermark} />
+                                <TreeLeft
+                                    store={store} // 共用的一些数据
+                                    action={action} // 所有操作
 
-                            <TreeLeft
-                                store={store} // 共用的一些数据
-                                action={action} // 所有操作
-
-                                searchShow={searchShow}
-                                searchPlaceholder={searchPlaceholder}
-                                loading={loading}
-                              // treeTitle={treeTitle}
-                                tree={this.state.tree} // 树
-                            />
-
-                            <TreeRight
-                                store={store} // 共用的一些数据
-                                action={action} // 所有操作
-
-                                max={max} // 最大
-                                selectedTitle={selectedTitle} // 标题
-                                selected={this.state.selected} // 当前选中
-                                isIntegration={isIntegration} // 是否整合
-                                selectedData={selectedData}
-                            >
-                                <BottomBox
-                                    bottomBtn={bottomBtn}
-                                    onClick={action.onClickBtn}
-                                    isSelect={isSelect}
-                                    isExistSelected={!!this.state.selected.size}
+                                    searchShow={searchShow}
+                                    searchPlaceholder={searchPlaceholder}
+                                    loading={loading}
+                                // treeTitle={treeTitle}
+                                    tree={this.state.tree} // 树
                                 />
-                            </TreeRight>
-                        </div>
 
+                                <TreeRight
+                                    store={store} // 共用的一些数据
+                                    action={action} // 所有操作
+
+                                    max={max} // 最大
+                                    selectedTitle={selectedTitle} // 标题
+                                    selected={this.state.selected} // 当前选中
+                                    isIntegration={isIntegration} // 是否整合
+                                    selectedData={selectedData}
+                                >
+                                    <BottomBox
+                                        bottomBtn={bottomBtn}
+                                        onClick={action.onClickBtn}
+                                        isSelect={isSelect}
+                                        isExistSelected={!!this.state.selected.size}
+                                    />
+                                </TreeRight>
+                            </div>
+                        </Loading>
                     </div>
                 }
+                
             </div>
         );
     }
