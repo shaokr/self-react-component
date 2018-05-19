@@ -540,11 +540,10 @@ export default class Tree extends Component {
     // 获取主要tree外壳的样式
     get treeStyle() {
         const {
-            show,
             zIndex
         } = this.props;
         return {
-            display: show ? '' : 'none',
+            display: this.visible ? '' : 'none',
             zIndex: zIndex >> 0
         };
     }
@@ -1088,12 +1087,19 @@ export default class Tree extends Component {
         const { loading } = this.props;
         return loading && !_.size(tree);
     }
+    get visible() {
+        const {
+            show, // 显示状态
+            visible
+        } = this.props;
+        return visible && show;
+    }
     render() {
         const { action, store } = this;
         const {
             isSelect,
             isSoLongAsTreeList,
-            show, // 显示状态
+            // show, // 显示状态
             // 标题设置
             title,
             onClose, // 关闭按钮
@@ -1123,7 +1129,7 @@ export default class Tree extends Component {
             <div className={this.treeClass} style={this.treeStyle}>
                 
                 {
-                    show &&
+                    this.visible &&
                     <div className="tree-main">
 
                         <Header title={title} onClick={action.onClose} />
@@ -1191,6 +1197,10 @@ Tree.defaultProps = {
             txt: '确定',
             key: 'yes',
             type: 'primary'
+        },
+        {
+            txt: '取消',
+            key: 'cancel'
         }
     ],
     className: '',
