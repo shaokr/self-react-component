@@ -944,7 +944,9 @@ export default class Tree extends Component {
 	// 触发删除
     _onDelSelected(key) {
     }
-
+    onScroll(e) {
+        e.stopPropagation();
+    }
     Handle() {
     }
     // ---------选中相关------------
@@ -1123,10 +1125,10 @@ export default class Tree extends Component {
         const selectedData = this.selectedData; // 获取选中项目的数据
         this.oldSelectedData = selectedData; // 保持为老选中项目数据
         if (isSoLongAsTreeList) {
-            return <TreeList tree={this.state.tree} className={className} store={store} action={action} />;
+            return <TreeList onScroll={this.onScroll} tree={this.state.tree} className={className} store={store} action={action} />;
         }
         return (
-            <div className={this.treeClass} style={this.treeStyle}>
+            <div className={this.treeClass} style={this.treeStyle} onScroll={this.onScroll}>
                 
                 {
                     this.visible &&
