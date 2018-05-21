@@ -1,5 +1,5 @@
 {
-  "version": "1.0.7",
+  "version": "1.0.8",
   "dependencies": {
     "rc-queue-anim": "^1.4.1",
     "react-day-picker": "^7.0.5"
