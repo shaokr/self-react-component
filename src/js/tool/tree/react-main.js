@@ -6,9 +6,10 @@ import Tree from '../../component/tree';
 export default class extends Component {
     static defaultProps = {
         init: [
-            {},
-            { key: '-2' },
-            { key: '-1' }
+            { key: '0' }, // 组织架构
+            { key: '-2' }, // 外部联系人
+            { key: '-1' } // 我的部门
+            // { key: '-3' } // 群
         ],
         expandType: '1',
         max: 5,
@@ -24,23 +25,29 @@ export default class extends Component {
         this.state = {
             init: false,
             selectedList: [],
-            tree: []
+            tree: [],
+            uc: 1
         };
-        this.init(props);
+        this.init(props, true);
     }
     componentWillReceiveProps(nextProps) {
-        this.init(nextProps);
+        const { props } = this;
+        this.init(nextProps, (
+            !_.eq(nextProps.selectedList, props.selectedList) ||
+            !_.eq(nextProps.init, props.init)
+        ));
     }
-    init = (props) => {
-        if ((props.show || props.visible) && !this.state.init) {
+    init = (props, load) => {
+        if ((props.show || props.visible) && load) {
             Promise.all([
                 this.treeProcess(),
-                this.selectedListProcess()
+                this.selectedListProcess(props)
             ]).then(([tree, selectedList]) => {
+                this.isGetCloudGroup
                 this.setState({
                     selectedList,
                     tree,
-                    init: true
+                    uc: this.state.uc + 1
                 });
             });
         }
@@ -49,9 +56,9 @@ export default class extends Component {
         const { api, init } = this.props;
         return api.initData(init);
     }
-    selectedListProcess = async () => {
-        const { api } = this.props;
-        let { selectedList } = this.props;
+    selectedListProcess = async (props) => {
+        const { api } = props;
+        let { selectedList } = props;
         if (selectedList) {
             const pathList = {};
             selectedList = _.map(selectedList, (item, index) => {
@@ -70,7 +77,6 @@ export default class extends Component {
             const grouping = _.groupBy(selectedList, 'type');
 
             const userList = _.get(grouping, ['user']);
-
             if (userList) {
                 const users = _.map(userList, ({ key }) => key);
                 const res = await api.getUserInfo({ users });
@@ -79,7 +85,7 @@ export default class extends Component {
                 });
             }
 
-            const deptList = _.get(grouping, [1]);
+            const deptList = _.get(grouping, ['dept']);
             if (deptList) {
                 const depts = _.map(deptList, ({ key }) => key);
                 const res = await api.getDeptInfo({ depts });
@@ -87,7 +93,15 @@ export default class extends Component {
                     _.set(selectedList, pathList[item.key], item);
                 });
             }
-            
+
+            const groupList = _.get(grouping, ['group']);
+            if (groupList) {
+                const groups = _.map(groupList, ({ key }) => key);
+                const res = await api.getGroupInfo({ groups });
+                _.forEach(res, (item) => {
+                    _.set(selectedList, pathList[item.key], item);
+                });
+            }
 
             return selectedList;
         }
@@ -95,13 +109,14 @@ export default class extends Component {
     }
     get newProps() {
         const { api, onSearchChange, onExpand } = this.props;
-        const { selectedList, tree } = this.state;
+        const { selectedList, tree, uc } = this.state;
         return {
             ...this.props,
             selectedList,
             tree,
             onSearchChange: onSearchChange || api.getSearch,
-            onExpand: onExpand || api.onExpand
+            onExpand: onExpand || api.onExpand,
+            uc
         };
     }
     render() {

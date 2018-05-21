@@ -46,7 +46,7 @@ const getUserInfo = async function ({ users }) {
  * 获取部门信息
  */
 const getDeptInfo = async function ({ depts }) {
-    const GsInfo = await this.io.group.GoGetInfos({
+    const GsInfo = await this.io.contacts.GoGetDeptInfo({
         dept_ids: depts,
         mask: ['dept_name', 'dept_id']
     }).then((res) => {
@@ -65,18 +65,15 @@ const getDeptInfo = async function ({ depts }) {
 };
 /**
  * 获取群详情
- * @param {*} param0 
  */
 const getGroupInfo = async function ({ groups }) {
-    const GsInfo = await this.io.contacts.GoGetDeptInfo({
+    const GsInfo = await this.io.group.GoGetInfos({
         group_ids: groups,
         mask: ['session_id', 'name', 'icon']
     }).then((res) => {
         if (res.res.err_code === '0') {
-            // const data = res.depts[0].datas;
             return _.map(res.groups, item => ({
                 key: item.session_id,
-                icon: 'folder',
                 avatar: item.avatar_url,
                 name: item.name,
                 itemType: item.type === GROUP_TYPE_OUTTER ? typeCloudGroup : typeInternalGroup
@@ -381,14 +378,15 @@ const getGroupUser = async function ({ key, type = typeGroupUser }, ck) {
  * @param {*} param0 
  * @param {*} ck 
  */
-const getGroupList = async function ({ selectDept }) {
+const getGroupList = async function ({ selectDept, isGetCloud }) {
     const res = await this.io.group.GoGetList();
+    if (!isGetCloud) res.groups = _.filter(res.groups, item => item.group_type !== GROUP_TYPE_OUTTER);
     const groupsList = _.map(res.groups, item => ({
         mem_type: item.mem_type,
         key: item.group_id,
         name: item.group_name,
         avatar: item.avatar_url,
-        itemType: item.mem_type === GROUP_TYPE_OUTTER ? typeCloudGroup : typeInternalGroup
+        itemType: item.group_type === GROUP_TYPE_OUTTER ? typeCloudGroup : typeInternalGroup
     }));
     const { admin = [], join = [] } = _.groupBy(groupsList, tiem => (tiem.mem_type === '110' ? 'join' : 'admin'));
     const resAdmin = {
@@ -491,7 +489,8 @@ const initData = async function (data = {}) {
     }
     // 我的群聊
     if (key === '-3') {
-        const list = await this.getGroupList({ selectDept });
+        const { isGetCloud = true } = data;
+        const list = await this.getGroupList({ selectDept, isGetCloud });
         const childrenNumber = _.sumBy(list, 'childrenNumber');
         return {
             key: '-3',
