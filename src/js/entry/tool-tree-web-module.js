@@ -132,11 +132,15 @@ if (__DEV__) {
                 render() {
                     return (
                         <Tree.WebIm
-                            // isIntegration
+                            isIntegration
                             onClickBtn={(...res) => {
                                 console.log(res);
                             }}
-                            selectedList={['35253091652191']}
+                            selectedList={[
+                                '35253091652191',
+                                { key: '268522070', type: 'dept' },
+                                { key: '35253091652776', type: 'group' }
+                            ]}
                             io={io}
                             // watermark={'邵康润'}
                             // expandType="1"
