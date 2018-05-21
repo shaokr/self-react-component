@@ -12,18 +12,7 @@ export default class extends Component {
         ],
         expandType: '1',
         max: 5,
-        isSelect: true,
-        bottomBtn: [
-            {
-                txt: '确定',
-                key: 'yes',
-                type: 'primary'
-            },
-            {
-                txt: '取消',
-                key: 'cancel'
-            }
-        ]
+        isSelect: true
     }
     // static getDerivedStateFromProps(nextProps, prevState){
     //     console.log(this);
@@ -68,7 +57,7 @@ export default class extends Component {
             selectedList = _.map(selectedList, (item, index) => {
                 if (!_.isObject(item)) {
                     item = {
-                        type: '0',
+                        type: 'user',
                         name: item,
                         key: item
                     };
@@ -80,7 +69,7 @@ export default class extends Component {
             });
             const grouping = _.groupBy(selectedList, 'type');
 
-            const userList = _.get(grouping, [0]);
+            const userList = _.get(grouping, ['user']);
 
             if (userList) {
                 const users = _.map(userList, ({ key }) => key);
@@ -89,6 +78,17 @@ export default class extends Component {
                     _.set(selectedList, pathList[item.key], item);
                 });
             }
+
+            const deptList = _.get(grouping, [1]);
+            if (deptList) {
+                const depts = _.map(deptList, ({ key }) => key);
+                const res = await api.getDeptInfo({ depts });
+                _.forEach(res, (item) => {
+                    _.set(selectedList, pathList[item.key], item);
+                });
+            }
+            
+
             return selectedList;
         }
         return [];
