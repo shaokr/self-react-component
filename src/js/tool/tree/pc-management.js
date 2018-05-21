@@ -1,5 +1,8 @@
 import _ from 'lodash';
 import Apiutil from 'Apiutil';
+import ZYcomponent from 'zy-component';
+import ZYtree from 'zy-tree';
+import Tree from './react-main';
 
 // 'Apiutil': 'host:js/Apiutil-util/1.0.0/util.min.js',
 // const cdnHost = '//192.168.1.251/fed/web-cdn';
@@ -204,7 +207,7 @@ export const initData = async (data = {}) => {
     };
 };
 
-export default {
+const api = {
     getDept,
     getUserList,
     getDeptList,
@@ -214,3 +217,14 @@ export default {
     onExpand,
     initData
 };
+
+export const Backstage = props => <Tree {...props} api={api} />;
+
+if (ZYcomponent) {
+    ZYcomponent.Tree.Backstage = Backstage;
+}
+if (ZYtree) {
+    ZYtree.Backstage = Backstage;
+}
+
+export default api;

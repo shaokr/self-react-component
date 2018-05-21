@@ -1,13 +1,19 @@
 import _ from 'lodash';
+import ZYcomponent from 'zy-component';
+import ZYtree from 'zy-tree';
+
+import Tree from './react-main';
+
 // import Tree from 'zy-tree';
-
-
 const typeUser = 'user'; // 用户
 const typeDept = 'dept'; // 部门
 const typeGroupUser = 'groupUser'; // 群用户
 const typeGroupList = 'groupList'; // 群列表
+const typeInternalGroup = 'internalGroup'; // 内部群
 const typeCloudUser = 'cloudUser'; // 外部联系人
 const typeCloudGroup = 'cloudGroup'; // 外部群
+
+const GROUP_TYPE_OUTTER = '101'; // 外部群
 
 const fpFilter = _.curryRight(_.filter, 2);
 const fpMap = _.curryRight(_.map, 2);
@@ -40,7 +46,7 @@ const getUserInfo = async function ({ users }) {
  * 获取部门信息
  */
 const getDeptInfo = async function ({ depts }) {
-    const GsInfo = await this.io.contacts.GoGetDeptInfo({
+    const GsInfo = await this.io.group.GoGetInfos({
         dept_ids: depts,
         mask: ['dept_name', 'dept_id']
     }).then((res) => {
@@ -51,6 +57,29 @@ const getDeptInfo = async function ({ depts }) {
                 icon: 'folder',
                 name: datas.dept_name,
                 itemType: typeDept
+            }));
+        }
+        return [];
+    });
+    return GsInfo;
+};
+/**
+ * 获取群详情
+ * @param {*} param0 
+ */
+const getGroupInfo = async function ({ groups }) {
+    const GsInfo = await this.io.contacts.GoGetDeptInfo({
+        group_ids: groups,
+        mask: ['session_id', 'name', 'icon']
+    }).then((res) => {
+        if (res.res.err_code === '0') {
+            // const data = res.depts[0].datas;
+            return _.map(res.groups, item => ({
+                key: item.session_id,
+                icon: 'folder',
+                avatar: item.avatar_url,
+                name: item.name,
+                itemType: item.type === GROUP_TYPE_OUTTER ? typeCloudGroup : typeInternalGroup
             }));
         }
         return [];
@@ -359,7 +388,7 @@ const getGroupList = async function ({ selectDept }) {
         key: item.group_id,
         name: item.group_name,
         avatar: item.avatar_url,
-        itemType: typeGroupList
+        itemType: item.mem_type === GROUP_TYPE_OUTTER ? typeCloudGroup : typeInternalGroup
     }));
     const { admin = [], join = [] } = _.groupBy(groupsList, tiem => (tiem.mem_type === '110' ? 'join' : 'admin'));
     const resAdmin = {
@@ -367,6 +396,7 @@ const getGroupList = async function ({ selectDept }) {
         name: '我管理的群',
         icon: 'folder',
         isSelected: false,
+        itemType: typeGroupList,
         isCheckedShow: selectDept,
         childrenNumber: admin.length,
         small: `(${admin.length})`,
@@ -377,6 +407,7 @@ const getGroupList = async function ({ selectDept }) {
         name: '我加入的群',
         icon: 'folder',
         isSelected: false,
+        itemType: typeGroupList,
         isCheckedShow: selectDept,
         childrenNumber: join.length,
         small: `(${join.length})`,
@@ -512,11 +543,23 @@ class Default {
         this.getDeptAndUserList = getDeptAndUserList.bind(this);
         this.getSearch = getSearch.bind(this);
         this.searchGroupUser = searchGroupUser.bind(this);
+        this.getGroupInfo = getGroupInfo.bind(this);
         this.getGroupUser = getGroupUser.bind(this);
         this.getGroupList = getGroupList.bind(this);
         this.onExpand = onExpand.bind(this);
         this.initData = initData.bind(this);
     }
+}
+
+export const WebIm = (props) => {
+    const { io } = props;
+    return <Tree {...props} api={new Default({ io })} />;
+};
+if (ZYcomponent) {
+    ZYcomponent.Tree.WebIm = WebIm;
+}
+if (ZYtree) {
+    ZYtree.WebIm = WebIm;
 }
 
 export default Default;
