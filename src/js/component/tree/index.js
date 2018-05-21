@@ -1195,7 +1195,7 @@ Tree.defaultProps = {
     bottomBtn: [ // 默认按钮设置
         {
             txt: '确定',
-            key: 'yes',
+            key: 'ok',
             type: 'primary'
         },
         {

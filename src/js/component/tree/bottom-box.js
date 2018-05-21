@@ -32,7 +32,7 @@ class Btn extends Component {
             return false;
         }
         if (isSelect) {
-            if (item.key === 'yes') {
+            if (item.key === 'ok') {
                 return true;
             }
         }
