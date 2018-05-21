@@ -34,20 +34,20 @@ const mainListObj = { // 载入文件的配置
     '_tool-tree-pc-management': { // 入口文件 签名
         // ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['react', 'mobx', 'mobx-react', 'Apiutil']
+        deps: ['react', 'mobx', 'mobx-react', 'Apiutil', '_component']
     },
     '_tool-tree-web-module': { // 入口文件 签名
-        // ToLoad: true, // 是否马上加载
+        ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['react', 'mobx', 'mobx-react', 'bridgeWs']
+        deps: ['react', 'mobx', 'mobx-react', 'bridgeWs', '_component']
     },
     '_component': { // 入口文件 签名
         // ToLoad: true, // 是否马上加载
          // 依赖库
-        deps: ['react', 'mobx', 'mobx-react', '_tool-tree-pc-management', '_tool-tree-web-module', 'antd']
+        deps: ['react', 'mobx', 'mobx-react', 'antd']
     },
     '_react-web-module': {
-        ToLoad: true, // 是否马上加载
+        // ToLoad: true, // 是否马上加载
         deps: ['react', 'mobx', 'mobx-react', 'bridgeWs']
     }
 };
