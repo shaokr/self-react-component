@@ -539,13 +539,17 @@ export default class Tree extends Component {
 
     // 获取主要tree外壳的样式
     get treeStyle() {
-        const {
+        let {
             zIndex
         } = this.props;
-        return {
-            display: this.visible ? '' : 'none',
-            zIndex: zIndex >> 0
+        const _style = {
+            display: this.visible ? '' : 'none'
         };
+        zIndex >>= 0;
+        if (zIndex) {
+            _style.zIndex = zIndex;
+        }
+        return _style;
     }
     // 获取主要tree外壳的class属性
     get treeClass() {
@@ -1125,11 +1129,24 @@ export default class Tree extends Component {
         const selectedData = this.selectedData; // 获取选中项目的数据
         this.oldSelectedData = selectedData; // 保持为老选中项目数据
         if (isSoLongAsTreeList) {
-            return <TreeList onScroll={this.onScroll} tree={this.state.tree} className={className} store={store} action={action} />;
+            return (
+                <TreeList
+                    onMouseDown={this.props.onMouseDown}
+                    onScroll={this.onScroll}
+                    tree={this.state.tree}
+                    className={className}
+                    store={store}
+                    action={action}
+                />
+            );
         }
         return (
-            <div className={this.treeClass} style={this.treeStyle} onScroll={this.onScroll}>
-                
+            <div
+                className={this.treeClass}
+                style={this.treeStyle}
+                onScroll={this.onScroll}
+                onMouseDown={this.props.onMouseDown}
+            >
                 {
                     this.visible &&
                     <div className="tree-main">
