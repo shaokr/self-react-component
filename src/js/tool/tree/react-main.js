@@ -25,35 +25,36 @@ export default class extends Component {
         this.state = {
             init: false,
             selectedList: [],
-            tree: [],
+            tree: props.tree,
             uc: 1
         };
-        this.init(props, true);
+        this.init({}, props);
     }
     componentWillReceiveProps(nextProps) {
-        const { props } = this;
-        this.init(nextProps, (
-            !_.eq(nextProps.selectedList, props.selectedList) ||
-            !_.eq(nextProps.init, props.init)
-        ));
+        this.init(this.props, nextProps);
     }
-    init = (props, load) => {
-        if ((props.show || props.visible) && load) {
-            Promise.all([
-                this.treeProcess(),
-                this.selectedListProcess(props)
-            ]).then(([tree, selectedList]) => {
-                this.isGetCloudGroup
-                this.setState({
-                    selectedList,
-                    tree,
-                    uc: this.state.uc + 1
-                });
-            });
+    init = async (props, nextProps = {}) => {
+        if (nextProps.show || nextProps.visible) {
+            const { state } = this;
+            if (nextProps.tree && !_.isEqual(nextProps.tree, props.tree)) {
+                state.tree = nextProps.tree;
+                state.uc++;
+            } else if (!_.isEqual(nextProps.init, props.init)) {
+                const tree = await this.treeProcess(nextProps);
+                state.tree = tree;
+                state.uc++;
+            }
+
+            if (!_.isEqual(nextProps.selectedList, props.selectedList)) {
+                const selectedList = await this.selectedListProcess(nextProps);
+                state.selectedList = selectedList;
+            }
+
+            this.setState(state);
         }
     }
-    treeProcess = async () => {
-        const { api, init } = this.props;
+    treeProcess = async (props) => {
+        const { api, init } = props;
         return api.initData(init);
     }
     selectedListProcess = async (props) => {
@@ -110,11 +111,15 @@ export default class extends Component {
     get newProps() {
         const { api, onSearchChange, onExpand } = this.props;
         const { selectedList, tree, uc } = this.state;
+        let _onSearchChange = api.getSearch;
+        if (_.isFunction(onSearchChange)) {
+            _onSearchChange = (val, ck) => onSearchChange(val, ck, api);
+        }
         return {
             ...this.props,
             selectedList,
             tree,
-            onSearchChange: onSearchChange || api.getSearch,
+            onSearchChange: _onSearchChange,
             onExpand: onExpand || api.onExpand,
             uc
         };
