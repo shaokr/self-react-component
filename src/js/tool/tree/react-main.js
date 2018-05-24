@@ -36,9 +36,11 @@ export default class extends Component {
     init = async (props, nextProps = {}) => {
         if (nextProps.show || nextProps.visible) {
             const { state } = this;
-            if (nextProps.tree && !_.isEqual(nextProps.tree, props.tree)) {
-                state.tree = nextProps.tree;
-                state.uc++;
+            if (nextProps.tree) {
+                if (!_.isEqual(nextProps.tree, props.tree)) {
+                    state.tree = nextProps.tree;
+                    state.uc++;
+                }
             } else if (!_.isEqual(nextProps.init, props.init)) {
                 const tree = await this.treeProcess(nextProps);
                 state.tree = tree;
