@@ -254,7 +254,7 @@ const getSearch = function (params, callback) {
             };
         }
         if (_data.keyword) {
-            const res = await this.io.search.GoSearchUser(_data);
+            const res = await this.io.search.GoSearchContacts(_data);
             if (res.err_code === '0') {
                 let list = [];
                 const hits = _.get(res, ['datas', 'hits']);
