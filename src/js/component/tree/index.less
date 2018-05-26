@@ -5,6 +5,7 @@
 // 头像
 // .tree-main{
 .@{px-tree} {
+    
     &--loading {
         width: @u*22;
         .@{px-loading}--box{
@@ -30,8 +31,6 @@
 // 主框
 .tree-main{
     *{
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
     }
     line-height: 1;
@@ -226,6 +225,8 @@
 // 选中人样式
 .tree-selected{
     &-ul{
+        padding: 0;
+        margin: 0;
         >li{
             display: flex;
             align-items: center;
@@ -351,6 +352,7 @@
             p{
                 .slh();
                 line-height: 1.2;
+                margin: 0;
             }
             small{
                 margin:0 @u*4;
