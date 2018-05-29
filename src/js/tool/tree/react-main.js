@@ -37,21 +37,21 @@ export default class extends Component {
         if (nextProps.show || nextProps.visible) {
             const { state } = this;
             if (nextProps.tree) {
-                if (!_.isEqual(nextProps.tree, props.tree)) {
+                if (!state.tree || !_.isEqual(nextProps.tree, props.tree)) {
                     state.tree = nextProps.tree;
                     state.uc++;
                 }
-            } else if (!_.isEqual(nextProps.init, props.init)) {
+            } else if (!state.tree || !_.isEqual(nextProps.init, props.init)) {
                 const tree = await this.treeProcess(nextProps);
                 state.tree = tree;
                 state.uc++;
             }
 
-            if (!_.isEqual(nextProps.selectedList, props.selectedList)) {
+            if (!_.size(state.selectedList) || !_.isEqual(nextProps.selectedList, props.selectedList)) {
                 const selectedList = await this.selectedListProcess(nextProps);
                 state.selectedList = selectedList;
+                state.uc++;
             }
-
             this.setState(state);
         }
     }
@@ -127,8 +127,9 @@ export default class extends Component {
         };
     }
     render() {
+        const { newProps } = this;
         return (
-            <Tree {...this.newProps} />
+            <Tree {...newProps} />
         );
     }
 }

@@ -614,8 +614,10 @@ export default class Tree extends Component {
             return [_key, { isDel: true, ...item, path: [item] }];
         });
         selectedList = new Map(selectedList);
+
         // 获取数据
         const { list, newTree } = getData({ data: tree, pattern: type, selectedList, disableKeys, disableChangeKeys: this.disableChangeKeys });
+        // console.log(list, newTree);
         const selected = this.getSelected(list, selectedList);
         // _.forEach(disableKeys, item => selected.delete(item));
         const state = {
@@ -1131,6 +1133,7 @@ export default class Tree extends Component {
         if (isSoLongAsTreeList) {
             return (
                 <TreeList
+                    key={this.props.uc}
                     onMouseDown={this.props.onMouseDown}
                     onScroll={this.onScroll}
                     tree={this.state.tree}
@@ -1157,6 +1160,7 @@ export default class Tree extends Component {
                                 <Watermark text={watermark} />
 
                                 <TreeLeft
+                                    key={this.props.uc}
                                     store={store} // 共用的一些数据
                                     action={action} // 所有操作
 
