@@ -241,11 +241,7 @@
                 height: @u*22;
                 margin-right: @u*10;
             }
-            >p{
-                .slh();
-                flex:1;
-                line-height: 1.5;
-            }
+            
             >span{
                 cursor: pointer;
                 transition: 0.2s;
@@ -260,6 +256,20 @@
     }
     &-front{
         margin-right: @u*5;
+    }
+    &-name{
+        display: flex;
+        align-items: center;
+        flex:1;
+        >p{
+            .slh();
+            line-height: 1.2;
+        }
+        >small {
+            margin:0 @u*4;
+            color: @c3;
+            display: inherit
+        }
     }
     
 }
@@ -348,6 +358,7 @@
         &-name{
             flex: 1;
             display: flex;
+            align-items: center;
             overflow: hidden;
             p{
                 .slh();
@@ -357,6 +368,7 @@
             small{
                 margin:0 @u*4;
                 color: @c3;
+                display: inherit
             }
         }
     }

@@ -13,6 +13,14 @@ const fpFilter = _.curryRight(_.filter, 2);
 const fpMap = _.curryRight(_.map, 2);
 const getCompanyName = _.curryRight(_.get, 3)('')(['corp_list', 0, 'name']);
 
+// 内部#459EF2  #E7F4FF  
+// 部门#56A24A #DFFFDA 
+// 外部#E88827 #FFF0DA  
+// NEW#EF562A #FFF0E6
+
+const SmallGe = ({ bgc, color, name }) => <span style={{ background: bgc, color, padding: '1px 5px', borderRadius: '100px', lineHeight: 1.3 }}>{name}</span>;
+const SmallCloudUser = ({ name = '联系人' }) => <SmallGe bgc="#FFF0DA" color="#E88827" name={name} />;
+const SmallCloudGroup = ({ name = '外部' }) => <SmallGe bgc="#FFF0DA" color="#E88827" name={name} />;
 /**
  * 获取用户信息
  */
@@ -219,7 +227,6 @@ const getDeptAndUserList = async function (data, ck) {
     }
     return RData;
 };
-
 /**
  * 获取外部联系人
  */
@@ -231,7 +238,8 @@ const getCloudUserList = async function () {
             avatar: item.avatar_url,
             name: item.name,
             companyName: getCompanyName(item),
-            itemType: typeCloudUser
+            itemType: typeCloudUser,
+            small: <SmallCloudUser />
         }));
     });
     return GsCloudUserList;
@@ -349,8 +357,8 @@ const getGroupUser = async function ({ key, type = typeGroupUser }, ck) {
 };
 /**
  * 获取群列表
- * @param {*} param0 
- * @param {*} ck 
+ * @param {*} param0
+ * @param {*} ck
  */
 const getGroupList = async function ({ selectDept }) {
     const res = await this.io.group.GoGetList();
@@ -359,9 +367,12 @@ const getGroupList = async function ({ selectDept }) {
         key: item.group_id,
         name: item.group_name,
         avatar: item.avatar_url,
-        itemType: typeGroupList
+        itemType: item.group_type === GROUP_TYPE_OUTTER ? typeCloudGroup : typeInternalGroup,
+        small: item.group_type === GROUP_TYPE_OUTTER ? <SmallCloudGroup /> : ''
     }));
-    const { admin = [], join = [] } = _.groupBy(groupsList, tiem => (tiem.mem_type === '110' ? 'join' : 'admin'));
+
+    const { admin = [], join = [] } = _.groupBy(groupsList, item => (item.mem_type === '110' ? 'join' : 'admin'));
+
     const resAdmin = {
         key: '我管理的群',
         name: '我管理的群',
