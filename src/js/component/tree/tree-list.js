@@ -68,6 +68,7 @@ const Front = ({ data, onClick, dataState, item }) => (
         <Avatar loading icon={getFrontIcon(data.icon, dataState)} name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} />
     </div>
     );
+
 // 名称
 const Name = ({ name, small }) => (
     <div className="tree-children-info-name">

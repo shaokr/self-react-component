@@ -15,6 +15,10 @@ class Li extends Component {
     shouldComponentUpdate() {
         return false;
     }
+    get small() {
+        const key = _.get(this, ['props', 'data', 'key']);
+        return _.get(this, ['props', 'store', 'list', key, 'self', 'small']);
+    }
     render() {
         const { data, action } = this.props;
 		// 是否可删除
@@ -23,10 +27,10 @@ class Li extends Component {
                 <div className="tree-selected-front">
                     <Avatar name={data.name} avatar={data.avatar} dataKey={data.key} color={data.color} icon={data.icon} />
                 </div>
-                <p>
-                    {data.name}
-                    <small>{data.small}</small>
-                </p>
+                <div className="tree-selected-name">
+                    <p>{data.name}</p>
+                    <small>{this.small}</small>
+                </div>
                 <Checked show={data.isDel} type="-1" onClick={() => action.hasSelectedItem(data)} />
             </li>
         );
@@ -37,7 +41,7 @@ class Li extends Component {
 export default ({ data, store, action }) => (
     <div className="scroll">
         <ul className="tree-selected-ul">
-            { _.map(data, item => <Li key={item.key} data={item} action={action} />) }
+            { _.map(data, item => <Li key={item.key} data={item} action={action} store={store} />) }
         </ul>
     </div>
 );
