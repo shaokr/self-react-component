@@ -6,8 +6,11 @@ const typeUser = 'user'; // 用户
 const typeDept = 'dept'; // 部门
 const typeGroupUser = 'groupUser'; // 群用户
 const typeGroupList = 'groupList'; // 群列表
+const typeInternalGroup = 'internalGroup'; // 内部群
 const typeCloudUser = 'cloudUser'; // 外部联系人
 const typeCloudGroup = 'cloudGroup'; // 外部群
+
+const GROUP_TYPE_OUTTER = '101'; // 外部群
 
 const fpFilter = _.curryRight(_.filter, 2);
 const fpMap = _.curryRight(_.map, 2);
