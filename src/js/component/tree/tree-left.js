@@ -26,9 +26,9 @@ export default class extends Component {
                     {/* <p>{treeTitle}</p> */}
                 </div>
 
-                <Loading visible={this.isLoadShow} tip="数据加载中">
+                {/* <Loading visible={this.isLoadShow} tip="数据加载中"> */}
                     <TreeList tree={tree} store={store} action={action} />
-                </Loading>
+                {/* </Loading> */}
 
             </div>
         );

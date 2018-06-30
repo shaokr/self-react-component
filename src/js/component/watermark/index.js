@@ -32,33 +32,35 @@ export default class Watermark extends Component {
      * 设置水印
      */
     setWatermark() {
-        const fontsize = 14;
-        const { text } = this;
-        const width = this.crw.width;
-        const height = this.crw.height;
-        const crw = this.crw;
+        if (this.props.text) {
+            const fontsize = 14;
+            const { text } = this;
+            const width = this.crw.width;
+            const height = this.crw.height;
+            const crw = this.crw;
 
-        const cw = document.createElement('canvas');
-        const cwWidth = 70 * text.length;
-        cw.width = cwWidth;
-        cw.height = cwWidth;
-        const ctx = cw.getContext('2d');
-        
-        ctx.clearRect(0, 0, cwWidth, cwWidth);
-        ctx.rotate((-30 * Math.PI) / 180);
-        ctx.font = `${fontsize}px microsoft yahei`;
-        // ctx.textAlign = 'center';
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        _.forEach(text, (item, index) => {
-            ctx.fillText(item, 0, (cwWidth / text.length) * (index + 1));
-        });
-        ctx.rotate((30 * Math.PI) / 180);
+            const cw = document.createElement('canvas');
+            const cwWidth = 70 * text.length;
+            cw.width = cwWidth;
+            cw.height = cwWidth;
+            const ctx = cw.getContext('2d');
 
-        const ctxr = crw.getContext('2d');
-        ctxr.clearRect(0, 0, width, height);
-        const pat = ctxr.createPattern(cw, 'repeat');
-        ctxr.fillStyle = pat;
-        ctxr.fillRect(0, 0, width, height);
+            ctx.clearRect(0, 0, cwWidth, cwWidth);
+            ctx.rotate((-30 * Math.PI) / 180);
+            ctx.font = `${fontsize}px microsoft yahei`;
+            // ctx.textAlign = 'center';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            _.forEach(text, (item, index) => {
+                ctx.fillText(item, 0, (cwWidth / text.length) * (index + 1));
+            });
+            ctx.rotate((30 * Math.PI) / 180);
+
+            const ctxr = crw.getContext('2d');
+            ctxr.clearRect(0, 0, width, height);
+            const pat = ctxr.createPattern(cw, 'repeat');
+            ctxr.fillStyle = pat;
+            ctxr.fillRect(0, 0, width, height);
+        }
     }
     get text() {
         const { text } = this.props;
@@ -95,10 +97,12 @@ export default class Watermark extends Component {
         ]);
     }
     render() {
+        if (!this.props.text) return null;
         return <canvas className={this.className} style={this.style} width={this.width} height={this.height} ref={(d) => { this.crw = d; }} />;
     }
 }
 
 Watermark.defaultProps = {
-    className: ''
+    className: '',
+    text: ''
 };

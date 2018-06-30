@@ -26,22 +26,24 @@ class Btn extends Component {
         this.props.onClick(item);
     }
     // 获取样式类型
-    get type() {
+    get disabled() {
         const { isSelect, isExistSelected, item } = this.props;
         if (isExistSelected) {
-            return item.type;
+            return false;
         }
         if (isSelect) {
-            if (item.key === 'yes') {
-                return 'sidabled';
+            if (item.key === 'ok') {
+                return true;
             }
         }
-        return item.type;
+        return false;
     }
     get buttonProps() {
+        const { disabled } = this;
         const { item } = this.props;
         const { key } = item;
         return {
+            disabled,
             ...item,
             onClick: this.onClick
         };

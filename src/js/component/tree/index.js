@@ -10,12 +10,13 @@ import _ from 'lodash';
 import Icon from 'component/icon';
 import message from 'component/message';
 import Watermark from 'component/watermark';
+import Loading from 'component/loading';
+import superDom from '../../component/super-dom';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
 import BottomBox from './bottom-box';
 import TreeList from './tree-list';
-
 
 import './index.less';
 // 头部
@@ -491,6 +492,7 @@ function setUc(list, key, isCache = {}) {
  * ----事件---
  * onCheck //
  */
+@superDom
 export default class Tree extends Component {
     constructor(props) {
         super(props);
@@ -537,14 +539,17 @@ export default class Tree extends Component {
 
     // 获取主要tree外壳的样式
     get treeStyle() {
-        const {
-            show,
+        let {
             zIndex
         } = this.props;
-        return {
-            display: show ? '' : 'none',
-            zIndex: zIndex >> 0
+        const _style = {
+            display: this.visible ? '' : 'none'
         };
+        zIndex >>= 0;
+        if (zIndex) {
+            _style.zIndex = zIndex;
+        }
+        return _style;
     }
     // 获取主要tree外壳的class属性
     get treeClass() {
@@ -609,8 +614,10 @@ export default class Tree extends Component {
             return [_key, { isDel: true, ...item, path: [item] }];
         });
         selectedList = new Map(selectedList);
+
         // 获取数据
         const { list, newTree } = getData({ data: tree, pattern: type, selectedList, disableKeys, disableChangeKeys: this.disableChangeKeys });
+        // console.log(list, newTree);
         const selected = this.getSelected(list, selectedList);
         // _.forEach(disableKeys, item => selected.delete(item));
         const state = {
@@ -943,7 +950,9 @@ export default class Tree extends Component {
 	// 触发删除
     _onDelSelected(key) {
     }
-
+    onScroll(e) {
+        e.stopPropagation();
+    }
     Handle() {
     }
     // ---------选中相关------------
@@ -1081,13 +1090,24 @@ export default class Tree extends Component {
         });
         return num;
     }
-
+    get isLoadShow() {
+        const { tree } = this.state;
+        const { loading } = this.props;
+        return loading && !_.size(tree);
+    }
+    get visible() {
+        const {
+            show, // 显示状态
+            visible
+        } = this.props;
+        return visible && show;
+    }
     render() {
         const { action, store } = this;
         const {
             isSelect,
             isSoLongAsTreeList,
-            show, // 显示状态
+            // show, // 显示状态
             // 标题设置
             title,
             onClose, // 关闭按钮
@@ -1111,51 +1131,68 @@ export default class Tree extends Component {
         const selectedData = this.selectedData; // 获取选中项目的数据
         this.oldSelectedData = selectedData; // 保持为老选中项目数据
         if (isSoLongAsTreeList) {
-            return <TreeList tree={this.state.tree} className={className} store={store} action={action} />;
+            return (
+                <TreeList
+                    key={this.props.uc}
+                    onMouseDown={this.props.onMouseDown}
+                    onScroll={this.onScroll}
+                    tree={this.state.tree}
+                    className={className}
+                    store={store}
+                    action={action}
+                />
+            );
         }
         return (
-            <div className={this.treeClass} style={this.treeStyle}>
+            <div
+                className={this.treeClass}
+                style={this.treeStyle}
+                onScroll={this.onScroll}
+                onMouseDown={this.props.onMouseDown}
+            >
                 {
-                    show &&
+                    this.visible &&
                     <div className="tree-main">
 
                         <Header title={title} onClick={action.onClose} />
+                        <Loading visible={this.isLoadShow} tip="数据加载中">
+                            <div className="tree-box" >
+                                <Watermark text={watermark} />
 
-                        <div className="tree-box" >
-                            <Watermark text={watermark} />
+                                <TreeLeft
+                                    key={this.props.uc}
+                                    store={store} // 共用的一些数据
+                                    action={action} // 所有操作
 
-                            <TreeLeft
-                                store={store} // 共用的一些数据
-                                action={action} // 所有操作
-
-                                searchShow={searchShow}
-                                searchPlaceholder={searchPlaceholder}
-                                loading={loading}
-                              // treeTitle={treeTitle}
-                                tree={this.state.tree} // 树
-                            />
-
-                            <TreeRight
-                                store={store} // 共用的一些数据
-                                action={action} // 所有操作
-
-                                max={max} // 最大
-                                selectedTitle={selectedTitle} // 标题
-                                selected={this.state.selected} // 当前选中
-                                isIntegration={isIntegration} // 是否整合
-                                selectedData={selectedData}
-                            >
-                                <BottomBox
-                                    bottomBtn={bottomBtn}
-                                    onClick={action.onClickBtn}
-                                    isSelect={isSelect}
-                                    isExistSelected={!!this.state.selected.size}
+                                    searchShow={searchShow}
+                                    searchPlaceholder={searchPlaceholder}
+                                    loading={loading}
+                                // treeTitle={treeTitle}
+                                    tree={this.state.tree} // 树
                                 />
-                            </TreeRight>
-                        </div>
 
+                                <TreeRight
+                                    store={store} // 共用的一些数据
+                                    action={action} // 所有操作
+
+                                    max={max} // 最大
+                                    selectedTitle={selectedTitle} // 标题
+                                    selected={this.state.selected} // 当前选中
+                                    isIntegration={isIntegration} // 是否整合
+                                    selectedData={selectedData}
+                                >
+                                    <BottomBox
+                                        bottomBtn={bottomBtn}
+                                        onClick={action.onClickBtn}
+                                        isSelect={isSelect}
+                                        isExistSelected={!!this.state.selected.size}
+                                    />
+                                </TreeRight>
+                            </div>
+                        </Loading>
                     </div>
                 }
+                
             </div>
         );
     }
@@ -1165,6 +1202,7 @@ Tree.defaultProps = {
     type: 'check', // 类型 check
     expandType: '2', // 可展开项展开类型
     show: true, // 是否显示
+    visible: true,
     isAlert: true, // 是否以弹窗的显示显示
     isSoLongAsTreeList: false, // 是否只需要列表树
     isSelect: false, // 是否必须有选项
@@ -1180,8 +1218,12 @@ Tree.defaultProps = {
     bottomBtn: [ // 默认按钮设置
         {
             txt: '确定',
-            key: 'yes',
+            key: 'ok',
             type: 'primary'
+        },
+        {
+            txt: '取消',
+            key: 'cancel'
         }
     ],
     className: '',
