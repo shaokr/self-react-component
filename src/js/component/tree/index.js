@@ -671,13 +671,17 @@ export default class Tree extends Component {
     } else {
       type = 'check';
     }
-    selectedList = _.map(selectedList, item => {
-      const _key = item.key.toString();
-      if (!_.isUndefined(item.isDel) && !item.isDel) {
-        this.disableChangeKeys.push(_key);
-      }
-      return [_key, { isDel: true, ...item, path: [item] }];
-    });
+    selectedList = _.compact(
+      _.map(selectedList, item => {
+        const _key = _.get(item, 'key');
+        if (_.isUndefined(key)) return;
+        _key = _key.toString();
+        if (!_.isUndefined(item.isDel) && !item.isDel) {
+          this.disableChangeKeys.push(_key);
+        }
+        return [_key, { isDel: true, ...item, path: [item] }];
+      })
+    );
     selectedList = new Map(selectedList);
 
     // 获取数据
