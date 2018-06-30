@@ -673,7 +673,7 @@ export default class Tree extends Component {
     }
     selectedList = _.compact(
       _.map(selectedList, item => {
-        const _key = _.get(item, 'key');
+        let _key = _.get(item, 'key');
         if (_.isUndefined(key)) return;
         _key = _key.toString();
         if (!_.isUndefined(item.isDel) && !item.isDel) {
