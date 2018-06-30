@@ -75,35 +75,28 @@ class Children {
   // tree的初始状态
   stateInit(item, data) {
     const { state = {} } = data || {};
+    // 是否包含子类
+    const isChildren = !!_.get(
+      item,
+      'isChildren',
+      _.size(_.get(item, 'children'))
+    );
 
-    const _isChildren = (() => {
-      const { isChildren, children } = item;
-      if (typeof isChildren === 'undefined') {
-        return !!(children && children.length);
-      }
-      return !!isChildren;
-    })();
+    // 是否可以展开
+    const isExpand = !!_.get(item, 'isExpand', isChildren);
 
-    const _isExpand = (() => {
-      const { isExpand } = item;
-      if (typeof isExpand === 'undefined') {
-        return _isChildren;
-      }
-      return !!isExpand;
-    })();
-
-    let _expand = state.expand;
-    if (typeof state.expand === 'undefined') {
-      _expand = !!item.expand;
-    }
-
-    const _isCheckedShow = !!item.isCheckedShow;
-
+    // 是否默认展开
+    let expand = !!_.get(state, 'expand', item.expand);
+    // 是否显示勾选框
+    const isCheckedShow = !!_.get(item, 'isCheckedShow');
+    // 点击可展开树节点触发事件类型
+    const expandType = _.get(item, 'expandType');
     return {
-      isChildren: _isChildren, // 是否包含子类
-      isExpand: _isExpand, // 是否可以展开
-      expand: _expand, // 展开状态
-      isCheckedShow: _isCheckedShow // 是否显示勾选框
+      isChildren,
+      isExpand,
+      expand,
+      isCheckedShow,
+      expandType
     };
   }
   // 多选模式
@@ -549,6 +542,39 @@ function setUc(list, key, isCache = {}) {
  */
 @superDom
 export default class Tree extends Component {
+  static defaultProps = {
+    type: 'check', // 类型 check
+    expandType: '2', // 点击可展开树节点触发事件类型
+    show: true, // 是否显示
+    visible: true,
+    isAlert: true, // 是否以弹窗的显示显示
+    isSoLongAsTreeList: false, // 是否只需要列表树
+    isSelect: false, // 是否必须有选项
+    zIndex: 3, // 浮动样式的层级
+    // 标题设置
+    title: '', // 默认标题
+    // 搜索设置
+    searchShow: true, // 是否显示搜索项
+    searchPlaceholder: '搜索', // 搜索框的Placeholder
+    // isIntegration = false,
+    // treeTitle: '选择',
+    selectedTitle: '已选', // 右侧选中的说明
+    bottomBtn: [
+      // 默认按钮设置
+      {
+        txt: '确定',
+        key: 'ok',
+        type: 'primary'
+      },
+      {
+        txt: '取消',
+        key: 'cancel'
+      }
+    ],
+    className: '',
+    watermark: '', // 水印
+    loading: true // 无数据显示设置加载中
+  };
   constructor(props) {
     super(props);
     this.initState = this.initState.bind(this);
@@ -674,7 +700,7 @@ export default class Tree extends Component {
     selectedList = _.compact(
       _.map(selectedList, item => {
         let _key = _.get(item, 'key');
-        if (_.isUndefined(key)) return;
+        if (_.isUndefined(_key)) return;
         _key = _key.toString();
         if (!_.isUndefined(item.isDel) && !item.isDel) {
           this.disableChangeKeys.push(_key);
@@ -1285,37 +1311,3 @@ export default class Tree extends Component {
     );
   }
 }
-
-Tree.defaultProps = {
-  type: 'check', // 类型 check
-  expandType: '2', // 可展开项展开类型
-  show: true, // 是否显示
-  visible: true,
-  isAlert: true, // 是否以弹窗的显示显示
-  isSoLongAsTreeList: false, // 是否只需要列表树
-  isSelect: false, // 是否必须有选项
-  zIndex: 3, // 浮动样式的层级
-  // 标题设置
-  title: '', // 默认标题
-  // 搜索设置
-  searchShow: true, // 是否显示搜索项
-  searchPlaceholder: '搜索', // 搜索框的Placeholder
-  // isIntegration = false,
-  // treeTitle: '选择',
-  selectedTitle: '已选', // 右侧选中的说明
-  bottomBtn: [
-    // 默认按钮设置
-    {
-      txt: '确定',
-      key: 'ok',
-      type: 'primary'
-    },
-    {
-      txt: '取消',
-      key: 'cancel'
-    }
-  ],
-  className: '',
-  watermark: '', // 水印
-  loading: true // 无数据显示设置加载中
-};

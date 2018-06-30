@@ -173,7 +173,10 @@ class TreeList extends Component {
   onClickItem(e) {
     const { store } = this.props;
     const { item } = this;
-    if (store.expandType === '1' && item._state.isExpand) {
+    const expandType =
+      _.get(item, '_state.expandType') || _.get(store, 'expandType');
+    const isExpand = _.get(item, '_state.isExpand');
+    if (expandType === '1' && isExpand) {
       this.onExpand(e);
     } else {
       this.onCheck(e);
