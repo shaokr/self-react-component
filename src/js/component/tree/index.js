@@ -11,6 +11,7 @@ import message from 'component/message';
 import Watermark from 'component/watermark';
 import Loading from 'component/loading';
 import superDom from '../../component/super-dom';
+import lang from './lang';
 
 import TreeLeft from './tree-left';
 import TreeRight from './tree-right';
@@ -509,7 +510,6 @@ function setUc(list, key, isCache = {}) {
   }
   return list;
 }
-
 /**
  * props：
  * 基本设置-----------------
@@ -555,19 +555,19 @@ export default class Tree extends Component {
     title: '', // 默认标题
     // 搜索设置
     searchShow: true, // 是否显示搜索项
-    searchPlaceholder: '搜索', // 搜索框的Placeholder
+    searchPlaceholder: this.getLangProps('searchPlaceholder'), // 搜索框的Placeholder
     // isIntegration = false,
     // treeTitle: '选择',
-    selectedTitle: '已选', // 右侧选中的说明
+    selectedTitle: this.getLangProps('selectedTitle'), // 右侧选中的说明
     bottomBtn: [
       // 默认按钮设置
       {
-        txt: '确定',
+        txt: this.getLangProps('bottomBtnOk'),
         key: 'ok',
         type: 'primary'
       },
       {
-        txt: '取消',
+        txt: this.getLangProps('bottomBtnCancel'),
         key: 'cancel'
       }
     ],
@@ -575,6 +575,10 @@ export default class Tree extends Component {
     watermark: '', // 水印
     loading: true // 无数据显示设置加载中
   };
+  getLangKey = (key1, key2 = key1) =>
+    _.get(this, ['props', 'lang', key1]) || _.get(lang, key2);
+  getLangProps = (key1, key2 = key1, key3 = key2) =>
+    _.get(this, ['props', key1]) || this.getLangKey(this, key2, key3);
   constructor(props) {
     super(props);
     this.initState = this.initState.bind(this);
@@ -910,7 +914,7 @@ export default class Tree extends Component {
     if (_.isFunction(ck)) {
       ck(max);
     } else {
-      let set = `超过可选最大值(${max})`;
+      let set = `${this.getLangKey('maxPrompt')}(${max})`;
       if (_.isString(ck)) {
         set = ck;
       }
@@ -1272,7 +1276,10 @@ export default class Tree extends Component {
         {this.visible && (
           <div className="tree-main">
             <Header title={title} onClick={action.onClose} />
-            <Loading visible={this.isLoadShow} tip="数据加载中">
+            <Loading
+              visible={this.isLoadShow}
+              tip={this.getLangKey('loadingText')}
+            >
               <div className="tree-box">
                 <Watermark text={watermark} />
 
