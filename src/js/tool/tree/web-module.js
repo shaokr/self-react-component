@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import ZYcomponent from 'zy-component';
 import ZYtree from 'zy-tree';
+import lang from './web-pc-lang';
 
 import Tree from './react-main';
 
@@ -13,6 +14,10 @@ const typeInternalGroup = 'internalGroup'; // 内部群
 const typeCloudUser = 'cloudUser'; // 外部联系人
 const typeCloudGroup = 'cloudGroup'; // 外部群
 
+const GROUP_MEMBER_TYPE_HOST = '104'; // 群主
+const GROUP_MEMBER_TYPE_MANAGER = '109'; // 群管理
+const GROUP_MEMBER_TYPE_NORMAL = '110'; // 普通成员
+const GROUP_MEMBER_TYPE_ADMIN = '1'; // 有管理权限, 包括群管理 & 群主
 const GROUP_TYPE_OUTTER = '101'; // 外部群
 
 const fpFilter = _.curryRight(_.filter, 2);
@@ -23,7 +28,9 @@ const getCompanyName = _.curryRight(_.get, 3)('')(['corp_list', 0, 'name']);
 // 部门#56A24A #DFFFDA
 // 外部#E88827 #FFF0DA
 // NEW#EF562A #FFF0E6
-
+/**
+ * 标签样式
+ */
 const SmallGe = ({ bgc, color, name }) => (
   <span
     style={{
@@ -37,10 +44,10 @@ const SmallGe = ({ bgc, color, name }) => (
     {name}
   </span>
 );
-const SmallCloudUser = ({ name = '联系人' }) => (
+const SmallCloudUser = ({ name = lang.smallCloudUser }) => (
   <SmallGe bgc="#FFF0DA" color="#E88827" name={name} />
 );
-const SmallCloudGroup = ({ name = '外部' }) => (
+const SmallCloudGroup = ({ name = lang.smallCloudGroup }) => (
   <SmallGe bgc="#FFF0DA" color="#E88827" name={name} />
 );
 /**
@@ -380,7 +387,7 @@ const searchGroupUser = async function name({ key, keyword, filter }) {
   }));
   const children = _.flow([_fpFilter, _fpMap])(userList);
   const Rdata = {
-    title: children.length ? '群成员' : '暂无搜索结果',
+    title: children.length ? lang.searchGroupUser : lang.searchNull, // '群成员' : '暂无搜索结果'
     children
   };
   return [Rdata];
@@ -431,12 +438,11 @@ const getGroupList = async function({ selectDept, isGetCloud }) {
 
   const { admin = [], join = [] } = _.groupBy(
     groupsList,
-    item => (item.mem_type === '110' ? 'join' : 'admin')
+    item => (item.mem_type === GROUP_MEMBER_TYPE_NORMAL ? 'join' : 'admin')
   );
-
   const resAdmin = {
-    key: '我管理的群',
-    name: '我管理的群',
+    key: 'myJoinGroup', // '我管理的群',
+    name: lang.myJoinGroup, // '我管理的群',
     icon: 'folder',
     isSelected: false,
     itemType: typeGroupList,
@@ -446,8 +452,8 @@ const getGroupList = async function({ selectDept, isGetCloud }) {
     children: admin
   };
   const reqJoin = {
-    key: '我加入的群',
-    name: '我加入的群',
+    key: 'myJoinGroup', // '我加入的群',
+    name: lang.myJoinGroup, // '我加入的群',
     icon: 'folder',
     isSelected: false,
     itemType: typeGroupList,
@@ -502,7 +508,7 @@ const initData = async function(data = {}) {
     const list = await this.getSelfDept({ type, selectDept });
     return {
       key: '-1',
-      name: '我的部门',
+      name: lang.myDept, // '我的部门',
       isChildren: true,
       isSelected: false,
       selectDept,
@@ -538,7 +544,7 @@ const initData = async function(data = {}) {
     const childrenNumber = _.sumBy(list, 'childrenNumber');
     return {
       key: '-3',
-      name: '我的群聊',
+      name: lang.myGroup, // '我的群聊',
       isChildren: true,
       isCheckedShow: selectDept,
       isSelected: false,
@@ -571,7 +577,8 @@ const initData = async function(data = {}) {
   };
 };
 class Default {
-  constructor({ io }) {
+  constructor({ io, lang }) {
+    lang.data = lang;
     this.io = io;
     this.getUserInfo = getUserInfo.bind(this);
     this.getDeptInfo = getDeptInfo.bind(this);
@@ -595,8 +602,8 @@ class Default {
 }
 
 export const WebIm = props => {
-  const { io } = props;
-  return <Tree {...props} api={new Default({ io })} />;
+  const { io, lang = {}, ..._props } = props;
+  return <Tree {..._props} api={new Default({ io, lang })} />;
 };
 if (ZYcomponent) {
   ZYcomponent.Tree.WebIm = WebIm;
