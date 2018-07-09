@@ -4,8 +4,10 @@
 import { Component } from 'react';
 
 import SelectedList from './selected-list';
+import { langMix } from 'helpers/lang';
 import lang from './lang';
 
+@langMix(lang)
 class Head extends Component {
   render() {
     const { action, max, title, size } = this.props;
@@ -25,7 +27,6 @@ class Head extends Component {
     );
   }
 }
-
 export default class extends Component {
   render() {
     const {

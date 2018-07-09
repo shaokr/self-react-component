@@ -175,17 +175,23 @@ if (__DEV__) {
         render() {
           return (
             <Tree.WebIm
+              lang={{
+                deleteAll: '13213'
+              }}
               isIntegration
               onClickBtn={(...res) => {
                 console.log(res);
               }}
+
               selectedList={[
                 '35253091652191',
                 { key: '268522070', type: 'dept' },
                 { key: '35253091652776', type: 'group' }
               ]}
               io={io}
-              // watermark={'邵康润'}
+              watermark={'邵康润'}
+              title="1312"
+              searchPlaceholder="喵！"
               // expandType="1"
               // disableKeys={['4563403140', '4563442200']}
               // disableChangeKeys={['4563403139', '4563442200']}

@@ -603,7 +603,7 @@ class Default {
 
 export const WebIm = props => {
   const { io, lang = {}, ..._props } = props;
-  return <Tree {..._props} api={new Default({ io, lang })} />;
+  return <Tree {...props} api={new Default({ io, lang })} />;
 };
 if (ZYcomponent) {
   ZYcomponent.Tree.WebIm = WebIm;
