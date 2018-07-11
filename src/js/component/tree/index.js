@@ -5,11 +5,12 @@
 import { Component } from 'react';
 import classnames from 'classnames';
 import _ from 'lodash';
+import { langMix } from 'helpers/lang';
 
-import Icon from 'component/icon';
-import message from 'component/message';
-import Watermark from 'component/watermark';
-import Loading from 'component/loading';
+import Icon from '../../component/icon';
+import message from '../../component/message';
+import Watermark from '../../component/watermark';
+import Loading from '../../component/loading';
 import superDom from '../../component/super-dom';
 import lang from './lang';
 
@@ -541,6 +542,7 @@ function setUc(list, key, isCache = {}) {
  * onCheck //
  */
 @superDom
+@langMix(lang)
 export default class Tree extends Component {
   static defaultProps = {
     type: 'check', // 类型 check
@@ -555,19 +557,19 @@ export default class Tree extends Component {
     title: '', // 默认标题
     // 搜索设置
     searchShow: true, // 是否显示搜索项
-    searchPlaceholder: this.getLangProps('searchPlaceholder'), // 搜索框的Placeholder
+    // searchPlaceholder: this.getLangProps('searchPlaceholder'), // 搜索框的Placeholder
     // isIntegration = false,
     // treeTitle: '选择',
-    selectedTitle: this.getLangProps('selectedTitle'), // 右侧选中的说明
+    // selectedTitle: this.getLangProps('selectedTitle'), // 右侧选中的说明
     bottomBtn: [
       // 默认按钮设置
       {
-        txt: this.getLangProps('bottomBtnOk'),
+        // txt: undefined, // this.getLangProps('bottomBtnOk'),
         key: 'ok',
         type: 'primary'
       },
       {
-        txt: this.getLangProps('bottomBtnCancel'),
+        // txt: undefined, // this.getLangProps('bottomBtnCancel'),
         key: 'cancel'
       }
     ],
@@ -575,10 +577,6 @@ export default class Tree extends Component {
     watermark: '', // 水印
     loading: true // 无数据显示设置加载中
   };
-  getLangKey = (key1, key2 = key1) =>
-    _.get(this, ['props', 'lang', key1]) || _.get(lang, key2);
-  getLangProps = (key1, key2 = key1, key3 = key2) =>
-    _.get(this, ['props', key1]) || this.getLangKey(this, key2, key3);
   constructor(props) {
     super(props);
     this.initState = this.initState.bind(this);
@@ -910,11 +908,11 @@ export default class Tree extends Component {
   }
   // 超过最大
   _onExceedMax(ck) {
-    const { max } = this.props;
+    const { max, getLangKey } = this.props;
     if (_.isFunction(ck)) {
       ck(max);
     } else {
-      let set = `${this.getLangKey('maxPrompt')}(${max})`;
+      let set = getLangKey('maxPrompt').langReplace(max);
       if (_.isString(ck)) {
         set = ck;
       }
@@ -1228,6 +1226,41 @@ export default class Tree extends Component {
     } = this.props;
     return visible && show;
   }
+  get newProps() {
+    let { bottomBtn, getLangProps } = this.props;
+    // bottomBtn: [
+    //   // 默认按钮设置
+    //   {
+    //     // txt: undefined, // this.getLangProps('bottomBtnOk'),
+    //     key: 'ok',
+    //     type: 'primary'
+    //   },
+    //   {
+    //     // txt: undefined, // this.getLangProps('bottomBtnCancel'),
+    //     key: 'cancel'
+    //   }
+    // ],
+    bottomBtn = _.map(bottomBtn, item => {
+      let { txt, key } = item;
+      if (_.isUndefined(txt)) {
+        if (key === 'ok') {
+          txt = getLangProps('bottomBtnOk');
+        } else if (key === 'cancel') {
+          txt = getLangProps('bottomBtnCancel');
+        }
+      }
+      return {
+        ...item,
+        txt
+      };
+    });
+    return {
+      ...this.props,
+      searchPlaceholder: getLangProps('searchPlaceholder'),
+      selectedTitle: getLangProps('selectedTitle'),
+      bottomBtn
+    };
+  }
   render() {
     const { action, store } = this;
     const {
@@ -1247,8 +1280,12 @@ export default class Tree extends Component {
       bottomBtn,
       className,
       watermark,
-      loading
-    } = this.props;
+      loading,
+      uc,
+
+      onMouseDown,
+      getLangKey
+    } = this.newProps;
     const { max, isIntegration } = this.config;
 
     const selectedData = this.selectedData; // 获取选中项目的数据
@@ -1256,8 +1293,8 @@ export default class Tree extends Component {
     if (isSoLongAsTreeList) {
       return (
         <TreeList
-          key={this.props.uc}
-          onMouseDown={this.props.onMouseDown}
+          key={uc}
+          onMouseDown={onMouseDown}
           onScroll={this.onScroll}
           tree={this.state.tree}
           className={className}
@@ -1276,10 +1313,7 @@ export default class Tree extends Component {
         {this.visible && (
           <div className="tree-main">
             <Header title={title} onClick={action.onClose} />
-            <Loading
-              visible={this.isLoadShow}
-              tip={this.getLangKey('loadingText')}
-            >
+            <Loading visible={this.isLoadShow} tip={getLangKey('loadingText')}>
               <div className="tree-box">
                 <Watermark text={watermark} />
 
