@@ -224,30 +224,31 @@
   &-ul {
     padding: 0;
     margin: 0;
-    > li {
-      display: flex;
-      align-items: center;
-      padding: 0 @box-p;
-      height: @u*30;
+    outline:0 none;
+  }
+  &-li {
+    display: flex;
+    align-items: center;
+    padding: 0 @box-p;
+    height: @u*30;
+    transition: 0.2s;
+    &:hover {
+      background-color: @ch1;
+    }
+    > img {
+      width: @u*22;
+      height: @u*22;
+      margin-right: @u*10;
+    }
+
+    > span {
+      cursor: pointer;
       transition: 0.2s;
       &:hover {
-        background-color: @ch1;
+        color: @error-c;
       }
-      > img {
-        width: @u*22;
-        height: @u*22;
-        margin-right: @u*10;
-      }
-
-      > span {
-        cursor: pointer;
-        transition: 0.2s;
-        &:hover {
-          color: @error-c;
-        }
-        .@{px-icon} {
-          .dpr(18);
-        }
+      .@{px-icon} {
+        .dpr(18);
       }
     }
   }
