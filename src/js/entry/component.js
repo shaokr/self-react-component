@@ -25,6 +25,7 @@ import Menu from 'component/menu';
 if (__DEV__) {
   const { render } = require('react-dom');
   const param = require('util/param').default;
+  const _ = require('lodash');
   if (param.debug == 'date-picker') {
     render(<DatePicker />, document.getElementById('app-main'));
   }
@@ -282,17 +283,19 @@ if (__DEV__) {
       document.getElementById('app-main')
     );
   }
-  if (param.debug == 'message') {
-    console.log(Message);
-    // success: ({ content, duration, onClose, animate }) => (
-    //     notice({ content, duration, type: 'success', onClose, animate })
-    // ),
-    Message.success({
-      content: '123123'
-    });
-    Message.error({
-      content: '23523'
-    });
+  if (param.debug == 'tree') {
+    const selectedList = _.map(_.range(10000), item => ({
+      key: item,
+      name: item
+    }));
+    render(
+      <Tree
+        visible
+        tree={[{ key: 'dfgdfg', name: 'dfgfg' }]}
+        selectedList={selectedList}
+      />,
+      document.getElementById('app-main')
+    );
   }
 }
 

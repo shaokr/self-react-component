@@ -41,13 +41,13 @@ const mainListObj = {
   },
   '_tool-tree-web-module': {
     // 入口文件 签名
-    ToLoad: true, // 是否马上加载
+    // ToLoad: true, // 是否马上加载
     // 依赖库
     deps: ['react', 'mobx', 'mobx-react', 'bridgeWs', '_component']
   },
   _component: {
     // 入口文件 签名
-    // ToLoad: true, // 是否马上加载
+    ToLoad: true, // 是否马上加载
     // 依赖库
     deps: ['react', 'mobx', 'mobx-react', 'antd']
   },
