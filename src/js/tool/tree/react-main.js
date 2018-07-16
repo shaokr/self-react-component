@@ -12,7 +12,7 @@ export default class extends Component {
       // { key: '-3' } // 群
     ],
     expandType: '1',
-    max: 5,
+    max: 1000,
     isSelect: true
   };
   // static getDerivedStateFromProps(nextProps, prevState){
