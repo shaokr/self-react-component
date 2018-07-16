@@ -155,6 +155,15 @@ class TreeList extends Component {
       }
     ]);
   }
+  get style() {
+    const {
+      item,
+      props: { data }
+    } = this;
+    return {
+      paddingLeft: 10 + 22 * (data.treeIdPath.length - 1)
+    };
+  }
   onExpand(e) {
     e.stopPropagation();
     const { data, action } = this.props;
@@ -186,8 +195,9 @@ class TreeList extends Component {
     const { data, action, store, onHover } = this.props;
     const { item } = this;
     const dataState = action.getDataState(data.key, data.treePath);
+
     return (
-      <div className={this.css}>
+      <div className={this.css} style={this.style}>
         <div
           className="tree-children-info"
           onClick={this.onClickItem}
@@ -210,14 +220,14 @@ class TreeList extends Component {
           />
         </div>
 
-        <Children
-          item={item}
-          data={data}
-          store={store}
-          action={action}
-          dataState={dataState}
-          onHover={onHover}
-        />
+        {/* <Children
+            item={item}
+            data={data}
+            store={store}
+            action={action}
+            dataState={dataState}
+            onHover={onHover}
+          /> */}
       </div>
     );
   }
@@ -227,12 +237,36 @@ export default class TreeListBox extends Component {
     const { className } = this.props;
     return classnames([className, 'scroll tree-children-box']);
   }
+  list = (data = this.props.tree) => {
+    let list = [];
+    if (_.isArray(data)) {
+      const { action } = this.props;
+      _.forEach(data, item => {
+        list.push(item);
+        if (_.size(item.children)) {
+          const dataState = action.getDataState(item.key, item.treePath);
+          if (dataState.isChildren && dataState.expand) {
+            list = _.concat(list, this.list(item.children)); // _.concat(list, item.children);
+          }
+        }
+      });
+    }
+    return list;
+  };
   render() {
     const { tree, store, action } = this.props;
     return (
       <div className={this.class}>
-        {_.map(tree, (item, index) => (
+        {/* {_.map(tree, (item, index) => (
           <TreeList key={index} data={item} store={store} action={action} />
+        ))} */}
+        {_.map(this.list(), (item, index) => (
+          <TreeList
+            key={`${index}-${item.key}`}
+            data={item}
+            store={store}
+            action={action}
+          />
         ))}
       </div>
     );
