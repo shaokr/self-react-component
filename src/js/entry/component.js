@@ -284,16 +284,17 @@ if (__DEV__) {
     );
   }
   if (param.debug == 'tree') {
-    const selectedList = _.map(_.range(10000), item => ({
-      key: item,
-      name: item
-    }));
+    const c = (key = '', children = []) => {
+      const sjs = _.random(true);
+      return _.map(_.range(3), item => ({
+        key: `${key}-${item}-${sjs}`,
+        name: `${key}-${item}-${sjs}`,
+        children
+      }));
+    };
+    const selectedList = c('a', c('b', c('c', c('d', c('e', c('f', c('g')))))));
     render(
-      <Tree
-        visible
-        tree={[{ key: 'dfgdfg', name: 'dfgfg' }]}
-        selectedList={selectedList}
-      />,
+      <Tree visible tree={selectedList} selectedList={selectedList} />,
       document.getElementById('app-main')
     );
   }
