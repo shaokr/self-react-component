@@ -577,8 +577,8 @@ const initData = async function(data = {}) {
   };
 };
 class Default {
-  constructor({ io, lang }) {
-    lang.data = lang;
+  constructor({ io, lang: _lang }) {
+    lang.data = _lang;
     this.io = io;
     this.getUserInfo = getUserInfo.bind(this);
     this.getDeptInfo = getDeptInfo.bind(this);
