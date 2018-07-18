@@ -29,7 +29,7 @@ export const langMix = lang => Comp =>
       });
     }
     componentWillUnmount() {
-      lang.off(this.id);
+      lang._monitor.off(this.id);
     }
     getLangKey = (key1, key2 = key1) =>
       _.get(this.renderDom, ['props', 'lang', key1]) || _.get(lang, key2);
