@@ -526,7 +526,7 @@ const initData = async function(data = {}) {
     const list = await this.getCloudUserList();
     return {
       key: '-2',
-      name: '外部联系人',
+      name: lang.cloudUser, //'外部联系人',
       isChildren: true,
       isSelected: false,
       type: `${typeCloudUser}`,
