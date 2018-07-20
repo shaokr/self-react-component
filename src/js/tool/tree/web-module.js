@@ -64,6 +64,7 @@ const getUserInfo = async function({ users }) {
       if (res.res.err_code === '0') {
         return _.map(res.users, item => ({
           key: item.uid,
+          cids: _.map(item.corp_list, data => _.get(data, 'cid')),
           name: item.name,
           avatar: item.avatar_url,
           companyName: getCompanyName(item),
@@ -205,8 +206,10 @@ const getUserList = async function({ key, type = typeUser }, ck) {
         return _.map(res.datas, item => {
           const userData = _.get(item, 'sync_data.user_data', {});
           const userDatas = _.get(item, 'user_datas', {});
+          const cids = _.map(userDatas.corp_list, data => _.get(data, 'cid'));
           return {
             key: userData.uid,
+            cids,
             name: userData.user_name,
             avatar: userDatas.avatar_url,
             itemType: typeUser,
@@ -328,6 +331,7 @@ const getSearch = function(params, callback) {
         _.forEach(hits, item => {
           const _item = {
             name: item.name,
+            cids: [item.cid],
             itemType: typeUser,
             key: item.uid,
             avatar: item.avatar_url,
@@ -380,6 +384,7 @@ const searchGroupUser = async function name({ key, keyword, filter }) {
   const _fpFilter = fpFilter(item => !_.includes(filter, item.uid));
   const _fpMap = fpMap(item => ({
     key: item.uid,
+    cids: [item.cid],
     name: item.name,
     avatar: item.avatar_url,
     itemType: typeGroupUser,
@@ -402,6 +407,7 @@ const getGroupUser = async function({ key, type = typeGroupUser }, ck) {
   });
   const Rdata = _.map(res.members, item => ({
     key: item.uid,
+    cids: _.map(item.corp_list, data => _.get(data, 'cid')),
     name: item.name,
     itemType: typeGroupUser,
     companyName: getCompanyName(item),
