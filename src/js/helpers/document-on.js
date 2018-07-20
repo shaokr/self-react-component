@@ -139,7 +139,6 @@ export default eventList => Comp =>
     }
     get onEve() {
       const onObj = {};
-      console.log(this.eventList);
       _.forEach(this.eventList, item => {
         const rKey = getOnReactKey(item);
         onObj[rKey] = this[rKey];
