@@ -1050,7 +1050,7 @@ export default class Tree extends Component {
   _onClickBtn(fn, item) {
     let { oldSelectedData } = this;
     const { list } = this.state;
-    oldSelectedData = _.map(oldSelectedData.list, item => {
+    const _oldSelectedData = _.map(oldSelectedData.list, item => {
       const _item = list[item.key];
       if (_item) {
         item.path = [];
@@ -1060,7 +1060,7 @@ export default class Tree extends Component {
       }
       return item;
     });
-    fn && fn(item, oldSelectedData);
+    fn && fn(item, _oldSelectedData);
   }
 
   // 触发删除

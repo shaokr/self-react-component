@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 
-import Tree from '../../component/tree';
+import { Tree } from 'zy-component';
 
 export default class extends Component {
   static defaultProps = {
