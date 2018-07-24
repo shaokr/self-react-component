@@ -82,14 +82,15 @@ export default class OverlayMain extends Component {
       const bodyWidth = document.body.clientWidth; // 当前可视范围宽度
 
       const [topType, leftType, edge = false] = splitCase(placement);
+      const notInit = bodyHeight === 0 || clientWidth === 0;
       if (topType === 'bottom') {
-        if (bodyHeight - domTop - clientHeight <= 10) {
+        if (!notInit && bodyHeight - top - clientHeight <= 10) {
           top = bodyHeight - clientHeight - 10;
         } else {
           top += height;
         }
       } else if (topType === 'top') {
-        if (domTop - clientHeight <= 10) {
+        if (!notInit && top - clientHeight <= 10) {
           top = 10;
         } else {
           top -= clientHeight;
@@ -98,7 +99,7 @@ export default class OverlayMain extends Component {
 
       if (leftType === 'left') {
         if (edge === 'edge') {
-          if (domLeft - clientWidth <= 10) {
+          if (!notInit && domLeft - clientWidth <= 10) {
             left = 10;
           } else {
             left -= clientWidth;
@@ -106,13 +107,13 @@ export default class OverlayMain extends Component {
         }
         // top += parentDom.clientHeight;
       } else if (leftType === 'center') {
-        if (domLeft - clientWidth / 2 <= 10) {
+        if (!notInit && domLeft - clientWidth / 2 <= 10) {
           left = 10;
         } else {
           left += (width - clientWidth) / 2;
         }
       } else if (leftType === 'right') {
-        if (bodyWidth - domLeft - clientWidth <= 10) {
+        if (!notInit && bodyWidth - domLeft - clientWidth <= 10) {
           left = bodyWidth - clientWidth - 10;
         } else {
           if (edge === 'edge') {
