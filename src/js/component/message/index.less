@@ -5,53 +5,53 @@
 @import '~global/mixins.less';
 
 .@{px-message} {
-    &-modal-warp{
-        position:fixed;
-        top: @u*16;
-        left:0;
-        z-index:9000;
-        width:100%;
-        pointer-events:none;
-        transition:all .5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  &-modal-warp {
+    position: fixed;
+    top: @u*16;
+    left: 0;
+    z-index: 9000;
+    width: 100%;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  &-notice {
+    .dpr(@fs3);
+    min-height: @u*20;
+    display: flex;
+    align-items: center;
+    padding: @u*8 @u*15;
+    background-color: #fff;
+    border-radius: @u*4;
+    line-height: @u*18;
+    box-shadow: 0 @u*2 @u*8 rgba(0, 0, 0, 0.2);
+    &-icon {
+      .dpr(@fs2);
+      color: #459ef2;
+      margin-right: @u*10;
     }
-    &-notice{
-        .dpr(@fs3);
-        min-height:@u*20;
-        display:flex;
-        align-items:center;
-        padding:@u*8 @u*15;
-        background-color:#fff;
-        border-radius:@u*4;
-        line-height:@u*18;
-        box-shadow: 0 @u*2 @u*8 rgba(0,0,0,.2);
-        &-icon{
-            .dpr(@fs2);
-            color:#459EF2;
-            margin-right:@u*10;
-        }
-        &-info{
-            color: @info-c;
-        }
-        &-success{
-            color: @success-c
-        }
-        &-error{
-            color: @error-c;
-        }
-        &-warning{
-            color: @warning-c;
-        }
+    &-info {
+      color: @info-c;
     }
-    &-notice-wrap{
-        display:flex;
-        justify-content:center;
-        padding: @u*8;
-        transition:all .2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    &-success {
+      color: @success-c;
     }
-    &-notice-close{
-        height:0;
-        padding:0;
-        opacity:0;
-        overflow:hidden;
+    &-error {
+      color: @error-c;
     }
+    &-warning {
+      color: @warning-c;
+    }
+  }
+  &-notice-wrap {
+    display: flex;
+    justify-content: center;
+    padding: @u*8;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  &-notice-close {
+    height: 0;
+    padding: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
 }

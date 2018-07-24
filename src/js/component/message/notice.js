@@ -6,68 +6,69 @@ import { prefixMessage } from 'config/const';
 import './index.less';
 
 export default class Notice extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            close: false
-        };
-        this.closeTimer = 0; // 喵
-        this.onEnd = this.onEnd.bind(this);
-        this.setCloseTimeout = this.setCloseTimeout.bind(this);
+    this.state = {
+      close: false
+    };
+    this.closeTimer = 0; // 喵
+    this.onEnd = this.onEnd.bind(this);
+    this.setCloseTimeout = this.setCloseTimeout.bind(this);
+  }
+  componentDidMount() {
+    this.setCloseTimeout();
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.close) {
+      this.close();
     }
-    componentDidMount() {
-        this.setCloseTimeout();
+    if (nextProps.refresh !== this.props.refresh) {
+      this.setCloseTimeout(nextProps.duration);
     }
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.close) {
-            this.close();
-        }
-        if (nextProps.refresh !== this.props.refresh) {
-            this.setCloseTimeout(nextProps.duration);
-        }
+  }
+  onEnd(obj) {
+    const { type } = obj;
+    if (type === 'leave') {
+      this.props.onClose();
     }
-    onEnd(obj) {
-        const { type } = obj;
-        if (type === 'leave') {
-            this.props.onClose();
-        }
+  }
+  setCloseTimeout(duration = this.props.duration) {
+    this.clearCloseTimer();
+    if (duration) {
+      this.closeTimer = setTimeout(() => {
+        this.close();
+      }, duration);
     }
-    setCloseTimeout(duration = this.props.duration) {
-        this.clearCloseTimer();
-        if (duration) {
-            this.closeTimer = setTimeout(() => {
-                this.close();
-            }, duration);
-        }
-    }
-    clearCloseTimer() {
-        clearTimeout(this.closeTimer);
-    }
-    close() {
-        this.clearCloseTimer();
-        this.setState({
-            close: true
-        });
-    }
-    render() {
-        const classes = classnames([
-            `${prefixMessage}-notice-wrap`
-        ]);
-        return (
-            <QueueAnim type="top" onEnd={this.onEnd} duration={[0, this.props.close ? 0 : 450]}>
-                {
-                    !this.state.close &&
-                    <div key={this.props.keys} className={classes}>
-                        { this.props.children }
-                    </div>
-                }
-            </QueueAnim>
-        );
-    }
+  }
+  clearCloseTimer() {
+    clearTimeout(this.closeTimer);
+  }
+  close() {
+    this.clearCloseTimer();
+    this.setState({
+      close: true
+    });
+  }
+  render() {
+    const classes = classnames([`${prefixMessage}-notice-wrap`]);
+    return (
+      <QueueAnim
+        type="top"
+        onEnd={this.onEnd}
+        duration={[0, this.props.close ? 0 : 450]}
+      >
+        {!this.state.close && (
+          <div key={this.props.keys} className={classes}>
+            {this.props.children}
+          </div>
+        )}
+      </QueueAnim>
+    );
+  }
 }
 
 Notice.defaultProps = {
-    close: false,
-    duration: 30000
+  close: false,
+  duration: 30000
 };
