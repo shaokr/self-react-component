@@ -447,8 +447,8 @@ const getGroupList = async function({ selectDept, isGetCloud }) {
     item => (item.mem_type === GROUP_MEMBER_TYPE_NORMAL ? 'join' : 'admin')
   );
   const resAdmin = {
-    key: 'myJoinGroup', // '我管理的群',
-    name: lang.myJoinGroup, // '我管理的群',
+    key: 'myAdminGroup', // '我管理的群',
+    name: lang.myAdminGroup, // '我管理的群',
     icon: 'folder',
     isSelected: false,
     itemType: typeGroupList,
