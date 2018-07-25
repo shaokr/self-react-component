@@ -185,7 +185,7 @@ if (__DEV__) {
 
   if (param.debug == 1) {
     const toolTree = require('pc-tool-tree');
-    console.log(toolTree);
+    // console.log(toolTree);
     const Apiutil = require('Apiutil');
     (async () => {
       // await Systemjs.import(`${cdnHost}/config/1.0.6/config.js`);
