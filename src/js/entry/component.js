@@ -303,6 +303,7 @@ module.exports = {
   Button,
   Tree,
   Icon,
+  Input,
   // Alert,
   Modal,
   Mask,
