@@ -1,4 +1,3 @@
-/* global document : true*/
 import { Component } from 'react';
 import _ from 'lodash';
 import PromiseClass from 'util/promise-class';
@@ -31,13 +30,14 @@ class Notification extends Component {
     await this.PromiseClass.promise;
     const key = notice.key || getUuid();
     const { notices } = this.state;
-
     notice.key = key;
     if (!_.find(notices, item => item.key === key)) {
-      notices.push(notice);
-      this.setState({
-        notices
-      });
+      setTimeout(() => {
+        notices.push(notice);
+        this.setState({
+          notices
+        });
+      }, notices.delay * 1000);
     }
   };
   animateRemove(key) {
@@ -91,7 +91,7 @@ class Notification extends Component {
               refresh={notice.refresh}
               onClose={() => {
                 this.remove(notice.key);
-                notice.onClose();
+                if (_.isFunction(notice.onClose)) notice.onClose();
               }}
             >
               {notice.content}
@@ -103,31 +103,6 @@ class Notification extends Component {
   }
 }
 
-// Notification.newInstance = (properties) => {
-//     const props = properties | {};
-//     const div = document.createElement('div');
-
-//     document.body.appendChild(div);
-
-//     const notifiaction = ReactDom.render(<Notification {...props} />, div);
-
-//     return {
-//         notice: (noticeProps) => {
-//             notifiaction.add(noticeProps);
-//         },
-//         removeNotice: (key) => {
-//             notifiaction.remove(key);
-//         },
-//         animateRemove: (key) => {
-//             notifiaction.animateRemove(key);
-//         },
-//         component: notifiaction,
-//         destroy: () => {
-//             ReactDom.unmountComponentAtNode(div);
-//             document.body.removeChild(div);
-//         }
-//     };
-// };
 Notification.newInstance = properties => {
   const props = properties | {};
 

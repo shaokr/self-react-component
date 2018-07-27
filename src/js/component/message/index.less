@@ -27,7 +27,9 @@
     &-icon {
       .dpr(@fs2);
       color: #459ef2;
-      margin-right: @u*10;
+      &::before{
+        margin-right: @u*10;
+      }
     }
     &-info {
       color: @info-c;
