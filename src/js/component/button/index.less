@@ -1,9 +1,11 @@
 @import '~global/var.less';
 @import '~global/mixins.less';
 
+// 按钮的三个大小变量高
 @large: @u*36; // 大
 @in: @u*30; // 中
 @small: @u*22; // 小
+
 // 可变化按钮样式
 .establish-btn(@color, @fColor: #fff) {
   @hue: hue(@color);
@@ -75,7 +77,7 @@
   line-height: @in;
   padding: 0 @in / 2;
   text-align: center;
-  border-radius: @u*3;
+  border-radius: @br1;
   // border:0 none;
   cursor: pointer;
   outline: none;
