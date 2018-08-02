@@ -25,33 +25,42 @@ export const WEEKDAYS_LONG = [
 ];
 export const WEEKDAYS_SHORT = ['一', '二', '三', '四', '五', '六', '日'];
 export const CLASSNAMES = {
-  container: `${prefixDatePicker}-Container`,
-  wrapper: `${prefixDatePicker}-Wrapper`,
-  interactionDisabled: `${prefixDatePicker}--InteractionDisabled`,
-  navBar: `${prefixDatePicker}-NavBar`,
-  navButton: `${prefixDatePicker}-NavButton`,
-  navButtonPrev: `${prefixDatePicker}-NavButton--prev`,
-  navButtonNext: `${prefixDatePicker}-NavButton--next`,
-  navButtonInteractionDisabled: `${prefixDatePicker}-NavButton--interactionDisabled`,
-  months: `${prefixDatePicker}-Months`,
-  month: `${prefixDatePicker}-Month`,
-  caption: `${prefixDatePicker}-Caption`,
-  weekdays: `${prefixDatePicker}-Weekdays`,
-  weekdaysRow: `${prefixDatePicker}-WeekdaysRow`,
-  weekday: `${prefixDatePicker}-Weekday`,
-  body: `${prefixDatePicker}-Body`,
-  week: `${prefixDatePicker}-Week`,
-  day: `${prefixDatePicker}-Day`,
-  footer: `${prefixDatePicker}-Footer`,
-  todayButton: `${prefixDatePicker}-TodayButton`,
-  today: `${prefixDatePicker}-Day--today`,
-  selected: `${prefixDatePicker}-Day--selected`,
-  disabled: `${prefixDatePicker}-Day--disabled`,
-  outside: `${prefixDatePicker}-Day--outside`
+  container: `${prefixDatePicker}-container`,
+  wrapper: `${prefixDatePicker}-wrapper`,
+  interactionDisabled: `${prefixDatePicker}--interactionDisabled`,
+
+  months: `${prefixDatePicker}-months`,
+  month: `${prefixDatePicker}-month`,
+
+  navBar: `${prefixDatePicker}-navbar`,
+  navButton: `${prefixDatePicker}-navbar__button`,
+  get navButtonPrev() {
+    return `${this.navButton} ${prefixDatePicker}-navbar__button--prev`;
+  },
+  get navButtonNext() {
+    return `${this.navButton} ${prefixDatePicker}-navbar__button--next`;
+  },
+  navButtonInteractionDisabled: `${prefixDatePicker}-navbar__button--disabled`,
+
+  caption: `${prefixDatePicker}-caption`,
+  weekdays: `${prefixDatePicker}-weekdays`,
+  weekdaysRow: `${prefixDatePicker}-weekdays__row`,
+  weekday: `${prefixDatePicker}-weekdays__day`,
+  body: `${prefixDatePicker}-body`,
+  week: `${prefixDatePicker}-week`,
+  todayButton: `${prefixDatePicker}-todayButton`,
+
+  day: `${prefixDatePicker}-day`,
+  today: `${prefixDatePicker}-day--today`,
+  selected: `${prefixDatePicker}-day--selected`,
+  disabled: `${prefixDatePicker}-day--disabled`,
+  outside: `${prefixDatePicker}-day--outside`,
+
+  footer: `${prefixDatePicker}-footer`
 };
 
 export const CLASSNAMES_INPUT = {
-  container: `${prefixDatePicker}-Container`,
-  overlayWrapper: `${prefixDatePicker}-Input-overlayWrapper`,
-  overlay: `${prefixDatePicker}-Input-overlay`
+  container: `${prefixDatePicker}-container`,
+  overlayWrapper: `${prefixDatePicker}-input-overlayWrapper`,
+  overlay: `${prefixDatePicker}-input-overlay`
 };
