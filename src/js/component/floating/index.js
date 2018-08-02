@@ -2,13 +2,14 @@ import { Component } from 'react';
 import _ from 'lodash';
 import fp from 'lodash/fp';
 import classnames from 'classnames';
-import memoize from 'memoize-one';
 
-import { prefixDropdown } from 'config/const';
+import { prefixFloating } from 'config/const';
 
 import { placementConfig, defaultPlacementConfig } from './config';
 
 import superDom from '../super-dom';
+
+import './index.less';
 
 /**
  * 查询是属于配置（是一个方法
@@ -148,7 +149,7 @@ export default class extends Component {
     return {};
   };
   get className() {
-    return classnames([`${prefixDropdown}--overlay`, this.props.className]);
+    return classnames([`${prefixFloating}--main`, this.props.className]);
   }
   dom = {};
   render() {
