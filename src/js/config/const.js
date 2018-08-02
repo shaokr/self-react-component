@@ -4,19 +4,20 @@
 const prefix = 'zy';
 
 module.exports = {
-    prefix,
-    prefixModal: `${prefix}-modal`,
-    prefixInput: `${prefix}-input`,
-    prefixButton: `${prefix}-button`,
-    prefixIcon: `${prefix}-icon`,
-    prefixMessage: `${prefix}-message`,
-    prefixTree: `${prefix}-tree`,
-    prefixLoading: `${prefix}-loading`,
-    prefixCheckbox: `${prefix}-checkbox`,
-    prefixScrollbar: `${prefix}-scrollbar`,
-    prefixWatermark: `${prefix}-watermark`,
-    prefixDatePicker: `${prefix}-datePicker`,
-    prefixCalendar: `${prefix}-calendar`,
-    prefixDropdown: `${prefix}-dropdown`,
-    prefixMenu: `${prefix}-menu`
+  prefix,
+  prefixModal: `${prefix}-modal`,
+  prefixInput: `${prefix}-input`,
+  prefixButton: `${prefix}-button`,
+  prefixIcon: `${prefix}-icon`,
+  prefixMessage: `${prefix}-message`,
+  prefixTree: `${prefix}-tree`,
+  prefixLoading: `${prefix}-loading`,
+  prefixCheckbox: `${prefix}-checkbox`,
+  prefixScrollbar: `${prefix}-scrollbar`,
+  prefixWatermark: `${prefix}-watermark`,
+  prefixDatePicker: `${prefix}-datePicker`,
+  prefixCalendar: `${prefix}-calendar`,
+  prefixDropdown: `${prefix}-dropdown`,
+  prefixMenu: `${prefix}-menu`,
+  prefixFloating: `${prefix}-floating`
 };
