@@ -1,11 +1,13 @@
 import { Component } from 'react';
 import classnames from 'classnames';
 import { prefixInput } from 'config/const';
+import forwardRef from 'helpers/forward-ref';
 
 import TextArea from './text-area';
 
 import './style.less';
 
+@forwardRef
 export default class extends Component {
   static TextArea = TextArea;
   static defaultProps = {
@@ -41,7 +43,13 @@ export default class extends Component {
     return props;
   }
   render() {
-    return <input {...this.inputProps} className={this.className} />;
+    return (
+      <input
+        ref={this.props._ref || 'index'}
+        {...this.inputProps}
+        className={this.className}
+      />
+    );
   }
 }
 // import { Input } from 'antd';
