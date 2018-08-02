@@ -10,7 +10,9 @@ import { prefixDropdown } from 'config/const';
 
 import documentOn from 'helpers/document-on';
 
-import OverlayMain from './overlay';
+import Floating from '../floating';
+
+// import OverlayMain from './overlay';
 import { defaultPlacementConfig } from './config';
 
 import './index.less';
@@ -140,6 +142,16 @@ export default class Dropdown extends Component {
     }
     return props.placement;
   }
+  get overlayProps() {
+    const { props } = this;
+    return {
+      ...props.overlayProps,
+      className: classnames([
+        `${prefixDropdown}--overlay`,
+        props.overlayProps.className
+      ])
+    };
+  }
   render() {
     const { state, props, mainDom } = this;
     return (
@@ -153,8 +165,8 @@ export default class Dropdown extends Component {
         style={props.style}
       >
         {props.children}
-        <OverlayMain
-          {...props.overlayProps}
+        <Floating
+          {...this.overlayProps}
           visible={this.overlayShow}
           getContainer={props.getContainer}
           placement={this.placement}
@@ -162,7 +174,7 @@ export default class Dropdown extends Component {
           mouseType={state.mouseType}
         >
           {props.overlay}
-        </OverlayMain>
+        </Floating>
       </div>
     );
   }
