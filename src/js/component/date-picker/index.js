@@ -17,7 +17,7 @@ import Floating from '../floating';
 import classnames from 'classnames';
 import { prefixDatePicker, prefixInput } from 'config/const';
 import documentOn from 'helpers/document-on';
-import createRef from 'helpers/create-ref';
+import { createRef } from 'helpers/ref-tool';
 
 import './style.less';
 import {

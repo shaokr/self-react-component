@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import classnames from 'classnames';
 import { prefixInput } from 'config/const';
-import forwardRef from 'helpers/forward-ref';
+import { forwardRef } from 'helpers/ref-tool';
 
 import TextArea from './text-area';
 
