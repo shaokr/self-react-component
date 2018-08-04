@@ -160,7 +160,7 @@ export default class extends Component {
         ref={d => {
           this.dom = d;
         }}
-        style={style}
+        style={{ ...style, ...this.props.style }}
         className={this.className}
       >
         {this.props.children}
