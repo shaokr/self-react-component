@@ -82,7 +82,7 @@ const enentList = {
 
 const getKey = item => `document${_.upperFirst(item)}`; // 到页面中用户使用的key
 const getOnKey = item => enentList[item] || item; // document中的事件
-const getOnReactKey = item => item; // document中的事件
+const getOnReactKey = item => item; // 下层元素的事件
 const getIsKey = item => `is${item}`; // 是否触发了自己本身使用的对象关键词
 
 export default eventList => Comp =>
