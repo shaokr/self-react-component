@@ -20,13 +20,18 @@ import Message from 'component/message';
 import Watermark from 'component/watermark';
 import Dropdown from 'component/dropdown';
 import Menu from 'component/menu';
-// import DatePicker from 'component/date-picker';
+import DatePicker from 'component/date-picker';
+import Switch from 'component/switch';
+
 
 if (__DEV__) {
   const { render } = require('react-dom');
   const param = require('util/param').default;
   if (param.debug == 'date-picker') {
-    render(<DatePicker />, document.getElementById('app-main'));
+    render(
+      <DatePicker lang={{ dateFormat: 'YYYY-M-D' }} showTime />,
+      document.getElementById('app-main')
+    );
   }
   if (param.debug == 'input') {
     render(<Input />, document.getElementById('app-main'));
@@ -304,6 +309,7 @@ module.exports = {
   Tree,
   Icon,
   Input,
+  Switch,
   // Alert,
   Modal,
   Mask,
@@ -314,6 +320,7 @@ module.exports = {
   version,
   Menu,
   Dropdown,
+  DatePicker,
 
   ShowDom,
   SuperDom
