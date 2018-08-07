@@ -38,6 +38,7 @@ export default class extends Component {
       size,
       onPressEnter,
       suffix,
+      visible,
       ...props
     } = this.props;
     return props;
