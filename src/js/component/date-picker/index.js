@@ -70,8 +70,23 @@ export default class extends Component {
     };
     this.date = this.state.calendarVal;
   }
+  get minDate() {
+    const { minDate } = this.props;
+    if (!_.isNaN(minDate * 1)) {
+      return minDate * 1;
+    }
+    return minDate;
+  }
+  get maxDate() {
+    const { maxDate } = this.props;
+    if (!_.isNaN(maxDate * 1)) {
+      return maxDate * 1;
+    }
+    return maxDate;
+  }
   onChange = date => {
-    const { minDate, maxDate, onChange } = this.props;
+    const { onChange } = this.props;
+    const { minDate, maxDate } = this;
     if (!isBetween(date, minDate, maxDate)) {
       const _minDate = moment(minDate);
       const _maxDate = moment(maxDate);
@@ -96,12 +111,14 @@ export default class extends Component {
     return '';
   };
   get disabledDate() {
-    const { minDate, disabledDate, maxDate } = this.props;
+    const { disabledDate } = this.props;
+    const { minDate, maxDate } = this;
     if (disabledDate) return disabledDate;
     return date => !isBetweenDay(date, minDate, maxDate);
   }
   get disabledDateTime() {
-    const { minDate, disabledDateTime, maxDate } = this.props;
+    const { disabledDateTime } = this.props;
+    const { minDate, maxDate } = this;
     if (disabledDateTime) return disabledDateTime;
     return date => {
       const _isSameDay = isSameDay(date);
