@@ -55,7 +55,7 @@ export default class extends Component {
     defaultValue: +new Date(),
     // showTime: false,
     // locale: '', //	国际化配置	object	默认配置
-    open: false, //	控制弹层是否展开	boolean	-
+    // open: false, //	控制弹层是否展开	boolean	-
     // placeholder: lang.inputPlaceholder, //	输入框提示文字	string|RangePicker[]	-
     popupStyle: '', //	格外的弹出日历样式	object	{}
     size: 'default', //	输入框大小，large 高度为 32px，small 为 22px，默认是 28px	string	无
@@ -179,7 +179,7 @@ export default class extends Component {
   }
   render() {
     const { calendarVal } = this.state;
-    const { onOpenChange } = this.props;
+    const { onOpenChange, open } = this.props;
     // return this.calendar;
     return (
       <Picker
@@ -188,6 +188,7 @@ export default class extends Component {
         value={calendarVal}
         onChange={this.onChange}
         onOpenChange={onOpenChange}
+        // open={open}
       >
         {({ value }) => (
           <Input
