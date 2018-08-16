@@ -42,6 +42,8 @@ function Last({data, build, path}) {
     data.externals['web-tool-tree'] = 'ZYtool-tree-web-module';
     data.externals['pc-tool-tree'] = 'ZYtool-tree-pc-management';
     data.externals['zy-component'] = 'ZYcomponent';
+    data.externals['moment'] = 'moment';
+    
     delete data.externals['antd'];
     
     // console.log(data);
