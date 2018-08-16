@@ -54,6 +54,19 @@
         align-items: center;
         transition: 0.2s;
         cursor: pointer;
+        &.type-immutable {
+          &::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            right: 0;
+            // top: 0;
+            width: 100%;
+            height: 32px;
+            z-index: @index1;
+            cursor: not-allowed;
+          }
+        }
         .tree-avatar {
           margin-right: @u*5;
         }

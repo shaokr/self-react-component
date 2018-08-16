@@ -4,6 +4,7 @@
 import { Component } from 'react';
 import _ from 'lodash';
 import { prefix } from 'config/const';
+import classnames from 'classnames';
 
 import Icon from 'component/icon';
 
@@ -19,8 +20,12 @@ const Li = ({ onCheck, item, selected, list }) => {
   const data = list[key] || {};
   const show = selected.has(key) || data.checked;
   const checkedType = show ? 1 : 9999;
+  const css = classnames({
+    'type-immutable': !data.isChangeChecked, // 不可变化
+    'type-normal': data.isChangeChecked
+  });
   return (
-    <li onClick={() => onCheck(item)}>
+    <li className={css} onClick={() => onCheck(item)}>
       <Avatar
         name={item.name}
         avatar={item.avatar}
