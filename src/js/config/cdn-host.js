@@ -6,9 +6,10 @@ const { location } = window;
 const _protocol = location.protocol === 'file:' ? 'http:' : location.protocol;
 
 const host = {
-    production: `${_protocol}//192.168.1.251:8989/fed/web-cdn`,
-    test: `${_protocol}//192.168.1.251:8282/fed/web-cdn`,
-    cloud: `${location.origin}/fed/web-cdn`
+  production: `${_protocol}//192.168.1.251:8989/fed/web-cdn`,
+  // test: `${_protocol}//192.168.1.251:8282/fed/web-cdn`,
+  test: `//localhost:8080/web-cdn/release`,
+  cloud: `${location.origin}/fed/web-cdn`
 }[env];
 
 export default host;

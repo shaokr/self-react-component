@@ -20,20 +20,20 @@ if (__DEV__) {
       // account	否	 	 	 用户名或手机,当login_type为1或2时需要填写
       // password	否	 	 	 当login_type为1时需要填写
       // verify_code	否	 	 	当login_type为2时需要填写
-      const res = await io.login.GoLogin({
-        ip: '192.168.1.239:8282',
-        dev_type: 5,
-        login_type: 1,
-        client_ver: '3.1.0',
-        account: 'shaokr',
-        password: '111111'
-      });
+      // const res = await io.login.GoLogin({
+      //   ip: '192.168.1.239:8282',
+      //   dev_type: 5,
+      //   login_type: 1,
+      //   client_ver: '3.1.0',
+      //   account: 'shaokr',
+      //   password: '111111'
+      // });
 
-      const ddd = new Main({ io });
-      ddd.getGroupUser({ key: '35253091652675' });
+      // const ddd = new Main({ io });
+      // ddd.getGroupUser({ key: '35253091652675' });
       // const data = await getDept({ key: 0 });
       // console.log(data);
-      const tree = await ddd.initData([{}, { key: '-3' }, { key: '-1' }]);
+      // const tree = await ddd.initData([{}, { key: '-3' }, { key: '-1' }]);
       class Div3 extends Component {
         constructor(props) {
           super(props);
@@ -84,7 +84,7 @@ if (__DEV__) {
           const tree = [
             {
               key: 1,
-              name: 1,
+              name: '天朝',
               expandType: '1',
               children: [
                 {
@@ -99,7 +99,7 @@ if (__DEV__) {
             },
             {
               key: 2,
-              name: 2,
+              name: '唧唧复唧唧',
               expandType: '2',
               children: [
                 {
@@ -132,14 +132,14 @@ if (__DEV__) {
               }}
               watermark={['邵康润', '金伟是猪2']}
               expandType="2"
-              onSearchChange={ddd.getSearch}
-              disableKeys={['4563403140', '4563442200']}
+              // onSearchChange={ddd.getSearch}
+              disableKeys={['2-2', '4563442200']}
               disableChangeKeys={['4563403139', '4563442200']}
               // consfig
               // type="radio"
               bottomBtn={this.state.btn}
               tree={tree}
-              onExpand={ddd.onExpand}
+              // onExpand={ddd.onExpand}
               loading={false}
               visible
               // max="7"

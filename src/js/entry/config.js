@@ -49,7 +49,7 @@ const mainListObj = {
     // 入口文件 签名
     // ToLoad: true, // 是否马上加载
     // 依赖库
-    deps: ['react', 'mobx', 'mobx-react', 'antd']
+    deps: ['react', 'mobx', 'mobx-react', 'moment']
   },
   '_react-web-module': {
     // ToLoad: true, // 是否马上加载
@@ -65,7 +65,7 @@ for (const key in mainListObj) {
     );
   }
 }
-Systemjs.import(`${cdnHost}/config/2.1.0/config.js`).then(res => {
+Systemjs.import(`${cdnHost}/config/2.1.2/config.js`).then(res => {
   // res中的map查看cdn目录下config.js文件
   Systemjs.config(res(cdnHost, true));
   Systemjs.config(mapListObj);
