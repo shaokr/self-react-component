@@ -6,6 +6,7 @@ import { Component } from 'react';
 import classnames from 'classnames';
 import _ from 'lodash';
 import { langMix } from 'helpers/lang';
+import avatarBase64 from 'helpers/avatar-base64';
 
 import Icon from '../../component/icon';
 import message from '../../component/message';
@@ -129,6 +130,7 @@ class Children {
         this.key = key;
         this.name = name;
         this.avatar = avatar; // 头像
+        this.avatarBase64 = avatarBase64(name, key);
         this.small = small; // 灰色文字描述
         this.icon = icon; // 使用的icon
 

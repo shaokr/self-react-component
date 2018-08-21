@@ -70,7 +70,7 @@ const Front = ({ data, onClick, dataState, item }) => (
       loading
       icon={getFrontIcon(data.icon, dataState)}
       name={data.name}
-      avatar={data.avatar}
+      avatar={data.avatar || item.avatarBase64}
       dataKey={data.key}
       color={data.color}
     />
@@ -186,6 +186,7 @@ class TreeList extends Component {
     const { data, action, store, onHover } = this.props;
     const { item } = this;
     const dataState = action.getDataState(data.key, data.treePath);
+    console.log(item);
     return (
       <div className={this.css}>
         <div

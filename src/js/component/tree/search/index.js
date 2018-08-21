@@ -6,6 +6,8 @@ import _ from 'lodash';
 import { prefix } from 'config/const';
 import classnames from 'classnames';
 
+import avatarBase64 from 'helpers/avatar-base64';
+
 import Icon from 'component/icon';
 
 import Avatar from '../avatar';
@@ -28,7 +30,7 @@ const Li = ({ onCheck, item, selected, list }) => {
     <li className={css} onClick={() => onCheck(item)}>
       <Avatar
         name={item.name}
-        avatar={item.avatar}
+        avatar={item.avatar || avatarBase64(item.key)}
         icon={item.icon}
         dataKey={item.key}
         color={item.color}

@@ -3,6 +3,7 @@
  */
 import { Component } from 'react';
 import _ from 'lodash';
+import avatarBase64 from 'helpers/avatar-base64';
 
 // import Scroll from 'component/scroll';
 // import Icon from 'component/icon';
@@ -27,7 +28,7 @@ class Li extends Component {
         <div className="tree-selected-front">
           <Avatar
             name={data.name}
-            avatar={data.avatar}
+            avatar={data.avatar || avatarBase64(data.key)}
             dataKey={data.key}
             color={data.color}
             icon={data.icon}
