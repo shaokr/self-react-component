@@ -1328,6 +1328,7 @@ export default class Tree extends Component {
                   loading={loading}
                   // treeTitle={treeTitle}
                   tree={this.state.tree} // 树
+                  disableKeys={this.props.disableKeys}
                 />
 
                 <TreeRight

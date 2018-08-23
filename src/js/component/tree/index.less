@@ -5,7 +5,7 @@
 // 头像
 // .tree-main{
 .@{px-tree} {
-    
+
     &--loading {
         width: @u*22;
         .@{px-loading}--box{
@@ -13,7 +13,7 @@
         }
     }
 }
-    
+
 // }
 // 大外框
 .tree-fixed{
@@ -42,7 +42,7 @@
     overflow: hidden;
     border: 1px solid @c3;
     box-shadow: 0 0 @u*5 rgba(0, 0, 0, 0.2);
-    
+
 }
 // 头
 .tree-header{
@@ -70,7 +70,7 @@
             .dpr(30);
         }
     }
-    
+
 }
 @box-lw:@u*320;
 @box-p:@u*10;
@@ -84,7 +84,7 @@
     border-top: 1px solid @c3;
     border-bottom: 1px solid @c3;
     // 搜索框
-    
+
     // 左右2边内容
     &-left,&-right{
         position: relative;
@@ -130,7 +130,7 @@
                 // overflow: auto;
             }
         }
-        
+
     }
     &-right{
         flex: 1;
@@ -160,7 +160,7 @@
         //     // margin-right: @u*-5;
         // }
     }
-    
+
 }
 // 底部
 .tree-bottom{
@@ -176,7 +176,7 @@
         min-width: @u*90;
         margin: @u*5;
     }
-}   
+}
 // 一些组件--------------------------------
 .tree-checkbox{
     .@{px-icon} {
@@ -241,7 +241,7 @@
                 height: @u*22;
                 margin-right: @u*10;
             }
-            
+
             >span{
                 cursor: pointer;
                 transition: 0.2s;
@@ -271,15 +271,15 @@
             display: inherit
         }
     }
-    
+
 }
 
 // 联系人样式
 .tree-children{
     &-ul{
-        
+
         // 正常情况
-        &.type-normal{ 
+        &.type-normal{
             >.tree-children-info{
                 &:hover{
                     &::after{
@@ -294,7 +294,7 @@
                     }
                 }
             }
-            
+
         }
         // 不可选
         &.type-immutable{
@@ -352,9 +352,11 @@
             }
             .tree-avatar{
                 margin-right:@u*5;
+                border-radius: @u*3;
+                overflow: hidden;
             }
         }
-        
+
         &-name{
             flex: 1;
             display: flex;

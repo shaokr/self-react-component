@@ -17,13 +17,16 @@ import './index.less';
 
 const _prefix = `${prefix}-tree-search`;
 
-const Li = ({ onCheck, item, selected, list }) => {
+const Li = ({ onCheck, item, selected, list, disableKeys }) => {
   const key = item.key.toString();
   const data = list[key] || {};
   const show = selected.has(key) || data.checked;
   const checkedType = show ? 1 : 9999;
+  const isDisabled = _.indexOf(disableKeys, item.key) !== -1;
   const css = classnames({
-    'type-immutable': !data.isChangeChecked, // 不可变化
+    'type-immutable':
+      (!data.isChangeChecked && data.isChangeChecked !== undefined) ||
+      isDisabled, // 不可变化
     'type-normal': data.isChangeChecked
   });
   return (
@@ -179,6 +182,7 @@ export default class Selected extends Component {
                           selected={selected}
                           list={storeList}
                           item={item2}
+                          disableKeys={this.props.disableKeys}
                         />
                       );
                     }
