@@ -33,7 +33,7 @@ const Li = ({ onCheck, item, selected, list, disableKeys }) => {
     <li className={css} onClick={() => onCheck(item)}>
       <Avatar
         name={item.name}
-        avatar={item.avatar || avatarBase64(item.key)}
+        avatar={item.avatar || avatarBase64(item.name, item.key)}
         icon={item.icon}
         dataKey={item.key}
         color={item.color}

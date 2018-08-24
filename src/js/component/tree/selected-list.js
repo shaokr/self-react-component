@@ -28,7 +28,7 @@ class Li extends Component {
         <div className="tree-selected-front">
           <Avatar
             name={data.name}
-            avatar={data.avatar || avatarBase64(data.key)}
+            avatar={data.avatar || avatarBase64(data.name, data.key)}
             dataKey={data.key}
             color={data.color}
             icon={data.icon}

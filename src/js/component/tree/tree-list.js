@@ -8,6 +8,7 @@ import _ from 'lodash';
 import Icon from 'component/icon';
 import Loading from 'component/loading';
 import { prefixTree } from 'config/const';
+import avatarBase64 from 'helpers/avatar-base64';
 
 import Avatar from './avatar';
 import { Checked } from './circle';
@@ -70,7 +71,8 @@ const Front = ({ data, onClick, dataState, item }) => (
       loading
       icon={getFrontIcon(data.icon, dataState)}
       name={data.name}
-      avatar={data.avatar || item.avatarBase64}
+      // avatar={data.avatar || item.avatarBase64}
+      avatar={data.avatar || avatarBase64(item.name, item.key)}
       dataKey={data.key}
       color={data.color}
     />
@@ -186,7 +188,6 @@ class TreeList extends Component {
     const { data, action, store, onHover } = this.props;
     const { item } = this;
     const dataState = action.getDataState(data.key, data.treePath);
-    console.log(item);
     return (
       <div className={this.css}>
         <div

@@ -7,7 +7,6 @@ import classnames from 'classnames';
 
 import Icon from 'component/icon';
 
-
 export default class Avatar extends Component {
   constructor(props) {
     super(props);

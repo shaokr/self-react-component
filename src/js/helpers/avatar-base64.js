@@ -19,6 +19,7 @@ function dataURItoBlob(base64Data) {
 
 function getBase64(params) {
   const { width = 22, height = 22, text = '', bgColor = 'rgb(0,0,0)' } = params;
+  const textin = `${text}`[0] + (`${text}`.length > 1 ? `${text}`[1] : '');
   const myCanvas = document.createElement('canvas');
   myCanvas.width = width;
   myCanvas.height = height;
@@ -34,7 +35,9 @@ function getBase64(params) {
   context.fillStyle = 'white';
   context.textAlign = 'center';
   context.textBaseline = 'middle';
-  context.fillText(`${text}`[0], width / 2, height / 2);
+  context.font =
+    '10px Tahoma, Hiragino Sans GB, "Helvetica Neue", Microsoft YaHei';
+  context.fillText(textin, width / 2, height / 2);
   context.fill();
 
   // 将canvas转换成文件
