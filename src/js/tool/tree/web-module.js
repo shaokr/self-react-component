@@ -57,7 +57,7 @@ const getUserInfo = async function({ users }) {
   const GsInfo = await this.io.user
     .GoGetUserInfo({
       uids: users,
-      mask: ['name', 'uid'],
+      mask: ['name', 'uid', 'avatar'],
       if_dept_list: '0'
     })
     .then(res => {
