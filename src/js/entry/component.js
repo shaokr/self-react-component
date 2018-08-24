@@ -22,6 +22,7 @@ import Dropdown from 'component/dropdown';
 import Menu from 'component/menu';
 import DatePicker from 'component/date-picker';
 import Switch from 'component/switch';
+import avatarBase64 from 'helpers/avatar-base64';
 
 
 if (__DEV__) {
@@ -323,5 +324,6 @@ module.exports = {
   DatePicker,
 
   ShowDom,
-  SuperDom
+  SuperDom,
+  avatarBase64
 };

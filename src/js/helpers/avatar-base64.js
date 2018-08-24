@@ -18,7 +18,13 @@ function dataURItoBlob(base64Data) {
 }
 
 function getBase64(params) {
-  const { width = 22, height = 22, text = '', bgColor = 'rgb(0,0,0)' } = params;
+  const {
+    width = 22,
+    height = 22,
+    text = '',
+    bgColor = 'rgb(0,0,0)',
+    fontSize = '10px'
+  } = params;
   const textin = `${text}`[0] + (`${text}`.length > 1 ? `${text}`[1] : '');
   const myCanvas = document.createElement('canvas');
   myCanvas.width = width;
@@ -31,12 +37,11 @@ function getBase64(params) {
   context.fill();
 
   context.beginPath();
-  context.font = '12px serif';
+  // context.font = '12px serif';
   context.fillStyle = 'white';
   context.textAlign = 'center';
   context.textBaseline = 'middle';
-  context.font =
-    '10px Tahoma, Hiragino Sans GB, "Helvetica Neue", Microsoft YaHei';
+  context.font = `${fontSize} Tahoma, Hiragino Sans GB, "Helvetica Neue", Microsoft YaHei`;
   context.fillText(textin, width / 2, height / 2);
   context.fill();
 
@@ -46,4 +51,5 @@ function getBase64(params) {
   return base64Data;
 }
 // 创建本地图片，debug用
-export default (text, id) => getBase64({ text, bgColor: avatarBgColor(id) });
+export default (text, id, width, height, fontSize) =>
+  getBase64({ text, bgColor: avatarBgColor(id), width, height, fontSize });
