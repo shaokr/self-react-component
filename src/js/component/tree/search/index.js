@@ -13,6 +13,8 @@ import Icon from 'component/icon';
 import Avatar from '../avatar';
 import { Checked } from '../circle';
 
+import lang from '../lang';
+
 import './index.less';
 
 const _prefix = `${prefix}-tree-search`;
@@ -46,7 +48,7 @@ const Li = ({ onCheck, item, selected, list, disableKeys }) => {
     </li>
   );
 };
-
+@langMix(lang)
 export default class Selected extends Component {
   constructor(props) {
     super(props);
@@ -115,14 +117,14 @@ export default class Selected extends Component {
           if (children.length) {
             result = [
               {
-                title: '查找结果',
+                title: lang.searchResult, // '查找结果',
                 children
               }
             ];
           } else {
             result = [
               {
-                title: '没有查找到数据',
+                title: lang.searchNull, //'没有查找到数据',
                 children
               }
             ];

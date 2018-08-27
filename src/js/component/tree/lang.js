@@ -10,5 +10,7 @@ export default new Lang({
   bottomBtnCancel: '取消',
   maxPrompt: '超过可选最大值($0)',
   loadingText: '数据加载中',
-  deleteAll: '删除全部'
+  deleteAll: '删除全部',
+  searchResult: '查找结果',
+  searchNull: '没有查找到数据'
 });
