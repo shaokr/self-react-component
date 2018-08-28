@@ -7,6 +7,7 @@ import { prefix } from 'config/const';
 import classnames from 'classnames';
 
 import avatarBase64 from 'helpers/avatar-base64';
+import { langMix } from 'helpers/lang';
 
 import Icon from 'component/icon';
 
