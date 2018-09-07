@@ -921,7 +921,7 @@ export default class Tree extends Component {
       if (this.message) {
         this.message.refresh();
       } else {
-        this.message = message.error({
+        this.message = message.warning({
           content: set,
           onClose: () => {
             this.message = undefined;

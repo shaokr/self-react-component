@@ -25,7 +25,14 @@ function getBase64(params) {
     bgColor = 'rgb(0,0,0)',
     fontSize = '10px'
   } = params;
-  const textin = `${text}`[0] + (`${text}`.length > 1 ? `${text}`[1] : '');
+  const textin =
+    text[0].match(/[^\x00-\xff]/gi) !== null
+      ? text[0]
+      : text.length > 1
+        ? text[0] + text[1]
+        : text[0];
+  // const textin = `${text}`[0] + (`${text}`.length > 1 ? `${text}`[1] : '');
+  console.log(textin);
   const myCanvas = document.createElement('canvas');
   myCanvas.width = width;
   myCanvas.height = height;
