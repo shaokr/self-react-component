@@ -32,7 +32,6 @@ function getBase64(params) {
         ? text[0] + text[1]
         : text[0];
   // const textin = `${text}`[0] + (`${text}`.length > 1 ? `${text}`[1] : '');
-  console.log(textin);
   const myCanvas = document.createElement('canvas');
   myCanvas.width = width;
   myCanvas.height = height;
