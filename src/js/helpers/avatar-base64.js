@@ -27,7 +27,7 @@ function getBase64(params) {
   } = params;
   const textin =
     text === ''
-      ? '失败'
+      ? ''
       : text[0].match(/[^\x00-\xff]/gi) !== null
         ? text[0]
         : text.length > 1
