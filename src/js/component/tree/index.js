@@ -1056,6 +1056,7 @@ export default class Tree extends Component {
       const _item = list[item.key];
       if (_item) {
         item.path = [];
+        item.avatarBase64 = _item.avatarBase64;
         _.forEach(_item.paths, ({ path, self }) => {
           item.path.push({ ...self, path });
         });
