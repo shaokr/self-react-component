@@ -212,7 +212,7 @@ class Children {
   get radioType() {
     return {
       // 初始化
-      init({ item }) {
+      init({ item, selectedList }) {
         const {
           key,
 
@@ -240,9 +240,10 @@ class Children {
         // this.isChecked = !!isChecked; // 是否可以设置勾选状态
         this.isCheckedShow = !!isCheckedShow;
         this.isChangeChecked = !!isChangeChecked; // 是否可以更改勾选状态
-        this.checked = false; // 勾选状态
 
-        this.typeChecked = 0; // 勾选类型 0全不选 1全选 2部分选中
+        this.checked = selectedList.has(key); // 勾选状态
+
+        this.typeChecked = this.checked ? 1 : 0; // 勾选类型 0全不选 1全选 2部分选中
 
         // 是否可以选中到另一个栏目
         if (typeof isSelected === 'undefined') {
@@ -698,6 +699,7 @@ export default class Tree extends Component {
     if (type === 'radio') {
       max = 1;
       isIntegration = true;
+      selectedList = _.take(selectedList);
     } else {
       type = 'check';
     }
