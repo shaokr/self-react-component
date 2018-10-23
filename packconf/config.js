@@ -26,6 +26,7 @@ function Last({data, build, path}) {
     // data.entry = entry;
 
     // data.resolve.modules.push(...userConfig.modules)
+    data.resolve.modules.unshift(paths.resolve(__dirname, '../node_modules'));
 
     // 添加目录拷贝
     let _copyList = Copy(path);
@@ -40,6 +41,10 @@ function Last({data, build, path}) {
     data.externals['bridgeWs'] = 'bridgeWs';
     data.externals['web-tool-tree'] = 'ZYtool-tree-web-module';
     data.externals['pc-tool-tree'] = 'ZYtool-tree-pc-management';
+    data.externals['zy-component'] = 'ZYcomponent';
+    data.externals['moment'] = 'moment';
+    
+    delete data.externals['antd'];
     
     // console.log(data);
     return data;

@@ -1,0 +1,13 @@
+@import "~global/var.less";
+@import "~global/mixins.less";
+
+.@{px-watermark} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: @index0;
+    pointer-events: none;
+    &~*{
+        z-index: @index1;
+    }
+}

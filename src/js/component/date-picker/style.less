@@ -1,0 +1,17 @@
+@import '~global/var.less';
+@import '~global/mixins.less';
+.@{px-datePicker} {
+  &-picker {
+    z-index: @index4;
+  }
+  &-panel {
+    width: 100%;
+    .rc-time-picker-panel-combobox {
+      display: flex;
+    }
+    .rc-time-picker-panel-select {
+      max-height: 100%;
+      flex: 1;
+    }
+  }
+}

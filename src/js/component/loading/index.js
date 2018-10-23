@@ -6,7 +6,7 @@ import { Component } from 'react';
 import classnames from 'classnames';
 import { prefix } from 'config/const';
 
-import superDom, { ShowDom } from '../super-dom';
+import { ShowDom } from '../super-dom';
 import Icon from '../icon';
 import Mask from '../mask';
 
@@ -16,19 +16,19 @@ const _prefix = `${prefix}-loading`;
 
 class Loading extends Component {
     get className() {
+        const { props } = this;
         const { size } = this.props;
         return classnames([
-            _prefix, this.props.className, `${_prefix}__${size}`
+            _prefix, props.wrapperClassName, `${_prefix}__${size}`, {
+                [`${_prefix}__show`]: props.visible
+            }
         ]);
     }
     get children() {
-        const { children } = this.props;
-        if (!children) {
-            return;
-        }
+        const { props } = this.props;
         return (
             <div className={`${_prefix}--children`}>
-                {children}
+                {props.children}
             </div>
         );
     }
@@ -39,17 +39,30 @@ class Loading extends Component {
         }
         return <p>{tip}</p>;
     }
-    render() {
+    get box() {
+        return (
+            <div className={`${_prefix}--box`}>
+                <Icon className={`${_prefix}--spin`} type="loading" />
+                {this.tip}
+            </div>
+        );
+    }
+    get childrens() {
         const { props } = this;
-        if (!props.visible && props.children) {
-            return props.children;
+        if (!props.children) {
+            return null;
         }
         return (
+            <div className={`${props.className} ${_prefix}--children`}>
+                {props.children}
+            </div>
+        );
+    }
+    render() {
+        return (
             <div className={this.className}>
-                <div className={`${_prefix}--box`}>
-                    <Icon className={`${_prefix}--spin`} type="loading" />
-                </div>
-                {this.children}
+                {this.box}
+                {this.childrens}
             </div>
         );
         // return (
@@ -64,7 +77,6 @@ class Loading extends Component {
 // spinning	是否旋转	boolean	true
 // tip	当作为包裹元素时，可以自定义描述文案	string	-
 // delay	延迟显示加载效果的时间（防止闪烁）	number (毫秒)	-
-// wrapperClassName	包装器的类属性	string	-
 Loading.defaultProps = {
     size: 'default',
     visible: true,

@@ -4,7 +4,15 @@
 @ch1: #EFF9FF;
 // 头像
 // .tree-main{
+.@{px-tree} {
 
+    &--loading {
+        width: @u*22;
+        .@{px-loading}--box{
+            top: 50%;
+        }
+    }
+}
 
 // }
 // 大外框
@@ -12,7 +20,7 @@
     position: fixed;
     width: 100%;
     height: 100%;
-    z-index: 100000;
+    z-index: @index5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,10 +30,7 @@
 }
 // 主框
 .tree-main{
-
     *{
-        margin: 0;
-        padding: 0;
         box-sizing: border-box;
     }
     line-height: 1;
@@ -37,7 +42,7 @@
     overflow: hidden;
     border: 1px solid @c3;
     box-shadow: 0 0 @u*5 rgba(0, 0, 0, 0.2);
-    
+
 }
 // 头
 .tree-header{
@@ -65,12 +70,13 @@
             .dpr(30);
         }
     }
-    
+
 }
 @box-lw:@u*320;
 @box-p:@u*10;
 // 中间box
 .tree-box{
+    position: relative;
     @h:@u*398;
     @lw:@box-lw;
     display: flex;
@@ -78,11 +84,12 @@
     border-top: 1px solid @c3;
     border-bottom: 1px solid @c3;
     // 搜索框
-    
+
     // 左右2边内容
     &-left,&-right{
         position: relative;
         // padding: @box-p 0 0 ;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         .scroll{
@@ -113,12 +120,17 @@
                 line-height: @u*32;
             }
         }
-        // .scroll{
-        //     // max-height: calc(~'100% - '@u*32*2);
-        //     height: 100%;
-        //     flex: 1;
-        //     overflow: auto;
-        // }
+        >.@{px-loading}{
+            display: flex;
+            flex: 1;
+            .scroll{
+                // max-height: calc(~'100% - '@u*32*2);
+                height: 100%;
+                // flex: 1;
+                // overflow: auto;
+            }
+        }
+
     }
     &-right{
         flex: 1;
@@ -144,12 +156,11 @@
             }
         }
         // .scroll{
-        //     max-height: calc(~'100% - '@u*32+10);
         //     height: 100%;
         //     // margin-right: @u*-5;
         // }
     }
-    
+
 }
 // 底部
 .tree-bottom{
@@ -165,7 +176,7 @@
         min-width: @u*90;
         margin: @u*5;
     }
-}   
+}
 // 一些组件--------------------------------
 .tree-checkbox{
     .@{px-icon} {
@@ -174,6 +185,8 @@
     }
 }
 .tree-avatar{
+    border-radius: @u*3;
+    overflow: hidden;
     @w: @u*22;
     @h: @u*22;
     display: flex;
@@ -193,6 +206,10 @@
     &--img{
         width: @w;
         height: @h;
+        display: none;
+        &&__show{
+            display: block;
+        }
     }
     &--name {
         width: @w;
@@ -210,6 +227,8 @@
 // 选中人样式
 .tree-selected{
     &-ul{
+        padding: 0;
+        margin: 0;
         >li{
             display: flex;
             align-items: center;
@@ -224,21 +243,9 @@
                 height: @u*22;
                 margin-right: @u*10;
             }
-            >p{
-                .slh();
-                flex:1;
-                line-height: 1.5;
-            }
+
             >span{
                 cursor: pointer;
-                border-radius: 50%;
-                border: 1px solid @c3;
-                height: @u*18;
-                width: @u*18;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: 4px;
                 transition: 0.2s;
                 &:hover{
                     color: @error-c;
@@ -252,15 +259,29 @@
     &-front{
         margin-right: @u*5;
     }
-    
+    &-name{
+        display: flex;
+        align-items: center;
+        flex:1;
+        >p{
+            .slh();
+            line-height: 1.2;
+        }
+        >small {
+            margin:0 @u*4;
+            color: @c3;
+            display: inherit
+        }
+    }
+
 }
 
 // 联系人样式
 .tree-children{
     &-ul{
-        
+
         // 正常情况
-        &.type-normal{ 
+        &.type-normal{
             >.tree-children-info{
                 &:hover{
                     &::after{
@@ -271,11 +292,11 @@
                         // top: 0;
                         width: 100%;
                         height: 32px;
-                        z-index: 0;
+                        z-index: @index0;
                     }
                 }
             }
-            
+
         }
         // 不可选
         &.type-immutable{
@@ -288,7 +309,7 @@
                     // top: 0;
                     width: 100%;
                     height: 32px;
-                    z-index: 1;
+                    z-index: @index1;
                     cursor: not-allowed;
                 }
             }
@@ -310,7 +331,7 @@
         padding-right: @box-p;
         >*{
             position: relative;
-            z-index: 1;
+            z-index: @index1;
         }
         &-front {
             height:100%;
@@ -333,18 +354,25 @@
             }
             .tree-avatar{
                 margin-right:@u*5;
+                border-radius: @u*3;
+                overflow: hidden;
             }
         }
-        
+
         &-name{
             flex: 1;
-            // margin-left:  @box-p;
-            i{
-                width: @u*20;
-                height: @u*20;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            p{
+                .slh();
+                line-height: 1.2;
+                margin: 0;
             }
             small{
+                margin:0 @u*4;
                 color: @c3;
+                display: inherit
             }
         }
     }
