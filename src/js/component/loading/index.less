@@ -12,49 +12,90 @@
             animation: loadingCircle 1s infinite linear;
         }
     }
+    // 小号
     &__small{
-        .@{px-loading}--spin{
-            .dpr(14);
+        >.@{px-loading}--box{
+            .@{px-loading}--spin{
+                .dpr(14);
+            }
+            >p{
+                .dpr(@fs3);
+            }
         }
     }
+    // 默认大小
     &__default{
-        .@{px-loading}--spin{
-            .dpr(22);
+        >.@{px-loading}--box{
+            .@{px-loading}--spin{
+                .dpr(22);
+            }
+            >p{
+                .dpr(@fs2);
+            }
         }
     }
+    // 大号
     &__large{
-        .@{px-loading}--spin{
-            .dpr(32);
+        
+        >.@{px-loading}--box{
+            .@{px-loading}--spin{
+                .dpr(32);
+            }
+            >p{
+                .dpr(@fs1);
+            }
         }
     }
-    
+    // 显示loading状态
+    &__show{
+        &::after{
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index:  @index3;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0)
+        }
+        .@{px-loading}--box{
+            display: inline;
+        }
+        .@{px-loading}--children{
+            opacity: .7;
+            filter: blur(.5px);
+        }
+    }
     &--box{
+        display: none;
         color: @c4;
         position: absolute;
-        display: inline;
+        // display: inline;
+        max-width: 80%;
         left: 50%;
-        top: 50%;
+        top: 100 - 61.8%; // 完美黄金比例！！！！！鼓掌啪啪啪啪！！
         transform: translate(-50%, -50%);
         text-align: center;
-        z-index: 100;
+        z-index: @index2;
         >p{
             .slh();
-            margin: @u*8 0 0 0;
+            // width: 61.8%; // 又是完美的黄金比例！！！
+            margin: @u*4 auto 0;
         }
     }
     &--children{
-        opacity: .7;
-        filter: blur(.5px);
+        height: 100%;
+        width: 100%;
     }
     &--mask-box {
         position: absolute;
-        width: 150px;
-        height: 100px;
+        width: @u*150;
+        height: @u*100;
         left: 50%;
         top: 50%;
         transform: translate(-50%,-50%);
         background: rgba(64, 64, 64, 0.24);
-        border-radius: 4px;
+        border-radius: @u*4;
     }
 }
 

@@ -1,12 +1,16 @@
-.hide {
-	display: none !important;
-}
-// 主要内容块
-.main {
-	margin: 0 auto;
-	min-width: @u*320;
-}
-.null{
-	padding:25% 0;
-	text-align: center; 
+@import './var.less';
+
+.@{px-scrollbar} {
+	overflow-x: hidden;
+	&::-webkit-scrollbar{
+		width: @u*8;
+	}
+	&::-webkit-scrollbar-thumb{
+		min-height:@u*10;
+		border-radius:@u*100;
+		background: rgba(204, 204, 204, 0.56);
+		&:hover{
+			background: rgba(204, 204, 204, 1);
+		}
+	}
 }
