@@ -11,21 +11,21 @@ import './index.less';
 const _prefix = `${prefix}-icon`;
 
 export default class extends Component {
-    get css() {
-        const { props } = this;
-        return classnames([
-            _prefix, props.className, `${_prefix}-${props.type}`
-        ]);
-    }
-    get iProps() {
-        const { children, ...props } = this.props;
-        return props;
-    }
-    render() {
-        const { props } = this;
-        // const { style, type, onClick } = this.props;
-        return (
-            <i {...props} className={this.css} >{props.children}</i>
-        );
-    }
+  get css() {
+    const { props } = this;
+    return classnames([_prefix, props.className, `${_prefix}-${props.type}`]);
+  }
+  get iProps() {
+    const { children, ...props } = this.props;
+    return props;
+  }
+  render() {
+    const { props } = this;
+    // const { style, type, onClick } = this.props;
+    return (
+      <i {...props} className={this.css}>
+        {props.children}
+      </i>
+    );
+  }
 }
