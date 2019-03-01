@@ -49,6 +49,7 @@ const Li = ({ onCheck, item, selected, list, disableKeys }) => {
     </li>
   );
 };
+
 @langMix(lang)
 export default class Selected extends Component {
   constructor(props) {
@@ -57,15 +58,20 @@ export default class Selected extends Component {
     this.state = {
       value: '',
       listShow: false,
-      list: []
+      list: [],
+      loading: false,
+      from: '0',
+      scrollEnd: false
     };
 
     this.setTimeoutId = 0;
 
     this.onChange = this.onChange.bind(this);
     this.onClose = this.onClose.bind(this);
+    this.onScroll = this.onScroll.bind(this);
     this.onClickThis = this.onClickThis.bind(this);
     this.onBlurHandler = this.onBlurHandler.bind(this);
+    // this.onChangeHandle = this.onChangeHandle.bind(this);
   }
   componentDidMount() {
     document.addEventListener('click', this.onBlurHandler, false);
@@ -80,65 +86,131 @@ export default class Selected extends Component {
       list: []
     });
   }
-  // 值修改
-  onChange(event) {
+  // 处理onChange结果公共函数
+  onChangeHandle = _.throttle(_res => {
     const {
-      onChange,
       store: { list }
     } = this.props;
-    let once = true;
-    this.setState({
-      value: event.target.value
-    });
-    onChange(event, res => {
-      if (once) {
-        once = false;
-        let result = [];
-        if (typeof res === 'string' && res) {
-          const children = [];
-          try {
-            const regExp = new RegExp(
-              res
-                .replace(/[ 　]/g, '')
-                .split('')
-                .join('[\\s\\S]*')
-            );
-            _.forEach(list, item => {
-              const name = _.get(item, 'name');
-              if (_.isString(name) && name.match(regExp)) {
-                children.push({
-                  icon: item.icon,
-                  avatar: item.avatar,
-                  name: item.name,
-                  key: item.key
-                });
-              }
+    const { hits: res, from, val } = _res;
+    if (val === '') return;
+    let result = [];
+    if (typeof res === 'string' && res) {
+      const children = [];
+      try {
+        const regExp = new RegExp(
+          res
+            .replace(/[ 　]/g, '')
+            .split('')
+            .join('[\\s\\S]*')
+        );
+        _.forEach(list, item => {
+          const name = _.get(item, 'name');
+          if (_.isString(name) && name.match(regExp)) {
+            children.push({
+              icon: item.icon,
+              avatar: item.avatar,
+              name: item.name,
+              key: item.key
             });
-          } catch (e) {}
-          if (children.length) {
-            result = [
-              {
-                title: lang.searchResult, // '查找结果',
-                children
-              }
-            ];
-          } else {
-            result = [
-              {
-                title: lang.searchNull, //'没有查找到数据',
-                children
-              }
-            ];
           }
-        } else if (_.isArray(res)) {
+        });
+      } catch (e) {}
+      if (children.length) {
+        result = [
+          {
+            title: lang.searchResult, // '查找结果',
+            children
+          }
+        ];
+      } else {
+        result = [
+          {
+            title: lang.searchNull, //'没有查找到数据',
+            children
+          }
+        ];
+      }
+    } else if (_.isArray(res)) {
+      if (this.state.scrollEnd) return;
+      if (val === this.state.value && this.state.loading) {
+        this.setState({
+          from,
+          loading: false
+        });
+        const { list: newList } = this.state;
+        if (newList.length) {
+          if (res.length) {
+            for (let value of res[0].children) {
+              newList[0].children.push(value);
+            }
+            result = newList;
+          } else {
+            this.setState({
+              scrollEnd: true
+            });
+            result = newList;
+          }
+        } else {
           result = res;
         }
-
+      } else {
         this.setState({
-          list: result
+          from: '0',
+          loading: false
         });
+        if (!res.length) {
+          result = [
+            {
+              title: lang.searchNull, //'没有查找到数据',
+              children: []
+            }
+          ];
+        } else {
+          result = res;
+        }
       }
+    }
+    this.setState({
+      list: result
     });
+  }, 600);
+  // 值修改
+  onChange(event) {
+    const { onChange } = this.props;
+    this.setState({
+      value: event.target.value,
+      from: '0',
+      list: [
+        {
+          title: '',
+          children: []
+        }
+      ],
+      loading: false,
+      scrollEnd: false
+    });
+    onChange(event, this.onChangeHandle);
+  }
+  // 滚动事件
+  onScroll(e) {
+    if (
+      !this.state.loading &&
+      e.target.scrollHeight - e.target.clientHeight - e.target.scrollTop < 50
+    ) {
+      this.setState({
+        loading: true
+      });
+      const event = {
+        target: {
+          value: this.state.value,
+          getAttribute: attr => {
+            if (attr === 'from') return this.state.from;
+          }
+        }
+      };
+      const { onChangemore } = this.props;
+      onChangemore(event, this.onChangeHandle);
+    }
   }
   // 失去焦点
   onBlurHandler() {
@@ -161,14 +233,14 @@ export default class Selected extends Component {
   }
   // 获取列表数据
   get list() {
-    const { list, listShow, value } = this.state;
+    const { list, listShow, value, loading } = this.state;
     if (listShow && value) {
       const {
         store: { selected, list: storeList },
         action: { onCheck }
       } = this.props;
       return (
-        <div className={`${_prefix}-list scroll`}>
+        <div className={`${_prefix}-list scroll`} onScroll={this.onScroll}>
           {_.map(list, (item, index) => {
             const { title, children } = item;
             return (
@@ -211,6 +283,7 @@ export default class Selected extends Component {
   }
   render() {
     const { placeholder } = this.props;
+    const { from } = this.state;
     return (
       <label
         className={_prefix}
@@ -223,7 +296,8 @@ export default class Selected extends Component {
           id="male"
           value={this.state.value}
           placeholder={placeholder}
-          onChange={this.onChange}
+          onChange={_.throttle(this.onChange, 500)}
+          from={from}
         />
         {this.closeIcon}
         {this.list}

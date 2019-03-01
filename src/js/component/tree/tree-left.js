@@ -24,6 +24,7 @@ export default class extends Component {
             <Search
               placeholder={searchPlaceholder}
               onChange={action.onSearchChange}
+              onChangemore={action.onSearchChange}
               store={store}
               action={action}
               disableKeys={this.props.disableKeys}
