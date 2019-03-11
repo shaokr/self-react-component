@@ -8,6 +8,8 @@ import _ from 'lodash';
 import 'rc-calendar/assets/index.css';
 import Calendar from 'rc-calendar';
 import Picker from 'rc-calendar/lib/Picker';
+import FullCalendar from 'rc-calendar/lib/FullCalendar';
+import Select from 'rc-select';
 
 import { Panel } from '../time-picker';
 import moment from 'moment';
@@ -39,10 +41,11 @@ import RangePicker from './range';
 export { MonthPicker };
 export { WeekPicker };
 export { RangePicker };
+export { Calendar };
 
 // @documentOn(['onClick'])
 @langMix(lang)
-export default class extends Component {
+class DatePicker extends Component {
   static defaultProps = {
     allowClear: true, //	是否显示清除按钮	boolean	true
     className: '', //	选择器 className	string	''
@@ -202,4 +205,16 @@ export default class extends Component {
 }
 // import { DatePicker } from 'antd';
 
-// export default DatePicker;
+DatePicker.Calendar = Calendar;
+class FullCalendarSelect extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const { props } = this;
+    return <FullClendar {...props} Select={Select} />;
+  }
+}
+DatePicker.FullCalendar = FullCalendarSelect;
+
+export default DatePicker;
