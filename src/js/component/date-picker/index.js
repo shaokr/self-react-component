@@ -8,8 +8,8 @@ import _ from 'lodash';
 import 'rc-calendar/assets/index.css';
 import Calendar from 'rc-calendar';
 import Picker from 'rc-calendar/lib/Picker';
-import FullCalendar from 'rc-calendar/lib/FullCalendar';
-import Select from 'rc-select';
+// import FullCalendar from 'rc-calendar/lib/FullCalendar';
+// import Select from 'rc-select';
 
 import { Panel } from '../time-picker';
 import moment from 'moment';
@@ -205,16 +205,28 @@ class DatePicker extends Component {
 }
 // import { DatePicker } from 'antd';
 
-DatePicker.Calendar = Calendar;
-class FullCalendarSelect extends Component {
+class CalendarFilter extends Component {
   constructor(props) {
     super(props);
   }
   render() {
     const { props } = this;
-    return <FullClendar {...props} Select={Select} />;
+    return <Calendar {...props} showDateInput={false} fullscreen />;
   }
 }
-DatePicker.FullCalendar = FullCalendarSelect;
+
+DatePicker.Calendar = CalendarFilter;
+
+// class FullCalendarSelect extends Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//   render() {
+//     const { props } = this;
+//     return <FullCalendar {...props} Select={Select} fullscreen />;
+//   }
+// }
+//
+// DatePicker.FullCalendar = FullCalendarSelect;
 
 export default DatePicker;
