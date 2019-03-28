@@ -311,8 +311,9 @@ const getCloudUserList = async function() {
  * 获取搜索数据
  * @param {'' || [''] || [{}]} params { key: '需要查找的关键词' }
  */
-const getSearch = function(params, callback) {
+const getSearch = function(params, callback, event) {
   const _function = async (data, ck) => {
+    const from = event.target.getAttribute('from');
     let _data = {};
     if (typeof data === 'string') {
       _data.keyword = data;
@@ -323,6 +324,8 @@ const getSearch = function(params, callback) {
         keyword: data.key
       };
     }
+    _data.size = '20';
+    _data.from = from;
     if (_data.keyword) {
       const res = await this.io.search.GoSearchContacts(_data);
       if (res.err_code === '0') {
@@ -346,7 +349,11 @@ const getSearch = function(params, callback) {
           children: item
         }));
         if (typeof ck === 'function') {
-          ck(RData);
+          ck({
+            hits: RData,
+            from: parseInt(from) + 20 + '',
+            val: data
+          });
         }
         return RData;
       }
