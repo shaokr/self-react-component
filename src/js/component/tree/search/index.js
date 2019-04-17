@@ -91,20 +91,20 @@ export default class Selected extends Component {
     const {
       store: { list }
     } = this.props;
-    const { hits: res, from, val } = _res;
-    if (val === '') return;
     let result = [];
-    if (typeof res === 'string' && res) {
+    const { hits: res, from, val } = _res;
+    if (typeof _res === 'string' && _res) {
       const children = [];
       try {
         const regExp = new RegExp(
-          res
+          _res
             .replace(/[ 　]/g, '')
             .split('')
             .join('[\\s\\S]*')
         );
         _.forEach(list, item => {
           const name = _.get(item, 'name');
+          // console.log(name);
           if (_.isString(name) && name.match(regExp)) {
             children.push({
               icon: item.icon,
@@ -131,6 +131,7 @@ export default class Selected extends Component {
         ];
       }
     } else if (_.isArray(res)) {
+      if (val === '') return;
       if (this.state.scrollEnd) return;
       if (val === this.state.value && this.state.loading) {
         this.setState({

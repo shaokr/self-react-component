@@ -47,7 +47,7 @@ export default (() => {
     }
 
     // 检测Android版本
-    if (/Android (\d+\.\d+)/.test(ua)) {
+    if (/Android (\d)/.test(ua)) {
         system.android = parseFloat(RegExp.$1);
     }
 
