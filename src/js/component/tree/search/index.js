@@ -87,7 +87,9 @@ export default class Selected extends Component {
     });
   }
   // 处理onChange结果公共函数
-  onChangeHandle = _.throttle(_res => {
+  onChangeHandle = _res => {
+    // _.throttle(_res => {
+    // console.log(_res);
     const {
       store: { list }
     } = this.props;
@@ -174,9 +176,12 @@ export default class Selected extends Component {
     this.setState({
       list: result
     });
-  }, 600);
+  };
+  // }, 1000);
   // 值修改
+
   onChange(event) {
+    // console.log(event.target.value);
     const { onChange } = this.props;
     this.setState({
       value: event.target.value,
@@ -190,8 +195,16 @@ export default class Selected extends Component {
       loading: false,
       scrollEnd: false
     });
-    onChange(event, this.onChangeHandle);
+    this.onChangeMiddle({ ...event }, onChange);
   }
+  onChangeMiddle = _.throttle(
+    (event, onChange) => {
+      // console.log(event.target);
+      onChange(event, this.onChangeHandle);
+    },
+    600,
+    { leading: false }
+  );
   // 滚动事件
   onScroll(e) {
     if (
@@ -297,7 +310,7 @@ export default class Selected extends Component {
           id="male"
           value={this.state.value}
           placeholder={placeholder}
-          onChange={_.throttle(this.onChange, 500)}
+          onChange={this.onChange}
           from={from}
         />
         {this.closeIcon}
