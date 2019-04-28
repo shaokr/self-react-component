@@ -402,7 +402,12 @@ const searchGroupUser = async function name({ key, keyword, filter }) {
     title: children.length ? lang.searchGroupUser : lang.searchNull, // '群成员' : '暂无搜索结果'
     children
   };
-  return [Rdata];
+  // return [Rdata];
+  return {
+    from: '0',
+    hits: [Rdata],
+    val: keyword
+  };
 };
 
 /**
