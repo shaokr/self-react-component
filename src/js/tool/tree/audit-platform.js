@@ -230,10 +230,14 @@ const getSearch = function(params, callback) {
         });
         list = _.groupBy(list, 'title');
 
-        const RData = _.map(list, (item, key) => ({
-          title: key,
-          children: item
-        }));
+        const RData = {
+          from: '0',
+          hits: _.map(list, (item, key) => ({
+            title: key,
+            children: item
+          })),
+          val: _data.keyword
+        };
         if (typeof ck === 'function') {
           ck(RData);
         }
