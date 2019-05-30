@@ -724,7 +724,6 @@ export default class Tree extends Component {
       disableKeys,
       disableChangeKeys: this.disableChangeKeys
     });
-    // console.log(list, newTree);
     const selected = this.getSelected(list, selectedList);
     // _.forEach(disableKeys, item => selected.delete(item));
     const state = {
@@ -1056,6 +1055,8 @@ export default class Tree extends Component {
     const { list } = this.state;
     const _oldSelectedData = _.map(oldSelectedData.list, item => {
       const _item = list[item.key];
+      // console.log(_item);
+      // console.log(item);
       if (_item) {
         item.path = [];
         item.avatarBase64 = _item.avatarBase64;
@@ -1179,6 +1180,7 @@ export default class Tree extends Component {
       // console.log(_.some(_item.paths, ({ state }) => state.isChildren));
       // 判断是否含有子类
       if (_.some(_item.paths, ({ state }) => state.isChildren)) {
+        // console.log(isIntegration);
         // 判断是否整合模式
         if (isIntegration) {
           if (
@@ -1189,6 +1191,8 @@ export default class Tree extends Component {
           ) {
             lists.push(item);
           }
+        } else {
+          lists.push(item);
         }
       } else if (isIntegration) {
         if (
