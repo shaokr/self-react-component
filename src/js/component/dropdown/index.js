@@ -189,5 +189,6 @@ Dropdown.defaultProps = {
   trigger: 'hover', //	触发下拉的行为	Array<'click'|'hover'>	'hover'
   defaultVisible: false,
   visible: undefined, //	菜单是否显示	boolean	-
+  triangle: true,
   onVisibleChange: '' // 菜单显示状态改变时调用，参数为 visible	Function(visible)	-
 };

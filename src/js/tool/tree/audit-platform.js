@@ -101,20 +101,25 @@ const getUserList = async function({ key, type = typeUser }, ck) {
   const res = await Apiutil.fetch('audit.tree.getUser', { did });
   let userList = [];
   if (res.err_code === '0') {
-    userList = _.map(res.datas, item => {
-      // const userData = _.get(item, 'sync_data.user_data', {});
-      // const userDatas = _.get(item, 'user_datas', {});
-      // const cids = _.map(userDatas.corp_list, data => _.get(data, 'cid'));
-      return {
-        key: item.uid,
-        // cids,
-        name: item.name,
-        avatar: item.furl,
-        itemType: typeUser,
-        // companyName: getCompanyName(userDatas),
-        type
-      };
-    });
+    // 禁用不显示 20190319 tianhong
+    userList = _.filter(
+      _.map(res.datas, item => {
+        // const userData = _.get(item, 'sync_data.user_data', {});
+        // const userDatas = _.get(item, 'user_datas', {});
+        // const cids = _.map(userDatas.corp_list, data => _.get(data, 'cid'));
+        return {
+          key: item.uid,
+          // cids,
+          name: item.name,
+          avatar: item.furl,
+          itemType: typeUser,
+          // companyName: getCompanyName(userDatas),
+          type,
+          status: item.status
+        };
+      }),
+      item2 => item2.status !== '0'
+    );
   }
 
   const RData = userList;
@@ -225,10 +230,14 @@ const getSearch = function(params, callback) {
         });
         list = _.groupBy(list, 'title');
 
-        const RData = _.map(list, (item, key) => ({
-          title: key,
-          children: item
-        }));
+        const RData = {
+          from: '0',
+          hits: _.map(list, (item, key) => ({
+            title: key,
+            children: item
+          })),
+          val: _data.keyword
+        };
         if (typeof ck === 'function') {
           ck(RData);
         }

@@ -8,6 +8,7 @@ import Tree from './react-main';
 // import Tree from 'zy-tree';
 const typeUser = 'user'; // 用户
 const typeDept = 'dept'; // 部门
+const typeAcc = 'account'; // 用户【姓名】
 const typeGroupUser = 'groupUser'; // 群用户
 const typeGroupList = 'groupList'; // 群列表
 const typeInternalGroup = 'internalGroup'; // 内部群
@@ -57,7 +58,7 @@ const getUserInfo = async function({ users }) {
   const GsInfo = await this.io.user
     .GoGetUserInfo({
       uids: users,
-      mask: ['name', 'uid', 'avatar'],
+      // mask: ['name', 'uid', 'avatar'],
       if_dept_list: '0'
     })
     .then(res => {
@@ -68,7 +69,35 @@ const getUserInfo = async function({ users }) {
           name: item.name,
           avatar: item.avatar_url,
           companyName: getCompanyName(item),
-          itemType: typeUser
+          itemType: typeUser,
+          account: item.account
+        }));
+      }
+      return [];
+    });
+  return GsInfo;
+};
+
+/**
+ * 获取用户信息[帐户]
+ */
+const getUserInfoAcc = async function({ account }) {
+  const GsInfo = await this.io.user
+    .GoGetUserInfoAcc({
+      account: account,
+      // user_mask: ['name', 'uid', 'avatar'],
+      if_dept_list: '0'
+    })
+    .then(res => {
+      if (res.res.err_code === '0') {
+        return _.map(res.users, item => ({
+          key: item.uid,
+          cids: _.map(item.corp_list, data => _.get(data, 'cid')),
+          name: item.name,
+          avatar: item.avatar_url,
+          companyName: getCompanyName(item),
+          itemType: 'account',
+          account: item.account
         }));
       }
       return [];
@@ -311,8 +340,9 @@ const getCloudUserList = async function() {
  * 获取搜索数据
  * @param {'' || [''] || [{}]} params { key: '需要查找的关键词' }
  */
-const getSearch = function(params, callback) {
+const getSearch = function(params, callback, event) {
   const _function = async (data, ck) => {
+    const from = event.target.getAttribute('from');
     let _data = {};
     if (typeof data === 'string') {
       _data.keyword = data;
@@ -323,6 +353,8 @@ const getSearch = function(params, callback) {
         keyword: data.key
       };
     }
+    _data.size = '20';
+    _data.from = from;
     if (_data.keyword) {
       const res = await this.io.search.GoSearchContacts(_data);
       if (res.err_code === '0') {
@@ -346,7 +378,11 @@ const getSearch = function(params, callback) {
           children: item
         }));
         if (typeof ck === 'function') {
-          ck(RData);
+          ck({
+            hits: RData,
+            from: parseInt(from) + 20 + '',
+            val: data
+          });
         }
         return RData;
       }
@@ -395,7 +431,12 @@ const searchGroupUser = async function name({ key, keyword, filter }) {
     title: children.length ? lang.searchGroupUser : lang.searchNull, // '群成员' : '暂无搜索结果'
     children
   };
-  return [Rdata];
+  // return [Rdata];
+  return {
+    from: '0',
+    hits: [Rdata],
+    val: keyword
+  };
 };
 
 /**
@@ -442,9 +483,8 @@ const getGroupList = async function({ selectDept, isGetCloud }) {
     small: item.group_type === GROUP_TYPE_OUTTER ? <SmallCloudGroup /> : ''
   }));
 
-  const { admin = [], join = [] } = _.groupBy(
-    groupsList,
-    item => (item.mem_type === GROUP_MEMBER_TYPE_NORMAL ? 'join' : 'admin')
+  const { admin = [], join = [] } = _.groupBy(groupsList, item =>
+    item.mem_type === GROUP_MEMBER_TYPE_NORMAL ? 'join' : 'admin'
   );
   const resAdmin = {
     key: 'myAdminGroup', // '我管理的群',
@@ -562,12 +602,71 @@ const initData = async function(data = {}) {
       childrenNumber
     };
   }
+
+  if (key === '-4') {
+    const uid = _.get(data, ['uid']);
+    const account = _.get(data, ['account']);
+    let res;
+    if (uid) {
+      res = await this.getUserInfo({ users: [uid] });
+    } else {
+      res = await this.getUserInfoAcc({ account: [account] });
+    }
+    if (res.length) {
+      return {
+        avatar: res[0].avatar,
+        key: res[0].key,
+        name: res[0].name,
+        itemType: uid ? typeUser : typeAcc,
+        type,
+        expand: false,
+        account: res[0].account
+      };
+    } else {
+      return {
+        avatar: '',
+        key: '',
+        name: 'undefined',
+        itemType: uid ? typeUser : typeAcc,
+        type,
+        expand: false,
+        isSelected: false,
+        account: false
+      };
+    }
+  }
+
+  // 天杀的群列表
+  if (key === '-5') {
+    const dept = _.get(data, ['dept']);
+    const GsInfo4 = await this.getDept({ key: dept, selectDept });
+    const list4 = await this.onExpand({
+      key: GsInfo4.dept_id,
+      type,
+      selectDept
+    });
+    return {
+      key: GsInfo4.dept_id,
+      name: GsInfo4.dept_name,
+      itemType: typeDept,
+      isChildren: true,
+      isCheckedShow: selectDept,
+      type,
+      icon: GsInfo4.dept_id === '0' ? 'company' : 'folder',
+      expand: false,
+      // children: list4,
+      small: GsInfo4.dept_mem_num ? `(${GsInfo4.dept_mem_num})` : '',
+      childrenNumber: GsInfo4.dept_mem_num * 1
+    };
+  }
+
   const GsInfo = await this.getDept({ key, selectDept });
   const list = await this.onExpand({
     key: GsInfo.dept_id,
     type,
     selectDept
   });
+
   return {
     key: GsInfo.dept_id,
     name: GsInfo.dept_name,
@@ -604,6 +703,7 @@ class Default {
     this.getGroupList = getGroupList.bind(this);
     this.onExpand = onExpand.bind(this);
     this.initData = initData.bind(this);
+    this.getUserInfoAcc = getUserInfoAcc.bind(this);
   }
 }
 

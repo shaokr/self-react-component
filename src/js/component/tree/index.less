@@ -107,6 +107,15 @@
                     background: rgba(204, 204, 204, 1);
                 }
             }
+            -ms-scroll-chaining: chained;
+            -ms-overflow-style: none;
+            -ms-content-zooming: zoom;
+            -ms-scroll-rails: none;
+            -ms-content-zoom-limit-min: 100%;
+            -ms-content-zoom-limit-max: 500%;
+            -ms-scroll-snap-type: proximity;
+            -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
+            -ms-overflow-style: none;
         }
     }
     &-left{
@@ -283,14 +292,16 @@
         // 正常情况
         &.type-normal{
             >.tree-children-info{
+              position: relative;
                 &:hover{
                     &::after{
                         content: '';
                         position: absolute;
                         background: @ch1;
                         right: 0;
-                        // top: 0;
-                        width: 100%;
+                        top: 0;
+                        // width: 100%;
+                        width: 319px;
                         height: 32px;
                         z-index: @index0;
                     }

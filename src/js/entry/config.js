@@ -11,7 +11,7 @@ const mapListObj = {
   // 自定义map和依赖关系,可覆盖cdn中的配置(注释的是例子
   map: {
     // 'ReactDom': 'host/js/react/15.4.0/react-dom.min.js',
-    treeIcon: `//at.alicdn.com/t/font_232637_v7d429dlco3l3di.js`,
+    // treeIcon: `//at.alicdn.com/t/font_232637_v7d429dlco3l3di.js`,
     Apiutil: '//localhost:8080/web-api-config/trunk/dist/util.js',
     bridgeWs: '//localhost:8080/web-bridge-ws/dist/bridge.js',
     React: 'host:js/react/15.4.0/react-with-addons.js',
@@ -37,7 +37,7 @@ const mainListObj = {
     // 入口文件 签名
     // ToLoad: true, // 是否马上加载
     // 依赖库
-    deps: ['react', 'mobx', 'mobx-react', 'Apiutil', '_component']
+    deps: ['react', 'mobx', 'mobx-react', 'Apiutil', '_component', 'mock']
   },
   '_tool-tree-web-module': {
     // 入口文件 签名
