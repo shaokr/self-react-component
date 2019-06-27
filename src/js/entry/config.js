@@ -25,6 +25,11 @@ const mapListObj = {
   }
 };
 
+if (__DEV__) {
+  mapListObj.map['zy-component'] =
+    'http://localhost:8080/react-component/dist/component.js';
+}
+
 const mainListObj = {
   // 载入文件的配置
   _main: {
@@ -43,7 +48,14 @@ const mainListObj = {
     // 入口文件 签名
     ToLoad: true, // 是否马上加载
     // 依赖库
-    deps: ['react', 'mobx', 'mobx-react', 'bridgeWs', '_component']
+    deps: [
+      'react',
+      'mobx',
+      'mobx-react',
+      'bridgeWs',
+      '_component',
+      'zy-component'
+    ]
   },
   _component: {
     // 入口文件 签名
