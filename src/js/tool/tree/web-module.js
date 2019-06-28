@@ -654,7 +654,7 @@ const initData = async function(data = {}) {
       type,
       icon: GsInfo4.dept_id === '0' ? 'company' : 'folder',
       expand: false,
-      // children: list4,
+      children: list4,
       small: GsInfo4.dept_mem_num ? `(${GsInfo4.dept_mem_num})` : '',
       childrenNumber: GsInfo4.dept_mem_num * 1
     };
