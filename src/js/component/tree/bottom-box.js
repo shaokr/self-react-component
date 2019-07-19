@@ -51,7 +51,6 @@ class Btn extends Component {
   }
   render() {
     const { item } = this.props;
-    console.log(this.buttonProps);
     return <Button {...this.buttonProps}>{item.txt}</Button>;
   }
 }
