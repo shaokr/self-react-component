@@ -237,6 +237,7 @@ const getUserList = async function({ key, type = typeUser }, ck) {
           const userDatas = _.get(item, 'user_datas', {});
           const cids = _.map(userDatas.corp_list, data => _.get(data, 'cid'));
           return {
+            account: userDatas.account,
             key: userData.uid,
             cids,
             name: userData.user_name,
