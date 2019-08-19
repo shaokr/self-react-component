@@ -177,6 +177,11 @@ const getDept = async function({ key }, ck) {
     })
     .then(res => {
       const data = res.depts[0].datas;
+      _.set(
+        data,
+        ['dept_mem_num'],
+        data.dept_mem_num - data.fdept_disabled_num
+      );
       return data;
     });
   if (typeof ck === 'function') {
@@ -667,7 +672,6 @@ const initData = async function(data = {}) {
     type,
     selectDept
   });
-
   return {
     key: GsInfo.dept_id,
     name: GsInfo.dept_name,
