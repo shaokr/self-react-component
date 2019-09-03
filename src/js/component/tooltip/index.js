@@ -1,148 +1,85 @@
 /**
- * 滚动条
+ * zhu
  */
 import { Component } from 'react';
+import TooltipContent from './tooltip';
 import _ from 'lodash';
+import { ShowDom } from '../super-dom';
 
 import './index.less';
+
+// https://www.jianshu.com/p/135731ec13f1
+// const getTopLeft = dom => {
+//   const fatherPosition = dom.offsetParent;
+//   if (fatherPosition) {
+//     const { left, top } = getTopLeft(fatherPosition);
+//     return {
+//       left: dom.offsetLeft + left,
+//       top: dom.offsetTop + top
+//     };
+//   } else {
+//     return {
+//       left: dom.offsetLeft,
+//       top: dom.offsetTop
+//     };
+//   }
+// };
 
 class Tooltip extends Component {
   constructor(props) {
     super(props);
+    this.rdom = null;
+    this.delDom = this.delDom.bind(this);
     this.state = {
-      tooltipWidth: 0,
-      tooltipHeight: 0,
-      wrapWidth: 0,
-      wrapHeight: 0,
-      hover: false
+      domOn: false
     };
   }
-  componentDidMount() {
+  delDom() {
     setTimeout(() => {
-      this.setState({
-        tooltipWidth: this.titleDom.offsetWidth,
-        tooltipHeight: this.titleDom.offsetHeight,
-        wrapWidth: this.wrapDom.offsetWidth,
-        wrapHeight: this.wrapDom.offsetHeight
-      });
-    }, 30);
+      if (this.rdom && !this.state.domOn) {
+        this.rdom.remove();
+        this.rdom = null;
+      }
+    }, 100);
   }
   render() {
-    const {
-      tooltipWidth,
-      tooltipHeight,
-      wrapWidth,
-      wrapHeight,
-      hover
-    } = this.state;
     const { children, title = '', placement = 'topLeft' } = this.props;
-    let style = null;
-    switch (placement) {
-      case 'topLeft':
-        style = {
-          top: `${-(tooltipHeight + 10)}px`,
-          left: 0
-        };
-        break;
-      case 'top':
-        style = {
-          top: `${-(tooltipHeight + 10)}px`,
-          left: `${(wrapWidth - tooltipWidth) / 2}px`
-        };
-        break;
-      case 'topRight':
-        style = {
-          top: `${-(tooltipHeight + 10)}px`,
-          right: 0
-        };
-        break;
-      case 'bottomLeft':
-        style = {
-          bottom: `${-(tooltipHeight + 10)}px`,
-          left: 0
-        };
-        break;
-      case 'bottom':
-        style = {
-          bottom: `${-(tooltipHeight + 10)}px`,
-          left: `${(wrapWidth - tooltipWidth) / 2}px`
-        };
-        break;
-      case 'bottomRight':
-        style = {
-          bottom: `${-(tooltipHeight + 10)}px`,
-          right: 0
-        };
-        break;
-      case 'leftTop':
-        style = {
-          top: 0,
-          left: `${-(tooltipWidth + 10)}px`
-        };
-        break;
-      case 'left':
-        style = {
-          top: `${(wrapHeight - tooltipHeight) / 2}px`,
-          left: `${-(tooltipWidth + 10)}px`
-        };
-        break;
-      case 'leftBottom':
-        style = {
-          bottom: 0,
-          left: `${-(tooltipWidth + 10)}px`
-        };
-        break;
-      case 'rightTop':
-        style = {
-          top: 0,
-          right: `${-(tooltipWidth + 10)}px`
-        };
-        break;
-      case 'right':
-        style = {
-          top: `${(wrapHeight - tooltipHeight) / 2}px`,
-          right: `${-(tooltipWidth + 10)}px`
-        };
-        break;
-      case 'rightBottom':
-        style = {
-          bottom: 0,
-          right: `${-(tooltipWidth + 10)}px`
-        };
-        break;
-      default:
-        style = {
-          top: `${-(tooltipHeight + 10)}px`,
-          left: 0
-        };
-    }
     return (
       <div
         className={`tooltip ${placement}`}
         onMouseOver={() => {
           this.setState({
-            hover: true
+            domOn: true
           });
+          if (!this.rdom) {
+            this.rdom = new ShowDom();
+            this.rdom.init(
+              <TooltipContent
+                title={title}
+                placement={placement}
+                wrapDom={this.wrapDom}
+                delDom={this.delDom}
+                ref={e => {
+                  this.tooltipDom = e;
+                }}
+              />
+            );
+          }
         }}
         onMouseLeave={() => {
           this.setState({
-            hover: false
+            domOn: false
           });
+          setTimeout(() => {
+            if (!this.tooltipDom.state.tooltipOn) {
+              this.delDom();
+            }
+          }, 100);
         }}
         ref={e => {
           this.wrapDom = e;
         }}
       >
-        <div
-          className="tooltip_content"
-          ref={e => {
-            this.titleDom = e;
-          }}
-          style={{ ...style, visibility: hover ? 'visible' : 'hidden' }}
-        >
-          <div className="arrow" />
-          <div className="tooltip_inner">{title}</div>
-        </div>
         {children}
       </div>
     );
