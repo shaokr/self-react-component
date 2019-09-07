@@ -15,6 +15,8 @@ const mapListObj = {
     Apiutil: '//localhost:8080/web-api-config/trunk/dist/util.js',
     bridgeWs: '//localhost:8080/web-bridge-ws/dist/bridge.js',
     React: 'host:js/react/15.4.0/react-with-addons.js',
+    // react:
+    //   'https://cdnjs.cloudflare.com/ajax/libs/react/16.9.0/umd/react.production.min.js',
     ReactDom: 'host:js/react/15.4.0/react-dom.js'
   },
   meta: {

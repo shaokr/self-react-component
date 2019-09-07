@@ -1,37 +1,73 @@
 /***
- * tooltip
+ * tooltip People always have dream...
  */
 
-import { Component } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import _ from 'lodash';
-import superDom from '../super-dom';
 
-// @superDom
-export default class TooltipContent extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      wrapWidth: 0,
-      wrapHeight: 0,
-      wrapLeft: 0,
-      wrapTop: 0,
-      tooltipWidth: 0,
-      tooltipHeight: 0
-    };
+function TooltipContent(props) {
+  const [state, setState] = useState({
+    init: false,
+    wrapWidth: 0,
+    wrapHeight: 0,
+    wrapLeft: 0,
+    wrapTop: 0,
+    tooltipWidth: 0,
+    tooltipHeight: 0
+  });
+  function useHookWithRefCallback(cb) {
+    const ref = useRef(null);
+    const setRef = useCallback(node => {
+      if (ref.current) {
+        cb(ref.current);
+      }
+      if (node) {
+        cb(node);
+      }
+      ref.current = node;
+    }, []);
+    return [setRef];
   }
-  componentDidMount() {
-    const { x, y, width, height } = this.props.wrapDom.getBoundingClientRect();
-    this.setState({
-      wrapWidth: width,
-      wrapHeight: height,
-      wrapLeft: x,
-      wrapTop: y,
-      tooltipWidth: this.titleDom.offsetWidth,
-      tooltipHeight: this.titleDom.offsetHeight
-    });
-  }
-  render() {
-    const { title, placement, onMouseIn, onMouseOut } = this.props;
+  const [ref] = useHookWithRefCallback(node => {
+    if (!state.init && props.wrapDom) {
+      const { x, y, width, height } = props.wrapDom.getBoundingClientRect();
+      setState({
+        init: true,
+        wrapWidth: width,
+        wrapHeight: height,
+        wrapLeft: x,
+        wrapTop: y,
+        tooltipWidth: node.offsetWidth,
+        tooltipHeight: node.offsetHeight
+      });
+    }
+  });
+  // useEffect(() => {
+  //   if (!state.init) {
+  //     const { x, y, width, height } = props.wrapDom.getBoundingClientRect();
+  //     console.log({
+  //       init: true,
+  //       wrapWidth: width,
+  //       wrapHeight: height,
+  //       wrapLeft: x,
+  //       wrapTop: y,
+  //       tooltipWidth: _.get(ref, ['current', 'offsetWidth']),
+  //       tooltipHeight: _.get(ref, ['current', 'offsetHeight'])
+  //     });
+  //     setState({
+  //       init: true,
+  //       wrapWidth: width,
+  //       wrapHeight: height,
+  //       wrapLeft: x,
+  //       wrapTop: y,
+  //       tooltipWidth: _.get(ref, ['current', 'offsetWidth']),
+  //       tooltipHeight: _.get(ref, ['current', 'offsetHeight'])
+  //     });
+  //   }
+  // });
+  // console.log(props.wrapDom, state.init);
+  const getStyle = () => {
+    let style = null;
     const {
       wrapWidth,
       wrapHeight,
@@ -39,9 +75,8 @@ export default class TooltipContent extends Component {
       wrapTop,
       tooltipWidth,
       tooltipHeight
-    } = this.state;
-    let style = null;
-    switch (placement) {
+    } = state;
+    switch (props.placement) {
       case 'topLeft':
         style = {
           top: `${wrapTop - (tooltipHeight + 10)}px`,
@@ -120,19 +155,20 @@ export default class TooltipContent extends Component {
           left: 0
         };
     }
-    return (
-      <div
-        className={`tooltip_content ${placement}`}
-        ref={e => {
-          this.titleDom = e;
-        }}
-        style={{ ...style }}
-        onMouseOver={onMouseIn}
-        onMouseLeave={onMouseOut}
-      >
-        <div className="arrow" />
-        <div className="tooltip_inner">{title}</div>
-      </div>
-    );
-  }
+    return style;
+  };
+  return (
+    <div
+      className={`tooltip_content ${props.placement}`}
+      ref={ref}
+      style={{ ...getStyle() }}
+      onMouseOver={() => props.onMouseIn()}
+      onMouseLeave={() => props.onMouseOut()}
+    >
+      <div className="arrow" />
+      <div className="tooltip_inner">{props.title}</div>
+    </div>
+  );
 }
+
+export default TooltipContent;

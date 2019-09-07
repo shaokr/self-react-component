@@ -23,6 +23,7 @@ import Menu from 'component/menu';
 import DatePicker from 'component/date-picker';
 import Switch from 'component/switch';
 import Tooltip from 'component/tooltip';
+import TooltipHook from 'component/tooltip/indexHook';
 import avatarBase64 from 'helpers/avatar-base64';
 
 
@@ -327,5 +328,6 @@ module.exports = {
   ShowDom,
   SuperDom,
   avatarBase64,
-  Tooltip
+  Tooltip,
+  TooltipHook
 };

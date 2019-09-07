@@ -2,7 +2,8 @@
  * zhu
  */
 import { Component } from 'react';
-import TooltipContent from './tooltip';
+import TooltipContent from './tooltipHook';
+// import TooltipContent from './tooltip';
 import _ from 'lodash';
 import { ShowDom } from '../super-dom';
 
@@ -35,12 +36,10 @@ class Tooltip extends Component {
     };
   }
   delDom() {
-    setTimeout(() => {
-      if (this.rdom && !this.state.domOn) {
-        this.rdom.remove();
-        this.rdom = null;
-      }
-    }, 100);
+    if (this.rdom && !this.state.domOn) {
+      this.rdom.remove();
+      this.rdom = null;
+    }
   }
   render() {
     const { children, title = '', placement = 'topLeft' } = this.props;
@@ -58,9 +57,20 @@ class Tooltip extends Component {
                 title={title}
                 placement={placement}
                 wrapDom={this.wrapDom}
-                delDom={this.delDom}
-                ref={e => {
-                  this.tooltipDom = e;
+                onMouseIn={() => {
+                  this.setState({
+                    domOn: true
+                  });
+                }}
+                onMouseOut={() => {
+                  this.setState({
+                    domOn: false
+                  });
+                  setTimeout(() => {
+                    if (!this.state.domOn) {
+                      this.delDom();
+                    }
+                  }, 100);
                 }}
               />
             );
@@ -71,13 +81,22 @@ class Tooltip extends Component {
             domOn: false
           });
           setTimeout(() => {
-            if (!this.tooltipDom.state.tooltipOn) {
+            if (!this.state.domOn) {
               this.delDom();
             }
           }, 100);
         }}
         ref={e => {
           this.wrapDom = e;
+        }}
+        onWheel={() => {
+          if (this.rdom) {
+            this.setState({
+              domOn: false
+            });
+            this.rdom.remove();
+            this.rdom = null;
+          }
         }}
       >
         {children}
