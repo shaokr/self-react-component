@@ -46,6 +46,7 @@ export default function Tooltip({
   });
   // useEffect(() => {
   if (init) {
+    // 这个判断没有涉及到钩子所以没事儿
     if (rdom && !domOn) {
       setTimeout(() => {
         if (!domOn) {

@@ -42,7 +42,10 @@ class Tooltip extends Component {
     }
   }
   render() {
-    const { children, title = '', placement = 'topLeft' } = this.props;
+    const { children, title = '', placement = 'topLeft', visible } = this.props;
+    if (visible === false) {
+      return children;
+    }
     return (
       <div
         className={`tooltip ${placement}`}
