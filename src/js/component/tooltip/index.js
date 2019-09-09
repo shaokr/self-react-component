@@ -2,8 +2,8 @@
  * zhu
  */
 import { Component } from 'react';
-import TooltipContent from './tooltipHook';
-// import TooltipContent from './tooltip';
+// import TooltipContent from './tooltipHook';
+import TooltipContent from './tooltip';
 import _ from 'lodash';
 import { ShowDom } from '../super-dom';
 
